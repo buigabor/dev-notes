@@ -1,6 +1,7 @@
 import * as esbuild from 'esbuild-wasm';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { fetchPlugin } from './plugins/fetch-plugin';
 import { unpkgPathPlugin } from './plugins/unpkg-path.plugin';
 
 export const App = () => {
@@ -32,7 +33,7 @@ export const App = () => {
       entryPoints: ['index.js'],
       bundle: true,
       write: false,
-      plugins: [unpkgPathPlugin()],
+      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
       // Replace process.env.NODE_ENV to 'production', and global to window in the bundle
       define: { 'process.env.NODE_ENV': '"production"', global: 'window' },
     });
