@@ -1,61 +1,28 @@
-import * as esbuild from 'esbuild-wasm';
-import React, { useEffect, useRef, useState } from 'react';
+import { css, Global } from '@emotion/react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import CodeEditor from './components/CodeEditor';
-import { Preview } from './components/Preview';
-import { fetchPlugin } from './plugins/fetch-plugin';
-import { unpkgPathPlugin } from './plugins/unpkg-path.plugin';
+import { TextEditor } from './components/TextEditor';
 
 export const App = () => {
-  const [input, setInput] = useState('');
-  const [code, setCode] = useState('');
-  const ref = useRef<any>();
-
-  const startService = async () => {
-    ref.current = await esbuild.startService({
-      worker: true,
-      wasmURL: 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm',
-    });
-  };
-
-  useEffect(() => {
-    startService();
-  }, []);
-
-  const onClick = async () => {
-    if (!ref.current) {
-      return;
-    }
-    // const result = await ref.current.transform(input, {
-    //   loader: 'jsx',
-    //   target: 'es2015',
-    // });
-
-    const result = await ref.current.build({
-      entryPoints: ['index.js'],
-      bundle: true,
-      write: false,
-      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
-      // Replace process.env.NODE_ENV to 'production', and global to window in the bundle
-      define: { 'process.env.NODE_ENV': '"production"', global: 'window' },
-    });
-
-    setCode(result.outputFiles[0].text);
-  };
-
   return (
-    <div>
-      <CodeEditor
-        initialValue="const a = 1;"
-        onChange={(value) => {
-          setInput(value);
-        }}
+    <>
+      <Global
+        styles={css`
+          body {
+            margin: 0;
+            padding: 0;
+          }
+          ol,
+          ul {
+            list-style: none;
+          }
+        `}
       />
       <div>
-        <button onClick={onClick}>Submit</button>
+        <TextEditor />
+        {/* <CodeCell /> */}
       </div>
-      <Preview code={code} />
-    </div>
+    </>
   );
 };
 

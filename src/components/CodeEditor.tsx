@@ -10,9 +10,14 @@ import editorStyles from './styles/codeEditorStyles';
 interface CodeEditorProps {
   initialValue: string;
   onChange(value: string): void;
+  setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
+const CodeEditor: React.FC<CodeEditorProps> = ({
+  initialValue,
+  onChange,
+  setError,
+}) => {
   const editorRef = useRef<any>();
   const onEditorDidMount: EditorDidMount = (getValue, monacoEditor) => {
     editorRef.current = monacoEditor;
@@ -23,6 +28,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
 
     monacoEditor.getModel()?.updateOptions({ tabSize: 2 });
 
+    // Highlight JSX syntax inside editor
     const highlighter = new MonacoJSXHighlighter(
       // @ts-ignore
       window.monaco,
@@ -41,19 +47,23 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
 
   const onFormatClick = () => {
     // get current value from editor
-    const currentCode = editorRef.current.getModel().getValue();
-    // format that value
-    const formattedCode = prettier
-      .format(currentCode, {
-        parser: 'babel',
-        plugins: [parser],
-        useTabs: false,
-        semi: true,
-        singleQuote: true,
-      })
-      .replace(/\n$/, '');
-    // set it as the new value
-    editorRef.current?.setValue(formattedCode);
+    try {
+      const currentCode = editorRef.current.getModel().getValue();
+      // format that value
+      const formattedCode = prettier
+        .format(currentCode, {
+          parser: 'babel',
+          plugins: [parser],
+          useTabs: false,
+          semi: true,
+          singleQuote: true,
+        })
+        .replace(/\n$/, '');
+      // set it as the new value
+      editorRef.current?.setValue(formattedCode);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -76,7 +86,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
         }}
         theme="vs-dark"
         language="javascript"
-        height="500px"
+        height="100%"
       />
     </div>
   );

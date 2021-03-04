@@ -4,6 +4,7 @@ import syntaxHighlights from './syntaxHighlighting';
 const editorStyles = css`
   position: relative;
   height: 100%;
+  width: calc(100% - 10px);
   &:hover .format-btn {
     opacity: 1;
   }
