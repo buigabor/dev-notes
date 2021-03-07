@@ -1,7 +1,10 @@
 import { css, Global } from '@emotion/react';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { TextEditor } from './components/TextEditor';
+import { Provider } from 'react-redux';
+import { CellList } from './components/CellList';
+import { store } from './state';
 
 export const App = () => {
   return (
@@ -9,6 +12,7 @@ export const App = () => {
       <Global
         styles={css`
           body {
+            background: #131417;
             margin: 0;
             padding: 0;
           }
@@ -18,10 +22,11 @@ export const App = () => {
           }
         `}
       />
-      <div>
-        <TextEditor />
-        {/* <CodeCell /> */}
-      </div>
+      <Provider store={store}>
+        <div style={{ background: '#131417' }}>
+          <CellList />
+        </div>
+      </Provider>
     </>
   );
 };
