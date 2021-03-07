@@ -71,6 +71,8 @@ const textEditorStyles = css`
   }
 
   .card {
+    color: #fff;
+    background-color: #202123;
     padding: 1rem;
     border: solid 1px #989898;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;

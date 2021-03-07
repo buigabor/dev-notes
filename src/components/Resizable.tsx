@@ -4,7 +4,7 @@ import { ResizableBox, ResizableBoxProps } from 'react-resizable';
 import resizableBoxStyles from './styles/resizableBoxStyles';
 
 interface ResizableProps {
-  direction: 'horizontal' | 'vertical';
+  direction: 'horizontal' | 'vertical' | 'vertical-sketch';
 }
 
 export const Resizable: React.FC<ResizableProps> = ({
@@ -52,9 +52,17 @@ export const Resizable: React.FC<ResizableProps> = ({
         setWidth(data.size.width);
       },
     };
-  } else {
+  } else if (direction === 'vertical') {
     resizableProps = {
       minConstraints: [Infinity, 24],
+      maxConstraints: [Infinity, innerHeight * 0.9],
+      height: 300,
+      width: Infinity,
+      resizeHandles: ['s'],
+    };
+  } else {
+    resizableProps = {
+      minConstraints: [Infinity, 210],
       maxConstraints: [Infinity, innerHeight * 0.9],
       height: 300,
       width: Infinity,
