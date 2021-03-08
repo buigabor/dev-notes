@@ -5,20 +5,23 @@ import MonacoJSXHighlighter from 'monaco-jsx-highlighter';
 import prettier from 'prettier';
 import parser from 'prettier/parser-babel';
 import { useRef } from 'react';
+import { useActions } from '../hooks/useActions';
 import editorStyles from './styles/codeEditorStyles';
 
 interface CodeEditorProps {
+  cellId: string;
   initialValue: string;
   onChange(value: string): void;
-  setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
   initialValue,
   onChange,
-  setError,
+  cellId,
 }) => {
   const editorRef = useRef<any>();
+  const { createBundle } = useActions();
+
   const onEditorDidMount: EditorDidMount = (getValue, monacoEditor) => {
     editorRef.current = monacoEditor;
     // Whenever there are changes in the editor, we get the code content from the editor and set it as a state
@@ -62,7 +65,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       // set it as the new value
       editorRef.current?.setValue(formattedCode);
     } catch (error) {
-      setError(error.message);
+      createBundle(cellId, error.message);
     }
   };
 

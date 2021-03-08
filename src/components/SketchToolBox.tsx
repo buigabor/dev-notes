@@ -7,7 +7,7 @@ import { Tools } from 'react-sketch';
 const sketchToolBoxStyles = css`
   position: absolute;
   top: 3rem;
-  right: 10px;
+  left: 10px;
   z-index: 5;
   display: flexbox;
   flex-direction: column;
@@ -74,6 +74,7 @@ interface SetToolBoxProps {
   canRedo: boolean;
   canUndo: boolean;
   color: string;
+  setEraserClicked: React.Dispatch<React.SetStateAction<boolean>>;
   setLineWidth: React.Dispatch<React.SetStateAction<number>>;
   setColor: React.Dispatch<React.SetStateAction<string>>;
   setCanUndo: React.Dispatch<React.SetStateAction<boolean>>;
@@ -91,14 +92,15 @@ interface SetToolBoxProps {
 
 export const SketchToolBox: React.FC<SetToolBoxProps> = ({
   setTool,
-  sketchRef,
   setCanUndo,
   setCanRedo,
+  setColor,
+  setLineWidth,
+  setEraserClicked,
+  sketchRef,
   canRedo,
   canUndo,
-  setColor,
   color,
-  setLineWidth,
 }) => {
   const [showColor, setShowColor] = useState(false);
   const anchorRef = useRef<any>(null);
@@ -173,7 +175,8 @@ export const SketchToolBox: React.FC<SetToolBoxProps> = ({
           onClick={() => {
             setTool(Tools.Pencil);
             setLineWidth(3);
-            setColor('black');
+            setColor(color);
+            setEraserClicked(false);
           }}
           className="toolbox-cell"
         >
@@ -183,7 +186,8 @@ export const SketchToolBox: React.FC<SetToolBoxProps> = ({
           onClick={() => {
             setTool(Tools.Line);
             setLineWidth(3);
-            setColor('black');
+            setColor(color);
+            setEraserClicked(false);
           }}
           className="toolbox-cell"
         >
@@ -195,7 +199,8 @@ export const SketchToolBox: React.FC<SetToolBoxProps> = ({
           onClick={() => {
             setTool(Tools.Circle);
             setLineWidth(3);
-            setColor('black');
+            setColor(color);
+            setEraserClicked(false);
           }}
           className="toolbox-cell"
         >
@@ -205,7 +210,8 @@ export const SketchToolBox: React.FC<SetToolBoxProps> = ({
           onClick={() => {
             setTool(Tools.Rectangle);
             setLineWidth(3);
-            setColor('black');
+            setColor(color);
+            setEraserClicked(false);
           }}
           className="toolbox-cell"
         >
@@ -257,7 +263,7 @@ export const SketchToolBox: React.FC<SetToolBoxProps> = ({
           className="toolbox-cell"
           onClick={() => {
             setTool(Tools.Pencil);
-            setColor('white');
+            setEraserClicked(true);
             setLineWidth(20);
           }}
         >

@@ -1,17 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import React from 'react';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { AddCell } from './AddCell';
 import { CellListItem } from './CellListItem';
-
-const cellListStyles = css`
-  padding: 0 10px;
-
-  .force-visible {
-    opacity: 1;
-  }
-`;
+import cellListStyles from './styles/cellListStyles';
 
 export const CellList: React.FC = () => {
   const orderedCellList = useTypedSelector(({ cells: { order, data } }) => {

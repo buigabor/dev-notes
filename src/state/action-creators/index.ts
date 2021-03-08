@@ -1,5 +1,8 @@
+import { Dispatch } from 'react';
+import bundlerHandler from '../../bundler';
 import { ActionType } from '../action-types';
 import {
+  Action,
   DeleteCellAction,
   InsertCellAfterAction,
   MoveCellAction,
@@ -36,5 +39,16 @@ export const insertCellAfter = (
       id,
       type: cellType,
     },
+  };
+};
+
+export const createBundle = (cellId: string, input: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({ type: ActionType.BUNDLE_START, payload: { cellId } });
+    const result = await bundlerHandler(input);
+    dispatch({
+      type: ActionType.BUNDLE_COMPLETE,
+      payload: { cellId, bundle: { code: result.code, error: result.error } },
+    });
   };
 };

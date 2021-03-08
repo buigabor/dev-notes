@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { AnimateSharedLayout, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { Cell } from '../state';
 import { ActionBar } from './ActionBar';
@@ -18,24 +19,53 @@ export const CellListItem: React.FC<CellListItemProps> = ({ cell }) => {
     if (cell.type === 'code') {
       setCellToRender(
         <>
-          <div className="action-bar-wrapper">
-            <ActionBar id={cell.id} />
-          </div>
-          <CodeCell cell={cell} />
+          <AnimateSharedLayout>
+            <motion.div
+              animate={{
+                scale: [1, 1.02, 1],
+              }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="action-bar-wrapper">
+                <ActionBar id={cell.id} />
+              </div>
+              <CodeCell cell={cell} />
+            </motion.div>
+          </AnimateSharedLayout>
         </>,
       );
     } else if (cell.type === 'text') {
       setCellToRender(
         <>
-          <ActionBar id={cell.id} />
-          <TextEditor cell={cell} />
+          <AnimateSharedLayout>
+            <motion.div
+              animate={{
+                scale: [1, 1.02, 1],
+              }}
+              transition={{ duration: 0.6 }}
+            >
+              <ActionBar id={cell.id} />
+              <TextEditor cell={cell} />
+            </motion.div>
+          </AnimateSharedLayout>
         </>,
       );
     } else if (cell.type === 'sketch') {
       setCellToRender(
         <>
-          <ActionBar id={cell.id} />
-          <Sketch />
+          <AnimateSharedLayout>
+            <motion.div
+              animate={{
+                scale: [1, 1.02, 1],
+              }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="action-bar-wrapper">
+                <ActionBar id={cell.id} />
+              </div>
+              <Sketch />
+            </motion.div>
+          </AnimateSharedLayout>
         </>,
       );
     }

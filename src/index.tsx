@@ -12,7 +12,7 @@ export const App = () => {
       <Global
         styles={css`
           body {
-            background: #131417;
+            background: #1c2536;
             margin: 0;
             padding: 0;
           }
@@ -23,7 +23,7 @@ export const App = () => {
         `}
       />
       <Provider store={store}>
-        <div style={{ background: '#131417' }}>
+        <div>
           <CellList />
         </div>
       </Provider>

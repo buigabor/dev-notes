@@ -21,6 +21,8 @@ const bundlerHandler = async (rawCode: string) => {
       plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
       // Replace process.env.NODE_ENV to 'production', and global to window in the bundle
       define: { 'process.env.NODE_ENV': '"production"', global: 'window' },
+      jsxFactory: '_React.createElement',
+      jsxFragment: '_React.Fragment',
     });
     return { code: result.outputFiles[0].text, error: '' };
   } catch (error) {

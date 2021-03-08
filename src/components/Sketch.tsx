@@ -25,13 +25,16 @@ export const Sketch: React.FC = () => {
   const [canRedo, setCanRedo] = useState(false);
   const [tool, setTool] = useState(Tools.Pencil);
   const [color, setColor] = useState('black');
+  const [eraserClicked, setEraserClicked] = useState(false);
   const [lineWidth, setLineWidth] = useState(3);
+  console.log(eraserClicked);
 
   useEffect(() => {}, []);
 
   return (
     <>
       <SketchToolBox
+        setEraserClicked={setEraserClicked}
         setLineWidth={setLineWidth}
         setColor={setColor}
         canRedo={canRedo}
@@ -49,7 +52,7 @@ export const Sketch: React.FC = () => {
           }}
         >
           <SketchField
-            lineColor={color}
+            lineColor={eraserClicked ? 'white' : color}
             onChange={() => {
               setCanUndo(sketchRef.current.canUndo());
               setCanRedo(sketchRef.current.canRedo());

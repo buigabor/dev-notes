@@ -7,6 +7,7 @@ const previewStyles = css`
   height: 100%;
   flex-grow: 1;
   overflow: hidden;
+  background-color: #fff;
   .react-draggable-transparent-selection &:after {
     content: '';
     position: absolute;
