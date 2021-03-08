@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { actionCreators } from '../state';
 
 export const useActions = () => {
+  console.log('test');
   const dispatch = useDispatch();
 
   return useMemo(() => {
