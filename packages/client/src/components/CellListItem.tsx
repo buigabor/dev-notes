@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import axios from 'axios';
 import { AnimateSharedLayout, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { Cell } from '../state';
@@ -14,6 +15,12 @@ interface CellListItemProps {
 
 export const CellListItem: React.FC<CellListItemProps> = ({ cell }) => {
   const [cellToRender, setCellToRender] = useState<JSX.Element>();
+
+  useEffect(() => {
+    axios.get('http://localhost:4005').then((res) => {
+      console.log(res);
+    });
+  }, []);
 
   useEffect(() => {
     if (cell.type === 'code') {

@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { CellList } from './components/CellList';
+import { NavBar } from './components/NavBar';
 import { store } from './state';
 
 export const App = () => {
@@ -23,6 +24,7 @@ export const App = () => {
         `}
       />
       <Provider store={store}>
+        <NavBar />
         <div>
           <CellList />
         </div>

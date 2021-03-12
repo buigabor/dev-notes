@@ -63,8 +63,6 @@ export const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     return state.bundles[cell.id];
   });
 
-  console.log(cumulativeCode);
-
   useEffect(() => {
     // Create the initial bundle
     if (!bundle) {

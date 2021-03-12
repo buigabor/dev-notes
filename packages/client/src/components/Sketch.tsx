@@ -27,7 +27,6 @@ export const Sketch: React.FC = () => {
   const [color, setColor] = useState('black');
   const [eraserClicked, setEraserClicked] = useState(false);
   const [lineWidth, setLineWidth] = useState(3);
-  console.log(eraserClicked);
 
   useEffect(() => {}, []);
 
