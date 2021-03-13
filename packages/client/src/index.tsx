@@ -3,8 +3,11 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { CellList } from './components/CellList';
+import { Login } from './components/Login';
 import { NavBar } from './components/NavBar';
+import { SignUp } from './components/SignUp';
 import { store } from './state';
 
 export const App = () => {
@@ -24,10 +27,14 @@ export const App = () => {
         `}
       />
       <Provider store={store}>
-        <NavBar />
-        <div>
-          <CellList />
-        </div>
+        <Router>
+          <NavBar />
+          <Switch>
+            <Route path="/" exact component={CellList} />
+            <Route path="/login" component={Login} />
+            <Route path="/signup" component={SignUp} />
+          </Switch>
+        </Router>
       </Provider>
     </>
   );
