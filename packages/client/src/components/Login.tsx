@@ -8,7 +8,9 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import React from 'react';
+import axios from 'axios';
+import React, { ChangeEvent, useState } from 'react';
+import { useHistory } from 'react-router';
 
 const CssTextField = withStyles({
   root: {
@@ -79,6 +81,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Login: React.FC = () => {
+  const [user, setUser] = useState({
+    username: '',
+    password: '',
+  });
+
+  const history = useHistory();
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUser({ ...user, [e.target.name]: e.target.value } as any);
+  };
+
   const classes = useStyles();
   return (
     <Container className={classes.container} component="main" maxWidth="xs">
@@ -90,10 +103,33 @@ export const Login: React.FC = () => {
         <Typography className={classes.text} component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            axios
+              .post('http://localhost:4005/user/login', user, {
+                withCredentials: true,
+              })
+              .then((res) => {
+                const { success } = res.data;
+                if (!success) {
+                  throw new Error();
+                } else {
+                  history.push('/');
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+                alert('Login failed!');
+              });
+          }}
+          className={classes.form}
+          noValidate
+        >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <CssTextField
+                onChange={onChange}
                 InputLabelProps={{
                   className: classes.outlinedTextfield,
                 }}
@@ -108,6 +144,7 @@ export const Login: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <CssTextField
+                onChange={onChange}
                 InputLabelProps={{
                   className: classes.outlinedTextfield,
                 }}

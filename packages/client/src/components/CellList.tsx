@@ -19,9 +19,37 @@ export const CellList: React.FC = () => {
     </React.Fragment>
   ));
   return (
-    <div css={cellListStyles}>
-      <AddCell forceVisible={orderedCellList.length === 0} nextCellId={null} />
-      {renderedCells}
-    </div>
+    <>
+      <button
+        onClick={() => {
+          // axios
+          //   .post('http://localhost:4005/cells', '', { withCredentials: true })
+          //   .then((res) => {
+          //     console.log(res);
+          //   })
+          //   .catch((error) => {
+          //     console.log(error);
+          //   });
+          fetch('http://localhost:4005/cells', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Cache: 'no-cache',
+            },
+            credentials: 'include',
+          });
+        }}
+      >
+        Saves
+      </button>
+      <div css={cellListStyles}>
+        <AddCell
+          forceVisible={orderedCellList.length === 0}
+          nextCellId={null}
+        />
+        {renderedCells}
+      </div>
+    </>
   );
 };
