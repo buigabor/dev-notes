@@ -113,7 +113,7 @@ router.post('/login', async (req, res) => {
     await deleteExpiredSessions();
     return res.status(200).json({ success: true });
   } catch (error) {
-    res.status(400).json(error);
+    res.status(400).json({ success: false, error: error });
   }
 });
 

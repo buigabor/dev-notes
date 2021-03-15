@@ -4,12 +4,31 @@ import { ActionType } from '../action-types';
 import {
   Action,
   DeleteCellAction,
+  Direction,
+  HideAlertAction,
   InsertCellAfterAction,
   MoveCellAction,
+  ShowAlertAction,
   UpdateCellAction,
 } from '../actions';
 import { CellTypes } from '../cell';
-import { Direction } from './../actions/index';
+
+export const showAlert = (
+  message: string,
+  alertType: 'success' | 'error',
+): ShowAlertAction => {
+  return {
+    type: ActionType.SHOW_ALERT,
+    payload: { message, alertType, displayMode: 'inline-block' },
+  };
+};
+
+export const hideAlert = (): HideAlertAction => {
+  return {
+    type: ActionType.HIDE_ALERT,
+    payload: { displayMode: 'none' },
+  };
+};
 
 export const updateCell = (id: string, content: string): UpdateCellAction => {
   return {

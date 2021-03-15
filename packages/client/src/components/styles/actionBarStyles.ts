@@ -21,6 +21,9 @@ const actionBarStyles = css`
       text-align: center;
       border-radius: 0px;
       outline: none;
+      &:hover {
+        background-color: #05c7bd;
+      }
     }
   }
 `;

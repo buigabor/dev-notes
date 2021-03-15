@@ -11,6 +11,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
 import { useHistory } from 'react-router';
+import { useActions } from '../hooks/useActions';
+import { Alert } from './Alert';
 
 const CssTextField = withStyles({
   root: {
@@ -85,6 +87,7 @@ export const Login: React.FC = () => {
     username: '',
     password: '',
   });
+  const { showAlert, hideAlert } = useActions();
 
   const history = useHistory();
 
@@ -94,88 +97,95 @@ export const Login: React.FC = () => {
 
   const classes = useStyles();
   return (
-    <Container className={classes.container} component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography className={classes.text} component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            axios
-              .post('http://localhost:4005/user/login', user, {
-                withCredentials: true,
-              })
-              .then((res) => {
-                const { success } = res.data;
-                if (!success) {
-                  throw new Error();
-                } else {
-                  history.push('/');
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-                alert('Login failed!');
-              });
-          }}
-          className={classes.form}
-          noValidate
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <CssTextField
-                onChange={onChange}
-                InputLabelProps={{
-                  className: classes.outlinedTextfield,
-                }}
-                variant="outlined"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <CssTextField
-                onChange={onChange}
-                InputLabelProps={{
-                  className: classes.outlinedTextfield,
-                }}
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            className={classes.submit}
+    <>
+      <Alert />
+      <Container className={classes.container} component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography className={classes.text} component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              axios
+                .post('http://localhost:4005/auth/login', user, {
+                  withCredentials: true,
+                })
+                .then((res) => {
+                  console.log(res);
+                  showAlert('Login successful!', 'success');
+                  setTimeout(() => {
+                    hideAlert();
+                    history.push('/');
+                  }, 1200);
+                })
+                .catch((error) => {
+                  console.log(error.response);
+                  showAlert('Login failed. Please try again!', 'error');
+                  setTimeout(() => {
+                    hideAlert();
+                  }, 3000);
+                });
+            }}
+            className={classes.form}
           >
-            Sign In
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link className={classes.link} href="/signup" variant="body2">
-                Don't have an account? Sign Up
-              </Link>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <CssTextField
+                  value={user.username}
+                  onChange={onChange}
+                  InputLabelProps={{
+                    className: classes.outlinedTextfield,
+                  }}
+                  variant="outlined"
+                  required={true}
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CssTextField
+                  value={user.password}
+                  onChange={onChange}
+                  InputLabelProps={{
+                    className: classes.outlinedTextfield,
+                  }}
+                  variant="outlined"
+                  required={true}
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link className={classes.link} href="/signup" variant="body2">
+                  Don't have an account? Sign Up
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Container>
+    </>
   );
 };

@@ -19,6 +19,11 @@ interface UserInDB {
 
 // USERS
 
+export async function getUserById(id: number) {
+  const currentUser = await sql`SELECT * from users WHERE id=${id}`;
+  return currentUser.map((c: UserInDB) => camelcaseKeys(c))[0];
+}
+
 export async function getUserByName(username: string) {
   const currentUser = await sql`SELECT * from users WHERE username=${username}`;
   return currentUser.map((c: UserInDB) => camelcaseKeys(c))[0];
@@ -66,5 +71,18 @@ export async function deleteExpiredSessions() {
 export async function deleteSessionByToken(token: string | undefined) {
   await sql`
     DELETE FROM sessions WHERE token = ${token};
+  `;
+}
+
+// PROJECTS TABLE
+
+export async function insertProject(userId: number) {
+  await sql`
+    INSERT INTO projects
+      (user_id)
+    VALUES
+      (${userId})
+    ON CONFLICT DO NOTHING
+    RETURNING *;
   `;
 }

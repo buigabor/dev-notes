@@ -11,6 +11,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
 import { useHistory } from 'react-router';
+import { useActions } from '../hooks/useActions';
+import { Alert } from './Alert';
 
 const CssTextField = withStyles({
   root: {
@@ -87,6 +89,7 @@ interface User {
 }
 
 export const SignUp: React.FC = () => {
+  const { showAlert, hideAlert } = useActions();
   const [user, setUser] = useState<User>({
     username: '',
     password: '',
@@ -101,102 +104,111 @@ export const SignUp: React.FC = () => {
   };
 
   return (
-    <Container className={classes.container} component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography className={classes.text} component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            axios
-              .post(
-                'http://localhost:4005/user/register',
-                { ...user },
-                { withCredentials: true },
-              )
-              .then((res) => {
-                if (res.status === 200) {
-                  alert('Registration successful');
-                  history.push('/');
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          }}
-          className={classes.form}
-          noValidate
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <CssTextField
-                onChange={onChange}
-                InputLabelProps={{
-                  className: classes.outlinedTextfield,
-                }}
-                variant="outlined"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <CssTextField
-                onChange={onChange}
-                InputLabelProps={{
-                  className: classes.outlinedTextfield,
-                }}
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <CssTextField
-                onChange={onChange}
-                InputLabelProps={{
-                  className: classes.outlinedTextfield,
-                }}
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            className={classes.submit}
+    <>
+      <Alert />
+      <Container className={classes.container} component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography className={classes.text} component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              axios
+                .post(
+                  'http://localhost:4005/auth/register',
+                  { ...user },
+                  { withCredentials: true },
+                )
+                .then((res) => {
+                  if (res.status === 200) {
+                    showAlert('Registration successful!', 'success');
+                    setTimeout(() => {
+                      hideAlert();
+                      history.push('/');
+                    }, 1200);
+                  }
+                })
+                .catch((error) => {
+                  const errorMessage = error.response.data.error;
+                  showAlert(errorMessage, 'error');
+                  setTimeout(() => {
+                    hideAlert();
+                  }, 3000);
+                });
+            }}
+            className={classes.form}
           >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link className={classes.link} href="/login" variant="body2">
-                Already have an account? Sign in
-              </Link>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <CssTextField
+                  onChange={onChange}
+                  InputLabelProps={{
+                    className: classes.outlinedTextfield,
+                  }}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CssTextField
+                  onChange={onChange}
+                  InputLabelProps={{
+                    className: classes.outlinedTextfield,
+                  }}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CssTextField
+                  onChange={onChange}
+                  InputLabelProps={{
+                    className: classes.outlinedTextfield,
+                  }}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              className={classes.submit}
+            >
+              Sign Up
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link className={classes.link} href="/login" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Container>
+    </>
   );
 };

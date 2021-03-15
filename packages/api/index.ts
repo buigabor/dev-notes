@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 // Route middleware
-app.use('/user', authRoute);
+app.use('/auth', authRoute);
 app.use('/cells', cellsRoute);
 
 // app.use((req, res, next) => {

@@ -31,6 +31,20 @@ export interface BundleCompleteAction {
   type: ActionType.BUNDLE_COMPLETE;
   payload: { cellId: string; bundle: { code: string; error: string } };
 }
+export interface ShowAlertAction {
+  type: ActionType.SHOW_ALERT;
+  payload: {
+    message: string;
+    alertType: 'success' | 'error';
+    displayMode: 'inline-block';
+  };
+}
+export interface HideAlertAction {
+  type: ActionType.HIDE_ALERT;
+  payload: {
+    displayMode: 'none';
+  };
+}
 
 export type Action =
   | MoveCellAction
@@ -38,4 +52,6 @@ export type Action =
   | UpdateCellAction
   | InsertCellAfterAction
   | BundleStartAction
-  | BundleCompleteAction;
+  | BundleCompleteAction
+  | ShowAlertAction
+  | HideAlertAction;

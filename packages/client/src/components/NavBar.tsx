@@ -58,6 +58,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const NavBar = () => {
   const classes = useStyles();
+  useEffect(() => {
+    axios.post('/');
+  }, []);
   return (
     <div>
       <AppBar className={classes.root} position="static">
