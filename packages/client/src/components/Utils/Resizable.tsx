@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react';
 import { ResizableBox, ResizableBoxProps } from 'react-resizable';
-import resizableBoxStyles from './styles/resizableBoxStyles';
+import resizableBoxStyles from '../styles/resizableBoxStyles';
 
 interface ResizableProps {
   direction: 'horizontal' | 'vertical' | 'vertical-sketch';

@@ -4,10 +4,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Login } from './components/Auth/Login';
+import { SignUp } from './components/Auth/SignUp';
 import { CellList } from './components/CellList';
-import { Login } from './components/Login';
 import { NavBar } from './components/NavBar';
-import { SignUp } from './components/SignUp';
 import { store } from './state';
 
 export const App = () => {

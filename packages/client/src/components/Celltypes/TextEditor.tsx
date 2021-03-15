@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import MDEditor from '@uiw/react-md-editor';
 import React, { useEffect, useRef, useState } from 'react';
-import { useActions } from '../hooks/useActions';
-import { Cell } from '../state';
-import textEditorStyles from './styles/textEditorStyles';
+import { useActions } from '../../hooks/useActions';
+import { Cell } from '../../state';
+import textEditorStyles from '../styles/textEditorStyles';
 
 interface TextEditorProps {
   cell: Cell;

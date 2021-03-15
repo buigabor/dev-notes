@@ -2,7 +2,7 @@
 import { css } from '@emotion/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { SketchField, Tools } from 'react-sketch';
-import { Resizable } from './Resizable';
+import { Resizable } from '../Utils/Resizable';
 import { SketchToolBox } from './SketchToolBox';
 
 const sketchStyles = css`

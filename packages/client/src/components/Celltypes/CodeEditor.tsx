@@ -5,8 +5,8 @@ import MonacoJSXHighlighter from 'monaco-jsx-highlighter';
 import prettier from 'prettier';
 import parser from 'prettier/parser-babel';
 import { useRef } from 'react';
-import { useActions } from '../hooks/useActions';
-import editorStyles from './styles/codeEditorStyles';
+import { useActions } from '../../hooks/useActions';
+import editorStyles from '../styles/codeEditorStyles';
 
 interface CodeEditorProps {
   cellId: string;

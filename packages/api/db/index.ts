@@ -34,10 +34,6 @@ export async function getUserByEmail(email: string) {
   return currentUser.map((c: UserInDB) => camelcaseKeys(c))[0];
 }
 
-export async function getUsers() {
-  console.log(await sql`SELECT * from users`);
-}
-
 export async function saveUser({ username, password, email }: UserInDB) {
   await sql`INSERT INTO users (username, password, email) VALUES(${username},${password}, ${email})`;
 }
@@ -76,13 +72,34 @@ export async function deleteSessionByToken(token: string | undefined) {
 
 // PROJECTS TABLE
 
-export async function insertProject(userId: number) {
+export async function insertProject(
+  userId: number,
+  title: string,
+  subtitle: string,
+  description: string,
+) {
+  await sql`
+    INSERT INTO projects
+      (user_id, title, subtitle, description)
+    VALUES
+      (${userId}, ${title}, ${subtitle}, ${description})
+    RETURNING *;
+  `;
+}
+
+export async function updateProject(
+  userId: number,
+  title: string,
+  subtitle: string,
+  description: string,
+  projectId: string,
+) {
   await sql`
     INSERT INTO projects
       (user_id)
     VALUES
       (${userId})
-    ON CONFLICT DO NOTHING
+    ON CONFLICT (name) DO UPDATE SET name=${title} WHERE user_id=${userId}
     RETURNING *;
   `;
 }

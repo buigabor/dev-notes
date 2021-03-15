@@ -11,8 +11,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
 import { useHistory } from 'react-router';
-import { useActions } from '../hooks/useActions';
-import { Alert } from './Alert';
+import { useActions } from '../../hooks/useActions';
+import { Alert } from '../Utils/Alert';
 
 const CssTextField = withStyles({
   root: {
@@ -82,27 +82,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface User {
-  username: string;
-  password: string;
-  email: string;
-}
-
-export const SignUp: React.FC = () => {
-  const { showAlert, hideAlert } = useActions();
-  const [user, setUser] = useState<User>({
+export const Login: React.FC = () => {
+  const [user, setUser] = useState({
     username: '',
     password: '',
-    email: '',
   });
+  const { showAlert, hideAlert } = useActions();
 
   const history = useHistory();
-  const classes = useStyles();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [e.target.name]: e.target.value } as any);
   };
 
+  const classes = useStyles();
   return (
     <>
       <Alert />
@@ -113,29 +106,28 @@ export const SignUp: React.FC = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography className={classes.text} component="h1" variant="h5">
-            Sign up
+            Sign in
           </Typography>
           <form
             onSubmit={(e) => {
               e.preventDefault();
               axios
-                .post(
-                  'http://localhost:4005/auth/register',
-                  { ...user },
-                  { withCredentials: true },
-                )
+                .post('http://localhost:4005/auth/login', user, {
+                  withCredentials: true,
+                })
                 .then((res) => {
-                  if (res.status === 200) {
-                    showAlert('Registration successful!', 'success');
+                  const { success } = res.data;
+                  if (success) {
+                    showAlert('Login successful!', 'success');
                     setTimeout(() => {
                       hideAlert();
-                      history.push('/');
+                      history.goBack();
                     }, 1200);
                   }
                 })
                 .catch((error) => {
-                  const errorMessage = error.response.data.error;
-                  showAlert(errorMessage, 'error');
+                  console.log(error.response);
+                  showAlert('Login failed. Please try again!', 'error');
                   setTimeout(() => {
                     hideAlert();
                   }, 3000);
@@ -146,12 +138,13 @@ export const SignUp: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <CssTextField
+                  value={user.username}
                   onChange={onChange}
                   InputLabelProps={{
                     className: classes.outlinedTextfield,
                   }}
                   variant="outlined"
-                  required
+                  required={true}
                   fullWidth
                   id="username"
                   label="Username"
@@ -161,27 +154,13 @@ export const SignUp: React.FC = () => {
               </Grid>
               <Grid item xs={12}>
                 <CssTextField
+                  value={user.password}
                   onChange={onChange}
                   InputLabelProps={{
                     className: classes.outlinedTextfield,
                   }}
                   variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <CssTextField
-                  onChange={onChange}
-                  InputLabelProps={{
-                    className: classes.outlinedTextfield,
-                  }}
-                  variant="outlined"
-                  required
+                  required={true}
                   fullWidth
                   name="password"
                   label="Password"
@@ -197,12 +176,12 @@ export const SignUp: React.FC = () => {
               variant="contained"
               className={classes.submit}
             >
-              Sign Up
+              Sign In
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link className={classes.link} href="/login" variant="body2">
-                  Already have an account? Sign in
+                <Link className={classes.link} href="/signup" variant="body2">
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>

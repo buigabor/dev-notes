@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
-import { useActions } from '../hooks/useActions';
-import actionBarStyles from './styles/actionBarStyles';
+import { useActions } from '../../hooks/useActions';
+import actionBarStyles from '../styles/actionBarStyles';
 
 interface ActionBarProps {
   id: string;

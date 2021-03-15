@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import React from 'react';
-import { useActions } from '../hooks/useActions';
+import { useActions } from '../../hooks/useActions';
 
 interface AddCellProps {
   nextCellId: string | null;

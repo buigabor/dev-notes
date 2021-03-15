@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import React from 'react';
-import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 
 const alertStyles = css`
   position: fixed;
@@ -25,7 +25,6 @@ export const Alert: React.FC = () => {
   const alert = useTypedSelector((state) => {
     return state.alerts;
   });
-  console.log(alert);
 
   return (
     <div

@@ -2,11 +2,11 @@
 import { AnimateSharedLayout, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { Cell } from '../state';
-import { ActionBar } from './ActionBar';
-import CodeCell from './CodeCell';
-import { Sketch } from './Sketch';
+import CodeCell from './Celltypes/CodeCell';
+import { Sketch } from './Celltypes/Sketch';
+import { TextEditor } from './Celltypes/TextEditor';
 import cellListItemStyles from './styles/cellListItemStyles';
-import { TextEditor } from './TextEditor';
+import { ActionBar } from './Utils/ActionBar';
 
 interface CellListItemProps {
   cell: Cell;

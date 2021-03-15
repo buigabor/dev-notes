@@ -3,13 +3,13 @@ import { css } from '@emotion/react';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
-import { useActions } from '../hooks/useActions';
-import { useCumulativeCode } from '../hooks/useCumulativeCode';
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import { Cell } from '../state';
+import { useActions } from '../../hooks/useActions';
+import { useCumulativeCode } from '../../hooks/useCumulativeCode';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { Cell } from '../../state';
+import { Resizable } from '../Utils/Resizable';
 import CodeEditor from './CodeEditor';
 import { Preview } from './Preview';
-import { Resizable } from './Resizable';
 
 interface CodeCellProps {
   cell: Cell;

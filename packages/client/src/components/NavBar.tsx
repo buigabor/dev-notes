@@ -1,9 +1,12 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import { Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -16,6 +19,17 @@ const useStyles = makeStyles((theme: Theme) =>
     logoText: {
       textDecoration: 'none',
       '& p': {
+        color: '#fff',
+        fontSize: '1.5rem',
+        fontWeight: 800,
+
+        fontFamily: 'Architects Daughter',
+      },
+    },
+    username: {
+      marginLeft: 'auto',
+      cursor: 'pointer',
+      '& span': {
         color: '#fff',
         fontSize: '1.5rem',
         fontWeight: 800,
@@ -56,11 +70,52 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const dropdownStyles = css`
+  position: absolute;
+  z-index: 50;
+  width: 9rem;
+  top: 3.5rem;
+  right: 1rem;
+  background-color: #fff;
+  color: rgb(66, 66, 66);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 5px;
+  .nav-dropdown__row:not(:first-of-type) {
+    border-top: 1px solid gray;
+  }
+  .nav-dropdown__row {
+    outline: none;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0.8rem 0 0.8rem 1rem;
+    span {
+      width: 100%;
+    }
+    svg {
+      margin: 0;
+      margin-right: 8px;
+    }
+  }
+  .fas {
+    margin-right: 10px;
+  }
+`;
+
 export const NavBar = () => {
   const classes = useStyles();
+  const [user, setUser] = useState({ username: '', userId: null });
+  const [profileClicked, setProfileClicked] = useState<boolean>(false);
   useEffect(() => {
-    axios.post('/');
+    axios
+      .get('http://localhost:4005/users', { withCredentials: true })
+      .then((res) => {
+        const { username, userId } = res.data;
+        setUser({ username, userId });
+      })
+      .catch((error) => console.log(error));
   }, []);
+  console.log(user);
+
   return (
     <div>
       <AppBar className={classes.root} position="static">
@@ -68,20 +123,70 @@ export const NavBar = () => {
           <Link className={classes.logoText} to="/">
             <Typography>DEVNOTES</Typography>
           </Link>
-          <div className={classes.buttonWrapper}>
-            <Link to="/signup">
-              <Button className={classes.signUpBtn} color="inherit">
-                SIGN UP
-              </Button>
-            </Link>
-            <Link to="/login">
-              <Button className={classes.loginBtn} color="inherit">
-                LOGIN
-              </Button>
-            </Link>
-          </div>
+          {user.username ? (
+            <div
+              onClick={() => {
+                setProfileClicked(!profileClicked);
+              }}
+              className={classes.username}
+            >
+              <span>{user.username}</span>
+            </div>
+          ) : (
+            <div className={classes.buttonWrapper}>
+              <Link to="/signup">
+                <Button className={classes.signUpBtn} color="inherit">
+                  SIGN UP
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button className={classes.loginBtn} color="inherit">
+                  LOGIN
+                </Button>
+              </Link>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
+      <div
+        css={dropdownStyles}
+        style={{ display: profileClicked ? 'inline-block' : 'none' }}
+      >
+        <div
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'l') {
+              setProfileClicked(false);
+            }
+          }}
+          className="nav-dropdown__row"
+          onClick={() => {
+            setProfileClicked(false);
+          }}
+        >
+          <span>
+            <i className="fas fa-user"></i>Profile
+          </span>
+        </div>
+        <div
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'l') {
+              setProfileClicked(false);
+            }
+          }}
+          className="nav-dropdown__row"
+          onClick={() => {
+            setProfileClicked(false);
+          }}
+        >
+          <span>
+            <i className="fas fa-sign-out-alt"></i>Logout
+          </span>
+        </div>
+      </div>
     </div>
   );
 };

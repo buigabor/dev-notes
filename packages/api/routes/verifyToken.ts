@@ -1,6 +1,6 @@
 import cookie from 'cookie';
 import express from 'express';
-import { getSessionByToken } from '../db';
+import { deleteExpiredSessions, getSessionByToken, getUserById } from '../db';
 
 export const verify = async (
   req: express.Request,
@@ -8,18 +8,25 @@ export const verify = async (
   next: express.NextFunction,
 ) => {
   const token = cookie.parse(req.headers.cookie || '');
-  console.log(token);
-
   if (!token.token) {
-    return res.status(401).json({ success: false, error: 'Access Denied' });
+    res
+      .status(401)
+      .json({ success: false, error: 'Access Denied. Please login.' });
   }
   try {
+    await deleteExpiredSessions();
     const session = await getSessionByToken(token.token);
     if (!session) {
-      return res.status(400).json({ success: false, error: 'Session expired' });
+      res.status(408).json({
+        success: false,
+        error: 'Session expired. Please login again.',
+      });
     }
-    return res.status(200).json({ success: true, error: null });
+    const user = await getUserById(session.userId);
+
+    req.headers.userId = user.id;
+    next();
   } catch (error) {
-    return res.status(400).json({ success: false, error: 'Invalid token' });
+    res.status(400).json({ success: false, error: 'Invalid token' });
   }
 };

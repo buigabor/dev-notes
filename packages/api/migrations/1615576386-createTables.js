@@ -8,6 +8,9 @@ exports.up = async (sql) => {
 
   await sql`CREATE TABLE projects (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title VARCHAR(70) NOT NULL,
+    subtitle VARCHAR(70),
+    description TEXT,
 		user_id INT REFERENCES users (id)
 	)`;
 
@@ -27,7 +30,7 @@ exports.up = async (sql) => {
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 		token VARCHAR(50),
 		expiry_timestamp TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '72 hours',
-		user_id INT REFERENCES users(id)
+		user_id INT REFERENCES users(id) ON DELETE CASCADE
 	)`;
 };
 

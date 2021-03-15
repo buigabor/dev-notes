@@ -70,7 +70,7 @@ router.post('/register', async (req, res) => {
       'Set-Cookie',
       cookie.serialize('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== 'development',
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge,
         path: '/',
@@ -97,7 +97,6 @@ router.post('/login', async (req, res) => {
     const maxAge = 60 * 60 * 72; // 24 hours
     const token = generateToken();
     await insertSession(token, currentUser.id);
-    console.log(process.env.NODE_ENV);
 
     res.setHeader(
       'Set-Cookie',
@@ -109,7 +108,6 @@ router.post('/login', async (req, res) => {
         path: '/',
       }),
     );
-    // res.header('token', token);
     await deleteExpiredSessions();
     return res.status(200).json({ success: true });
   } catch (error) {

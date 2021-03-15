@@ -1,13 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import { useActions } from '../hooks/useActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
-import { AddCell } from './AddCell';
-import { Alert } from './Alert';
+import { AddProjectLayout } from './AddProjectLayout';
 import { CellListItem } from './CellListItem';
 import cellListStyles from './styles/cellListStyles';
+import { AddCell } from './Utils/AddCell';
+import { Alert } from './Utils/Alert';
 
 const actionButtonStyles = css`
   color: #fff;
@@ -33,6 +35,7 @@ const actionButtonsWrapperStyles = css`
   justify-content: flex-end;
   gap: 15px;
   padding-right: 1rem;
+  margin-bottom: 45px;
 
   .delete-all-btn {
     ${actionButtonStyles}
@@ -60,7 +63,10 @@ const actionButtonsWrapperStyles = css`
 `;
 
 export const CellList: React.FC = () => {
+  const [showOverlay, setShowOverlay] = useState(false);
   const { showAlert, hideAlert } = useActions();
+  const history = useHistory();
+
   const orderedCellList = useTypedSelector(({ cells: { order, data } }) => {
     return order.map((cellId: string) => {
       return data[cellId];
@@ -76,20 +82,23 @@ export const CellList: React.FC = () => {
   return (
     <>
       <Alert />
+      <AddProjectLayout
+        setShowOverlay={setShowOverlay}
+        showOverlay={showOverlay}
+      />
       <div css={actionButtonsWrapperStyles}>
+        <button className="save-btn">
+          <i className="fas fa-save"></i>
+          Save
+        </button>
         <button
-          className="save-btn"
           onClick={() => {
             axios
               .post('http://localhost:4005/cells', '', {
                 withCredentials: true,
               })
               .then((res) => {
-                console.log(res);
-                showAlert('Cells Saved!', 'success');
-                setTimeout(() => {
-                  hideAlert();
-                }, 1000);
+                setShowOverlay(true);
               })
               .catch((error) => {
                 const errorMessage = error.response.data.error;
@@ -97,12 +106,17 @@ export const CellList: React.FC = () => {
                 setTimeout(() => {
                   hideAlert();
                 }, 3000);
-                console.log(error.response);
+                if (error.response.status === 408) {
+                  history.push('/login');
+                }
               });
           }}
+          className="load-btn"
         >
-          <i className="fas fa-save"></i>
-          Save
+          <i className="fas fa-file-upload"></i>Create
+        </button>
+        <button className="load-btn">
+          <i className="fas fa-file-upload"></i>Edit
         </button>
         <button className="load-btn">
           <i className="fas fa-file-upload"></i>Load
