@@ -8,11 +8,12 @@ import {
   Direction,
   HideAlertAction,
   InsertCellAfterAction,
+  LoadCellsAction,
   MoveCellAction,
   ShowAlertAction,
   UpdateCellAction,
 } from '../actions';
-import { CellTypes } from '../cell';
+import { Cell, CellTypes } from '../cell';
 import { ProjectState } from '../reducers/projectsReducer';
 
 export const showAlert = (
@@ -29,6 +30,16 @@ export const hideAlert = (): HideAlertAction => {
   return {
     type: ActionType.HIDE_ALERT,
     payload: { displayMode: 'none' },
+  };
+};
+
+export const loadCells = (
+  order: string[],
+  data: { [key: string]: Cell },
+): LoadCellsAction => {
+  return {
+    type: ActionType.LOAD_CELLS,
+    payload: { order, data },
   };
 };
 

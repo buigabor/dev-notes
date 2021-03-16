@@ -22,7 +22,7 @@ exports.up = async (sql) => {
   await sql`CREATE TABLE cellsData (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 		data TEXT,
-    orderOfCells TEXT,
+    order_of_cells TEXT,
 		project_id INT REFERENCES projects(id),
 		cell_type_id INT REFERENCES cell_types(id)
 	)`;

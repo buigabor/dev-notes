@@ -2,6 +2,14 @@ import { ActionType } from '../action-types';
 import { Cell, CellTypes } from '../cell';
 
 export type Direction = 'up' | 'down';
+
+export interface LoadCellsAction {
+  type: ActionType.LOAD_CELLS;
+  payload: {
+    order: string[];
+    data: { [key: string]: Cell };
+  };
+}
 export interface MoveCellAction {
   type: ActionType.MOVE_CELL;
   payload: {
@@ -84,6 +92,7 @@ export interface SaveProjectAction {
 }
 
 export type Action =
+  | LoadCellsAction
   | MoveCellAction
   | DeleteCellAction
   | UpdateCellAction

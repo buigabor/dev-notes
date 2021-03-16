@@ -93,7 +93,7 @@ export const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
         <Resizable direction="horizontal">
           <CodeEditor
             cellId={cell.id}
-            initialValue=""
+            initialValue={cell.content || ''}
             onChange={(value) => {
               updateCell(cell.id, value);
             }}

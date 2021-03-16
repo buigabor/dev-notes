@@ -9,7 +9,6 @@ export const verify = async (
 ) => {
   try {
     const token = cookie.parse(req.headers.cookie || '');
-    console.log(token);
 
     if (!token.token) {
       return res

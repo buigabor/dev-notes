@@ -8,7 +8,7 @@ interface Cell {
   id: number;
   content: string;
   projectId: number;
-  cellType: string;
+  cellTypeId: string;
 }
 interface Project {
   id: number;
@@ -127,7 +127,15 @@ export async function updateProject(
   `;
 }
 
-// CELLS
+// CELLS DATA
+
+export async function getCellDataByProjectId(projectId: number) {
+  const project = await sql`
+  SELECT * from cellsData WHERE project_id=${projectId}
+  `;
+
+  return project.map((p: Project) => camelcaseKeys(p))[0];
+}
 
 export async function saveCellData(
   projectId: number,
@@ -136,7 +144,7 @@ export async function saveCellData(
 ) {
   const cell = await sql`
     INSERT INTO cellsData
-      (project_id, data, orderOfCells)
+      (project_id, data, order_of_cells)
     VALUES
       (${projectId}, ${data},${order})
     RETURNING *;

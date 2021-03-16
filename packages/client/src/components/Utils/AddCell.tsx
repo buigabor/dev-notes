@@ -76,7 +76,7 @@ export const AddCell: React.FC<AddCellProps> = ({
           <span>
             <i className="fas fa-plus-circle"></i>
           </span>
-          <span>Code</span>
+          <span style={{ fontFamily: 'Architects Daughter' }}>CODE</span>
         </button>
         <button
           className="add-button"
@@ -87,7 +87,7 @@ export const AddCell: React.FC<AddCellProps> = ({
           <span>
             <i className="fas fa-plus-circle"></i>
           </span>
-          <span>Text</span>
+          <span style={{ fontFamily: 'Architects Daughter' }}>TEXT</span>
         </button>
         <button
           className="add-button"
@@ -98,7 +98,7 @@ export const AddCell: React.FC<AddCellProps> = ({
           <span>
             <i className="fas fa-plus-circle"></i>
           </span>
-          <span>Sketch</span>
+          <span style={{ fontFamily: 'Architects Daughter' }}>SKETCH</span>
         </button>
       </div>
       <div className="divider"></div>

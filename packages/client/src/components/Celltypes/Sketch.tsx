@@ -56,6 +56,7 @@ export const Sketch: React.FC = () => {
               setCanUndo(sketchRef.current.canUndo());
               setCanRedo(sketchRef.current.canRedo());
             }}
+            backgroundColor={'white'}
             ref={sketchRef}
             css={sketchStyles}
             style={{ border: '1px solid gray' }}

@@ -5,7 +5,10 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
 import React from 'react';
+import { useActions } from '../../hooks/useActions';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Project } from '../../state/reducers/projectsReducer';
 
 const useStyles = makeStyles({
@@ -33,28 +36,45 @@ interface ProjectCardProps {
   project: Project;
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({
-  project: { title, subtitle, description },
-}) => {
+export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  const { loadCells } = useActions();
+  const cellsState = useTypedSelector((state) => state.cells);
+  console.log(cellsState);
+
   const classes = useStyles();
   return (
     <Card className={classes.root}>
       <CardContent>
-        <Typography className={classes.title}>{title}</Typography>
+        <Typography className={classes.title}>{project.title}</Typography>
         <Typography
           className={classes.subtitle}
           variant="body2"
           component="p"
           color="textSecondary"
         >
-          {subtitle}
+          {project.subtitle}
         </Typography>
         <Typography variant="body2" component="p">
-          {description}
+          {project.description}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button className={classes.loadBtn} size="small">
+        <Button
+          onClick={async () => {
+            const res = await axios.post(
+              'http://localhost:4005/cells',
+              { projectId: project.id },
+              {
+                withCredentials: true,
+              },
+            );
+            const data = res.data.data.cellsData;
+            const order = res.data.data.order;
+            loadCells(order, data);
+          }}
+          className={classes.loadBtn}
+          size="small"
+        >
           Load Project
         </Button>
       </CardActions>

@@ -17,11 +17,11 @@ const actionButtonStyles = css`
   color: #fff;
   border-radius: 4px;
   background-color: #f5534f;
-  font-weight: 500;
+  font-weight: 700;
   border: none;
   padding: 0.65rem 0.7rem;
-  font-size: 0.85em;
-  max-width: 120px;
+  font-size: 0.9em;
+  max-width: 135px;
   cursor: pointer;
   text-transform: uppercase;
   outline: none;
@@ -121,7 +121,7 @@ export const CellList: React.FC = () => {
       <div css={actionButtonsWrapperStyles}>
         <button onClick={() => {}} className="save-btn">
           <i className="fas fa-save"></i>
-          Save
+          <span style={{ fontFamily: 'Architects Daughter' }}>Save</span>
         </button>
         <button
           onClick={async () => {
@@ -132,10 +132,12 @@ export const CellList: React.FC = () => {
           }}
           className="load-btn"
         >
-          <i className="fas fa-file-upload"></i>Create
+          <i className="fas fa-folder-plus"></i>{' '}
+          <span style={{ fontFamily: 'Architects Daughter' }}>Create</span>
         </button>
         <button className="load-btn">
-          <i className="fas fa-file-upload"></i>Edit
+          <i className="fas fa-edit"></i>{' '}
+          <span style={{ fontFamily: 'Architects Daughter' }}>Edit</span>
         </button>
         <button
           className="load-btn"
@@ -154,10 +156,12 @@ export const CellList: React.FC = () => {
             fetchAllProjects();
           }}
         >
-          <i className="fas fa-file-upload"></i>Load
+          <i className="fas fa-file-upload"></i>{' '}
+          <span style={{ fontFamily: 'Architects Daughter' }}>Load</span>
         </button>
         <button className="delete-all-btn">
-          <i className="fas fa-trash"></i>Delete All
+          <i className="fas fa-trash"></i>{' '}
+          <span style={{ fontFamily: 'Architects Daughter' }}>Delete All</span>
         </button>
       </div>
       <div css={cellListStyles}>

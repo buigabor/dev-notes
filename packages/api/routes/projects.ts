@@ -8,7 +8,6 @@ router.get('/', verify, async (req, res) => {
   try {
     const userId = req.headers.userId;
     const projects = await getAllProjectsByUserId(Number(userId));
-    console.log(projects);
     res.status(200).json({ success: true, data: { projects } });
   } catch (error) {
     res.status(400).json(error);
