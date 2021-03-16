@@ -1,8 +1,19 @@
 import express from 'express';
-import { insertProject } from '../db';
+import { getAllProjectsByUserId, insertProject } from '../db';
 import { verify } from './verifyToken';
 
 const router = express.Router();
+
+router.get('/', verify, async (req, res) => {
+  try {
+    const userId = req.headers.userId;
+    const projects = await getAllProjectsByUserId(Number(userId));
+    console.log(projects);
+    res.status(200).json({ success: true, data: { projects } });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
 
 router.post('/create', verify, async (req, res) => {
   try {

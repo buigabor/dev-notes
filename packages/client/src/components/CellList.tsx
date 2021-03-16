@@ -5,8 +5,10 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import { useActions } from '../hooks/useActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import { Project } from '../state/reducers/projectsReducer';
 import { CellListItem } from './CellListItem';
 import { AddProjectLayout } from './Layouts/AddProjectLayout';
+import { LoadProjectLayout } from './Layouts/LoadProjectLayout';
 import cellListStyles from './styles/cellListStyles';
 import { AddCell } from './Utils/AddCell';
 import { Alert } from './Utils/Alert';
@@ -63,7 +65,10 @@ const actionButtonsWrapperStyles = css`
 `;
 
 export const CellList: React.FC = () => {
-  const [showOverlay, setShowOverlay] = useState(false);
+  const [showAddOverlay, setShowAddOverlay] = useState(false);
+  const [showLoadOverlay, setShowLoadOverlay] = useState(false);
+  const [projects, setProjects] = useState<Project[] | null>(null);
+
   const { showAlert, hideAlert } = useActions();
   const history = useHistory();
   const project = useTypedSelector((state) => state.projects);
@@ -75,6 +80,26 @@ export const CellList: React.FC = () => {
     });
   });
 
+  const checkIfLoggedIn = async () => {
+    return await axios
+      .get('http://localhost:4005/sessions', {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.status === 200) return true;
+      })
+      .catch((error) => {
+        const errorMessage = error.response.data.error;
+        showAlert(errorMessage, 'error');
+        setTimeout(() => {
+          hideAlert();
+        }, 3000);
+        if (error.response.status === 408) {
+          history.push('/login');
+        }
+      });
+  };
+
   const renderedCells = orderedCellList.map((cell) => (
     <React.Fragment key={cell.id}>
       <CellListItem cell={cell} />
@@ -85,8 +110,13 @@ export const CellList: React.FC = () => {
     <>
       <Alert />
       <AddProjectLayout
-        setShowOverlay={setShowOverlay}
-        showOverlay={showOverlay}
+        setShowAddOverlay={setShowAddOverlay}
+        showAddOverlay={showAddOverlay}
+      />
+      <LoadProjectLayout
+        projects={projects}
+        showLoadOverlay={showLoadOverlay}
+        setShowLoadOverlay={setShowLoadOverlay}
       />
       <div css={actionButtonsWrapperStyles}>
         <button onClick={() => {}} className="save-btn">
@@ -94,24 +124,11 @@ export const CellList: React.FC = () => {
           Save
         </button>
         <button
-          onClick={() => {
-            axios
-              .get('http://localhost:4005/sessions', {
-                withCredentials: true,
-              })
-              .then((res) => {
-                setShowOverlay(true);
-              })
-              .catch((error) => {
-                const errorMessage = error.response.data.error;
-                showAlert(errorMessage, 'error');
-                setTimeout(() => {
-                  hideAlert();
-                }, 3000);
-                if (error.response.status === 408) {
-                  history.push('/login');
-                }
-              });
+          onClick={async () => {
+            const loggedIn = await checkIfLoggedIn();
+            if (loggedIn) {
+              return setShowAddOverlay(true);
+            }
           }}
           className="load-btn"
         >
@@ -120,7 +137,23 @@ export const CellList: React.FC = () => {
         <button className="load-btn">
           <i className="fas fa-file-upload"></i>Edit
         </button>
-        <button className="load-btn">
+        <button
+          className="load-btn"
+          onClick={async () => {
+            const loggedIn = await checkIfLoggedIn();
+            if (loggedIn) {
+              setShowLoadOverlay(true);
+            }
+            let fetchAllProjects = async () => {
+              const res = await axios.get('http://localhost:4005/projects', {
+                withCredentials: true,
+              });
+              const projects = res.data.data.projects;
+              setProjects(projects);
+            };
+            fetchAllProjects();
+          }}
+        >
           <i className="fas fa-file-upload"></i>Load
         </button>
         <button className="delete-all-btn">

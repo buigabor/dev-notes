@@ -70,13 +70,13 @@ const addProjectStyles = css`
 `;
 
 interface AddProjectLayoutProps {
-  showOverlay: boolean;
-  setShowOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+  showAddOverlay: boolean;
+  setShowAddOverlay: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
-  showOverlay,
-  setShowOverlay,
+  showAddOverlay: showOverlay,
+  setShowAddOverlay,
 }) => {
   const { showAlert, hideAlert, createProject } = useActions();
   const [project, setProject] = useState({
@@ -87,7 +87,6 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
   const history = useHistory();
   const cellsState = useTypedSelector((state) => state.cells);
   const projectState = useTypedSelector((state) => state.projects);
-  console.log(projectState);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProject({ ...project, [e.target.name]: e.target.value } as any);
@@ -100,14 +99,14 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
       css={addProjectStyles}
       onClick={(e) => {
         if ((e.target as HTMLDivElement).classList.contains('overlay')) {
-          setShowOverlay(false);
+          setShowAddOverlay(false);
         }
       }}
     >
       <div className="add-project-wrapper">
         <i
           onClick={() => {
-            setShowOverlay(false);
+            setShowAddOverlay(false);
           }}
           className="fas fa-times"
         ></i>
@@ -140,28 +139,10 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
               setTimeout(() => {
                 hideAlert();
               }, 1000);
-              setShowOverlay(false);
+              setShowAddOverlay(false);
             } catch (error) {
               console.log(error);
             }
-            // axios
-            //   .post(
-            //     'http://localhost:4005/cells/save',
-            //     { ...cellsState, projectId: projectState.id },
-            //     {
-            //       withCredentials: true,
-            //     },
-            //   )
-            //   .then((res) => {
-            //     showAlert('Project created!', 'success');
-            //     setTimeout(() => {
-            //       hideAlert();
-            //     }, 1000);
-            //     setShowOverlay(false);
-            //   })
-            //   .catch((error) => {
-            //     console.log(error);
-            //   });
           }}
           autoComplete="off"
         >
@@ -188,7 +169,6 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
             label="Project description"
             multiline
             rows={4}
-            defaultValue="Default Value"
             variant="filled"
             name="description"
           />

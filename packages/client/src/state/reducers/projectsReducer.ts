@@ -3,6 +3,8 @@ import { ActionType } from '../action-types';
 import { Action } from '../actions';
 
 export interface Project {
+  userId?: number | null;
+  id?: number | null;
   title: string;
   subtitle: string;
   description: string;

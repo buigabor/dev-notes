@@ -85,6 +85,14 @@ export async function deleteSessionByToken(token: string | undefined) {
 
 // PROJECTS TABLE
 
+export async function getAllProjectsByUserId(userId: number) {
+  const projects = await sql`
+  SELECT * from projects WHERE user_id=${userId}
+  `;
+
+  return projects.map((p: Project) => camelcaseKeys(p));
+}
+
 export async function insertProject(
   userId: number,
   title: string,
