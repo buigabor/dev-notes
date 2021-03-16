@@ -19,9 +19,10 @@ exports.up = async (sql) => {
 		name VARCHAR (20)
 	)`;
 
-  await sql`CREATE TABLE cells (
+  await sql`CREATE TABLE cellsData (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-		content TEXT,
+		data TEXT,
+    orderOfCells TEXT,
 		project_id INT REFERENCES projects(id),
 		cell_type_id INT REFERENCES cell_types(id)
 	)`;
@@ -36,7 +37,7 @@ exports.up = async (sql) => {
 
 exports.down = async (sql) => {
   await sql`DROP TABLE IF EXISTS sessions CASCADE`;
-  await sql`DROP TABLE IF EXISTS cells CASCADE`;
+  await sql`DROP TABLE IF EXISTS cellsData CASCADE`;
   await sql`DROP TABLE IF EXISTS cell_types CASCADE`;
   await sql`DROP TABLE IF EXISTS projects CASCADE`;
   await sql`DROP TABLE IF EXISTS users CASCADE`;

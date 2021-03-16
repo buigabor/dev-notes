@@ -4,8 +4,8 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
 import { useHistory } from 'react-router';
-import { useActions } from '../hooks/useActions';
-import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useActions } from '../../hooks/useActions';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 
 const addProjectStyles = css`
   position: fixed;
@@ -78,14 +78,16 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
   showOverlay,
   setShowOverlay,
 }) => {
-  const { showAlert, hideAlert } = useActions();
+  const { showAlert, hideAlert, createProject } = useActions();
   const [project, setProject] = useState({
     title: '',
     subtitle: '',
     description: '',
   });
   const history = useHistory();
-  const cells = useTypedSelector((state) => state.cells);
+  const cellsState = useTypedSelector((state) => state.cells);
+  const projectState = useTypedSelector((state) => state.projects);
+  console.log(projectState);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProject({ ...project, [e.target.name]: e.target.value } as any);
@@ -111,35 +113,55 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
         ></i>
         <h1>Project Details</h1>
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            axios
-              .post(
+
+            try {
+              const res = await axios.post(
                 'http://localhost:4005/projects/create',
-                { ...project },
+                project,
                 {
                   withCredentials: true,
                 },
-              )
-              .then((res) => {
-                console.log(res);
-                showAlert('Cells Saved!', 'success');
-                setTimeout(() => {
-                  hideAlert();
-                }, 1000);
-                setShowOverlay(false);
-              })
-              .catch((error) => {
-                const errorMessage = error.response.data.error;
-                showAlert(errorMessage, 'error');
-                setTimeout(() => {
-                  hideAlert();
-                }, 3000);
-                if (error.response.status === 408) {
-                  history.push('/login');
-                }
-                console.log(error.response);
-              });
+              );
+              const projectCreated = res.data.data.project;
+              createProject(projectCreated);
+              setTimeout(() => {}, 100);
+
+              axios.post(
+                'http://localhost:4005/cells/save',
+                { ...cellsState, projectId: projectCreated.id },
+                {
+                  withCredentials: true,
+                },
+              );
+
+              showAlert('Project created!', 'success');
+              setTimeout(() => {
+                hideAlert();
+              }, 1000);
+              setShowOverlay(false);
+            } catch (error) {
+              console.log(error);
+            }
+            // axios
+            //   .post(
+            //     'http://localhost:4005/cells/save',
+            //     { ...cellsState, projectId: projectState.id },
+            //     {
+            //       withCredentials: true,
+            //     },
+            //   )
+            //   .then((res) => {
+            //     showAlert('Project created!', 'success');
+            //     setTimeout(() => {
+            //       hideAlert();
+            //     }, 1000);
+            //     setShowOverlay(false);
+            //   })
+            //   .catch((error) => {
+            //     console.log(error);
+            //   });
           }}
           autoComplete="off"
         >

@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import { useActions } from '../hooks/useActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
-import { AddProjectLayout } from './AddProjectLayout';
 import { CellListItem } from './CellListItem';
+import { AddProjectLayout } from './Layouts/AddProjectLayout';
 import cellListStyles from './styles/cellListStyles';
 import { AddCell } from './Utils/AddCell';
 import { Alert } from './Utils/Alert';
@@ -66,6 +66,8 @@ export const CellList: React.FC = () => {
   const [showOverlay, setShowOverlay] = useState(false);
   const { showAlert, hideAlert } = useActions();
   const history = useHistory();
+  const project = useTypedSelector((state) => state.projects);
+  const cells = useTypedSelector((state) => state.cells);
 
   const orderedCellList = useTypedSelector(({ cells: { order, data } }) => {
     return order.map((cellId: string) => {
@@ -87,14 +89,14 @@ export const CellList: React.FC = () => {
         showOverlay={showOverlay}
       />
       <div css={actionButtonsWrapperStyles}>
-        <button className="save-btn">
+        <button onClick={() => {}} className="save-btn">
           <i className="fas fa-save"></i>
           Save
         </button>
         <button
           onClick={() => {
             axios
-              .post('http://localhost:4005/cells', '', {
+              .get('http://localhost:4005/sessions', {
                 withCredentials: true,
               })
               .then((res) => {

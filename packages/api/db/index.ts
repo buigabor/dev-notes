@@ -4,6 +4,19 @@ require('dotenv').config();
 const postgres = require('postgres');
 const sql = postgres();
 
+interface Cell {
+  id: number;
+  content: string;
+  projectId: number;
+  cellType: string;
+}
+interface Project {
+  id: number;
+  userId: number;
+  title: string;
+  subtitle: string;
+  description: string;
+}
 interface Session {
   id: number;
   token: string;
@@ -78,13 +91,15 @@ export async function insertProject(
   subtitle: string,
   description: string,
 ) {
-  await sql`
+  const project = await sql`
     INSERT INTO projects
       (user_id, title, subtitle, description)
     VALUES
       (${userId}, ${title}, ${subtitle}, ${description})
     RETURNING *;
   `;
+
+  return project.map((p: Project) => camelcaseKeys(p))[0];
 }
 
 export async function updateProject(
@@ -102,4 +117,22 @@ export async function updateProject(
     ON CONFLICT (name) DO UPDATE SET name=${title} WHERE user_id=${userId}
     RETURNING *;
   `;
+}
+
+// CELLS
+
+export async function saveCellData(
+  projectId: number,
+  data: string,
+  order: string,
+) {
+  const cell = await sql`
+    INSERT INTO cellsData
+      (project_id, data, orderOfCells)
+    VALUES
+      (${projectId}, ${data},${order})
+    RETURNING *;
+  `;
+
+  return cell.map((c: Cell) => camelcaseKeys(c))[0];
 }

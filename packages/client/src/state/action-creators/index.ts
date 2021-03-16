@@ -3,6 +3,7 @@ import bundlerHandler from '../../bundler';
 import { ActionType } from '../action-types';
 import {
   Action,
+  AddProjectAction,
   DeleteCellAction,
   Direction,
   HideAlertAction,
@@ -12,6 +13,7 @@ import {
   UpdateCellAction,
 } from '../actions';
 import { CellTypes } from '../cell';
+import { ProjectState } from '../reducers/projectsReducer';
 
 export const showAlert = (
   message: string,
@@ -69,5 +71,13 @@ export const createBundle = (cellId: string, input: string) => {
       type: ActionType.BUNDLE_COMPLETE,
       payload: { cellId, bundle: { code: result.code, error: result.error } },
     });
+  };
+};
+
+export const createProject = (project: ProjectState): AddProjectAction => {
+  const { id, title, subtitle, description, userId } = project;
+  return {
+    type: ActionType.ADD_PROJECT,
+    payload: { id, title, subtitle, description, userId },
   };
 };

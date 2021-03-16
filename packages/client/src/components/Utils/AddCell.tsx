@@ -2,6 +2,7 @@
 import { css } from '@emotion/react';
 import React from 'react';
 import { useActions } from '../../hooks/useActions';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 
 interface AddCellProps {
   nextCellId: string | null;
@@ -61,6 +62,8 @@ export const AddCell: React.FC<AddCellProps> = ({
   forceVisible,
 }) => {
   const { insertCellAfter } = useActions();
+
+  const project = useTypedSelector((state) => state.projects);
   return (
     <div className={forceVisible ? 'force-visible' : ''} css={addCellStyles}>
       <div className="add-buttons-wrapper">

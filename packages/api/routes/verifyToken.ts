@@ -21,11 +21,12 @@ export const verify = async (
         success: false,
         error: 'Session expired. Please login again.',
       });
-    }
-    const user = await getUserById(session.userId);
+    } else {
+      const user = await getUserById(session.userId);
 
-    req.headers.userId = user.id;
-    next();
+      req.headers.userId = user.id;
+      next();
+    }
   } catch (error) {
     res.status(400).json({ success: false, error: 'Invalid token' });
   }

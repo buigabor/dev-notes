@@ -7,4 +7,8 @@ export enum ActionType {
   BUNDLE_COMPLETE = 'bundle_complete',
   SHOW_ALERT = 'show_alert',
   HIDE_ALERT = 'hide_alert',
+  ADD_PROJECT = 'add_project',
+  EDIT_PROJECT = 'edit_project',
+  LOAD_PROJECT = 'load_project',
+  SAVE_PROJECT = 'save_project',
 }

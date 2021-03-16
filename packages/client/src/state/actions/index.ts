@@ -1,5 +1,5 @@
 import { ActionType } from '../action-types';
-import { CellTypes } from '../cell';
+import { Cell, CellTypes } from '../cell';
 
 export type Direction = 'up' | 'down';
 export interface MoveCellAction {
@@ -46,6 +46,43 @@ export interface HideAlertAction {
   };
 }
 
+export interface AddProjectAction {
+  type: ActionType.ADD_PROJECT;
+  payload: {
+    id: number | null;
+    userId: number | null;
+    title: string;
+    subtitle: string;
+    description: string;
+  };
+}
+
+export interface EditProjectAction {
+  type: ActionType.EDIT_PROJECT;
+  payload: {
+    title: string;
+    subtitle: string;
+    description: string;
+  };
+}
+
+export interface LoadProjectAction {
+  type: ActionType.LOAD_PROJECT;
+  payload: {
+    id: number;
+    title: string;
+    subtitle: string;
+    description: string;
+  };
+}
+export interface SaveProjectAction {
+  type: ActionType.SAVE_PROJECT;
+  payload: {
+    projectId: number;
+    cells: Cell[];
+  };
+}
+
 export type Action =
   | MoveCellAction
   | DeleteCellAction
@@ -54,4 +91,8 @@ export type Action =
   | BundleStartAction
   | BundleCompleteAction
   | ShowAlertAction
-  | HideAlertAction;
+  | HideAlertAction
+  | AddProjectAction
+  | EditProjectAction
+  | LoadProjectAction
+  | SaveProjectAction;
