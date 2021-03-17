@@ -60,7 +60,7 @@ export async function getSessionByToken(token: string) {
 
   return sessions.map((s: Session) => camelcaseKeys(s))[0];
 }
-
+getSessionByToken('a').then((res) => console.log(res));
 export async function insertSession(token: string, userId: number) {
   await sql`
     INSERT INTO sessions

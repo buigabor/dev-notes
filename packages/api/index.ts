@@ -4,7 +4,7 @@ import authRoute from './routes/auth';
 import cellsRoute from './routes/cells';
 import projectsRoute from './routes/projects';
 import sessionsRoute from './routes/sessions';
-import usersRoute from './routes/users';
+import usersRoute from './routes/user';
 
 const app = express();
 const port = 4005;

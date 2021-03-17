@@ -7,7 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useActions } from '../hooks/useActions';
 import { Alert } from './Utils/Alert';
 
@@ -107,17 +107,23 @@ export const NavBar = () => {
   const classes = useStyles();
   const [user, setUser] = useState({ username: '', userId: null });
   const [profileClicked, setProfileClicked] = useState<boolean>(false);
+  const [logoutClicked, setLogoutClicked] = useState(false);
   const { showAlert, hideAlert } = useActions();
+  const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     axios
-      .get('http://localhost:4005/users', { withCredentials: true })
+      .get('http://localhost:4005/user', { withCredentials: true })
       .then((res) => {
         const { username, userId } = res.data;
         setUser({ username, userId });
       })
-      .catch((error) => console.log(error));
-  }, []);
+      .catch((error) => {
+        setUser({ ...user, username: '', userId: null });
+        console.log('User not found');
+      });
+  }, [location, logoutClicked]);
 
   return (
     <>
@@ -193,10 +199,12 @@ export const NavBar = () => {
                   await axios.get('http://localhost:4005/auth/logout', {
                     withCredentials: true,
                   });
+                  setLogoutClicked(!logoutClicked);
                   showAlert('Logout successful!', 'success');
                   setTimeout(() => {
                     hideAlert();
                   }, 1500);
+                  history.push('/');
                 } catch (error) {
                   showAlert('Logout failed!', 'error');
                   setTimeout(() => {
