@@ -25,6 +25,7 @@ const addProjectStyles = css`
       width: 380px;
       padding: 2rem 4rem;
       border-radius: 10px;
+      transition: all 0.25s ease-in-out;
 
       form {
         display: flex;

@@ -5,20 +5,24 @@ import { getSessionByToken, getUserById } from '../db';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const token = cookie.parse(req.headers.cookie || '');
-  const session = await getSessionByToken(token.token);
-  if (!session) {
-    return res.status(200).json({ user: null, error: 'Session not found' });
-  }
-  const user = await getUserById(session.userId);
-  if (!user) {
+  try {
+    const token = cookie.parse(req.headers.cookie || '');
+    const session = await getSessionByToken(token.token);
+    if (!session) {
+      return res.status(200).json({ user: null, error: 'Session not found' });
+    }
+    const user = await getUserById(session.userId);
+    if (!user) {
+      return res
+        .status(200)
+        .json({ user: null, error: 'User or session not found' });
+    }
     return res
       .status(200)
-      .json({ user: null, error: 'User or session not found' });
+      .json({ userId: user.id, username: user.username, error: null });
+  } catch (error) {
+    return res.status(400).json({ success: false, error: 'Invalid token' });
   }
-  return res
-    .status(200)
-    .json({ userId: user.id, username: user.username, error: null });
 });
 
 export default router;

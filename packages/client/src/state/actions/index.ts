@@ -77,10 +77,11 @@ export interface EditProjectAction {
 export interface LoadProjectAction {
   type: ActionType.LOAD_PROJECT;
   payload: {
-    id: number;
+    id: number | null;
     title: string;
     subtitle: string;
     description: string;
+    userId: number | null;
   };
 }
 export interface SaveProjectAction {

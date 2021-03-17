@@ -33,7 +33,6 @@ router.post('/register', async (req, res) => {
     // Validate data
     const validation = registerValidation({ username, email, password });
     const { error } = validation;
-    console.log(error?.message);
 
     if (error) {
       return res.status(400).json({ success: false, error: error.message });

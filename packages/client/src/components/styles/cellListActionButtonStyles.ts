@@ -6,9 +6,9 @@ export const actionButtonStyles = css`
   background-color: #f5534f;
   font-weight: 700;
   border: none;
-  padding: 0.65rem 0.7rem;
-  font-size: 0.9em;
-  max-width: 135px;
+  padding: 0.65rem 0.65rem;
+  font-size: 0.84em;
+  max-width: 155px;
   cursor: pointer;
   text-transform: uppercase;
   outline: none;

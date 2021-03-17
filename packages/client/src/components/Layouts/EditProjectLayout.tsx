@@ -1,57 +1,65 @@
 /** @jsxImportSource @emotion/react */
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
-import React, { ChangeEvent, useState } from 'react';
-import { useHistory } from 'react-router';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import addProjectStyles from './styles/addProjectStyles';
-interface AddProjectLayoutProps {
-  showAddOverlay: boolean;
-  setShowAddOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+
+interface EditProjectLayoutProps {
+  showEditOverlay: boolean;
+  setShowEditOverlay: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
-  showAddOverlay: showOverlay,
-  setShowAddOverlay,
+export const EditProjectLayout: React.FC<EditProjectLayoutProps> = ({
+  showEditOverlay,
+  setShowEditOverlay,
 }) => {
-  const { showAlert, hideAlert, createProject } = useActions();
   const [project, setProject] = useState({
     title: '',
     subtitle: '',
     description: '',
   });
-  const history = useHistory();
-  const cellsState = useTypedSelector((state) => state.cells);
+  const { showAlert, hideAlert } = useActions();
   const projectState = useTypedSelector((state) => state.projects);
-
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProject({ ...project, [e.target.name]: e.target.value } as any);
   };
+
+  useEffect(() => {
+    setProject({
+      ...project,
+      title: projectState.title,
+      subtitle: projectState.subtitle,
+      description: projectState.description,
+    });
+  }, [projectState]);
+
+  const { editProject } = useActions();
 
   return (
     <div
       className="overlay"
       style={{
-        visibility: showOverlay ? 'visible' : 'hidden',
+        visibility: showEditOverlay ? 'visible' : 'hidden',
       }}
       css={addProjectStyles}
       onClick={(e) => {
         if ((e.target as HTMLDivElement).classList.contains('overlay')) {
-          setShowAddOverlay(false);
+          setShowEditOverlay(false);
         }
       }}
     >
       <div
         style={{
-          transform: showOverlay ? 'translateY(0)' : 'translateY(-40rem)',
-          opacity: showOverlay ? 100 : 0,
+          transform: showEditOverlay ? 'translateY(0)' : 'translateY(-40rem)',
+          opacity: showEditOverlay ? 100 : 0,
         }}
         className="add-project-wrapper"
       >
         <i
           onClick={() => {
-            setShowAddOverlay(false);
+            setShowEditOverlay(false);
           }}
           className="fas fa-times"
         ></i>
@@ -59,31 +67,20 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-
             try {
-              const res = await axios.post(
-                'http://localhost:4005/projects/create',
+              const res = await axios.patch(
+                `http://localhost:4005/projects/${projectState.id}`,
                 project,
-                {
-                  withCredentials: true,
-                },
+                { withCredentials: true },
               );
-              const projectCreated = res.data.data.project;
-              createProject(projectCreated);
-              setTimeout(() => {}, 100);
+              const currentProject = res.data.data.project;
 
-              axios.post(
-                'http://localhost:4005/cells/save',
-                { ...cellsState, projectId: projectCreated.id },
-                {
-                  withCredentials: true,
-                },
-              );
-              showAlert('Project created!', 'success');
+              editProject(currentProject);
+              setShowEditOverlay(false);
+              showAlert('Project updated!', 'success');
               setTimeout(() => {
                 hideAlert();
-              }, 1000);
-              setShowAddOverlay(false);
+              }, 1500);
             } catch (error) {
               console.log(error);
             }

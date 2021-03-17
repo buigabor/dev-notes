@@ -6,9 +6,11 @@ import {
   AddProjectAction,
   DeleteCellAction,
   Direction,
+  EditProjectAction,
   HideAlertAction,
   InsertCellAfterAction,
   LoadCellsAction,
+  LoadProjectAction,
   MoveCellAction,
   ShowAlertAction,
   UpdateCellAction,
@@ -89,6 +91,22 @@ export const createProject = (project: ProjectState): AddProjectAction => {
   const { id, title, subtitle, description, userId } = project;
   return {
     type: ActionType.ADD_PROJECT,
+    payload: { id, title, subtitle, description, userId },
+  };
+};
+
+export const editProject = (project: ProjectState): EditProjectAction => {
+  const { title, subtitle, description } = project;
+  return {
+    type: ActionType.EDIT_PROJECT,
+    payload: { title, subtitle, description },
+  };
+};
+
+export const loadProject = (project: ProjectState): LoadProjectAction => {
+  const { id, title, subtitle, description, userId } = project;
+  return {
+    type: ActionType.LOAD_PROJECT,
     payload: { id, title, subtitle, description, userId },
   };
 };

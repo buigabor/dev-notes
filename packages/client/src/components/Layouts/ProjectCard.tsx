@@ -42,9 +42,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
   setShowLoadOverlay,
 }) => {
-  const { loadCells, showAlert, hideAlert } = useActions();
+  const { loadCells, showAlert, hideAlert, loadProject } = useActions();
   const cellsState = useTypedSelector((state) => state.cells);
-  console.log(cellsState);
 
   const classes = useStyles();
   return (
@@ -79,6 +78,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                 const data = res.data.data.cellsData;
                 const order = res.data.data.order;
                 loadCells(order, data);
+                loadProject(project);
                 setShowLoadOverlay(false);
                 showAlert('Project loaded!', 'success');
                 setTimeout(() => {

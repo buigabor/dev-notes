@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 // Route middleware
-app.use('/users', usersRoute);
+app.use('/user', usersRoute);
 app.use('/auth', authRoute);
 app.use('/cells', cellsRoute);
 app.use('/projects', projectsRoute);

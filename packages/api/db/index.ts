@@ -60,7 +60,7 @@ export async function getSessionByToken(token: string) {
 
   return sessions.map((s: Session) => camelcaseKeys(s))[0];
 }
-getSessionByToken('a').then((res) => console.log(res));
+
 export async function insertSession(token: string, userId: number) {
   await sql`
     INSERT INTO sessions
@@ -84,6 +84,14 @@ export async function deleteSessionByToken(token: string | undefined) {
 }
 
 // PROJECTS TABLE
+
+export async function getProjectById(projectId: number) {
+  const project = sql`
+  SELECT * from projects WHERE id=${projectId}
+  `;
+
+  return project.map((p: Project) => camelcaseKeys(p));
+}
 
 export async function getAllProjectsByUserId(userId: number) {
   const projects = await sql`
@@ -111,20 +119,19 @@ export async function insertProject(
 }
 
 export async function updateProject(
-  userId: number,
+  projectId: number,
   title: string,
   subtitle: string,
   description: string,
-  projectId: string,
 ) {
-  await sql`
-    INSERT INTO projects
-      (user_id)
-    VALUES
-      (${userId})
-    ON CONFLICT (name) DO UPDATE SET name=${title} WHERE user_id=${userId}
-    RETURNING *;
+  const project = await sql`
+    UPDATE projects
+    SET title=${title}, subtitle=${subtitle}, description=${description}
+    WHERE id=${projectId}
+    RETURNING *
   `;
+
+  return project.map((p: Project) => camelcaseKeys(p))[0];
 }
 
 // CELLS DATA
