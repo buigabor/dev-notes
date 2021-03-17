@@ -80,6 +80,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: '#00b5ad',
     '&:hover': { backgroundColor: '#0cd1c7' },
   },
+  errorMessages: {
+    padding: '10px 20px 10px 20px',
+    marginTop: 20,
+    border: '1.5px solid red',
+    borderRadius: 10,
+    color: 'red',
+    '& ul': {
+      paddingLeft: 10,
+      listStyle: 'disc',
+    },
+  },
 }));
 
 interface User {
@@ -90,6 +101,7 @@ interface User {
 
 export const SignUp: React.FC = () => {
   const { showAlert, hideAlert } = useActions();
+  const [error, setError] = useState('');
   const [user, setUser] = useState<User>({
     username: '',
     password: '',
@@ -136,10 +148,12 @@ export const SignUp: React.FC = () => {
                 })
                 .catch((error) => {
                   const errorMessage = error.response.data.error;
-                  showAlert(errorMessage, 'error');
-                  setTimeout(() => {
-                    hideAlert();
-                  }, 3000);
+                  setError(errorMessage);
+
+                  // showAlert(errorMessage, 'error');
+                  // setTimeout(() => {
+                  //   hideAlert();
+                  // }, 3000);
                 });
             }}
             className={classes.form}
@@ -192,6 +206,16 @@ export const SignUp: React.FC = () => {
                 />
               </Grid>
             </Grid>
+            <div
+              style={{ visibility: error ? 'visible' : 'hidden' }}
+              className={classes.errorMessages}
+            >
+              <ul>
+                {error.split('.').map((errorMessage, i) => {
+                  return <li key={i}>{errorMessage}</li>;
+                })}
+              </ul>
+            </div>
             <Button
               type="submit"
               fullWidth

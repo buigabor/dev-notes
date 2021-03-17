@@ -10,6 +10,7 @@ import React from 'react';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Project } from '../../state/reducers/projectsReducer';
+import { Alert } from '../Utils/Alert';
 
 const useStyles = makeStyles({
   root: {
@@ -34,50 +35,69 @@ const useStyles = makeStyles({
 
 interface ProjectCardProps {
   project: Project;
+  setShowLoadOverlay: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
-  const { loadCells } = useActions();
+export const ProjectCard: React.FC<ProjectCardProps> = ({
+  project,
+  setShowLoadOverlay,
+}) => {
+  const { loadCells, showAlert, hideAlert } = useActions();
   const cellsState = useTypedSelector((state) => state.cells);
   console.log(cellsState);
 
   const classes = useStyles();
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        <Typography className={classes.title}>{project.title}</Typography>
-        <Typography
-          className={classes.subtitle}
-          variant="body2"
-          component="p"
-          color="textSecondary"
-        >
-          {project.subtitle}
-        </Typography>
-        <Typography variant="body2" component="p">
-          {project.description}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button
-          onClick={async () => {
-            const res = await axios.post(
-              'http://localhost:4005/cells',
-              { projectId: project.id },
-              {
-                withCredentials: true,
-              },
-            );
-            const data = res.data.data.cellsData;
-            const order = res.data.data.order;
-            loadCells(order, data);
-          }}
-          className={classes.loadBtn}
-          size="small"
-        >
-          Load Project
-        </Button>
-      </CardActions>
-    </Card>
+    <>
+      <Alert />
+      <Card className={classes.root}>
+        <CardContent>
+          <Typography className={classes.title}>{project.title}</Typography>
+          <Typography
+            className={classes.subtitle}
+            variant="body2"
+            component="p"
+            color="textSecondary"
+          >
+            {project.subtitle}
+          </Typography>
+          <Typography variant="body2" component="p">
+            {project.description}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button
+            onClick={async () => {
+              try {
+                const res = await axios.post(
+                  'http://localhost:4005/cells',
+                  { projectId: project.id },
+                  {
+                    withCredentials: true,
+                  },
+                );
+                const data = res.data.data.cellsData;
+                const order = res.data.data.order;
+                loadCells(order, data);
+                setShowLoadOverlay(false);
+                showAlert('Project loaded!', 'success');
+                setTimeout(() => {
+                  hideAlert();
+                }, 2000);
+              } catch (error) {
+                showAlert('Project failed to load', 'error');
+                setTimeout(() => {
+                  hideAlert();
+                }, 1500);
+              }
+            }}
+            className={classes.loadBtn}
+            size="small"
+          >
+            Load Project
+          </Button>
+        </CardActions>
+      </Card>
+    </>
   );
 };

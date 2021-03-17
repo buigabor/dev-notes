@@ -8,6 +8,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useActions } from '../hooks/useActions';
+import { Alert } from './Utils/Alert';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -105,6 +107,8 @@ export const NavBar = () => {
   const classes = useStyles();
   const [user, setUser] = useState({ username: '', userId: null });
   const [profileClicked, setProfileClicked] = useState<boolean>(false);
+  const { showAlert, hideAlert } = useActions();
+
   useEffect(() => {
     axios
       .get('http://localhost:4005/users', { withCredentials: true })
@@ -116,76 +120,96 @@ export const NavBar = () => {
   }, []);
 
   return (
-    <div>
-      <AppBar className={classes.root} position="static">
-        <Toolbar>
-          <Link className={classes.logoText} to="/">
-            <Typography>DEVNOTES</Typography>
-          </Link>
-          {user.username ? (
-            <div
-              onClick={() => {
-                setProfileClicked(!profileClicked);
+    <>
+      <Alert />
+      <div>
+        <AppBar className={classes.root} position="static">
+          <Toolbar>
+            <Link className={classes.logoText} to="/">
+              <Typography>DEVNOTES</Typography>
+            </Link>
+            {user.username ? (
+              <div
+                onClick={() => {
+                  setProfileClicked(!profileClicked);
+                }}
+                className={classes.username}
+              >
+                <span>{user.username}</span>
+              </div>
+            ) : (
+              <div className={classes.buttonWrapper}>
+                <Link to="/signup">
+                  <Button className={classes.signUpBtn} color="inherit">
+                    SIGN UP
+                  </Button>
+                </Link>
+                <Link to="/login">
+                  <Button className={classes.loginBtn} color="inherit">
+                    LOGIN
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </Toolbar>
+        </AppBar>
+        <div
+          css={dropdownStyles}
+          style={{ display: profileClicked ? 'inline-block' : 'none' }}
+        >
+          <div
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'l') {
+                setProfileClicked(false);
+              }
+            }}
+            className="nav-dropdown__row"
+            onClick={() => {
+              setProfileClicked(false);
+            }}
+          >
+            <span>
+              <i className="fas fa-user"></i>Profile
+            </span>
+          </div>
+          <div
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'l') {
+                setProfileClicked(false);
+              }
+            }}
+            className="nav-dropdown__row"
+            onClick={() => {
+              setProfileClicked(false);
+            }}
+          >
+            <span
+              onClick={async () => {
+                try {
+                  await axios.get('http://localhost:4005/auth/logout', {
+                    withCredentials: true,
+                  });
+                  showAlert('Logout successful!', 'success');
+                  setTimeout(() => {
+                    hideAlert();
+                  }, 1500);
+                } catch (error) {
+                  showAlert('Logout failed!', 'error');
+                  setTimeout(() => {
+                    hideAlert();
+                  }, 1500);
+                }
               }}
-              className={classes.username}
             >
-              <span>{user.username}</span>
-            </div>
-          ) : (
-            <div className={classes.buttonWrapper}>
-              <Link to="/signup">
-                <Button className={classes.signUpBtn} color="inherit">
-                  SIGN UP
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button className={classes.loginBtn} color="inherit">
-                  LOGIN
-                </Button>
-              </Link>
-            </div>
-          )}
-        </Toolbar>
-      </AppBar>
-      <div
-        css={dropdownStyles}
-        style={{ display: profileClicked ? 'inline-block' : 'none' }}
-      >
-        <div
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'l') {
-              setProfileClicked(false);
-            }
-          }}
-          className="nav-dropdown__row"
-          onClick={() => {
-            setProfileClicked(false);
-          }}
-        >
-          <span>
-            <i className="fas fa-user"></i>Profile
-          </span>
-        </div>
-        <div
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'l') {
-              setProfileClicked(false);
-            }
-          }}
-          className="nav-dropdown__row"
-          onClick={() => {
-            setProfileClicked(false);
-          }}
-        >
-          <span>
-            <i className="fas fa-sign-out-alt"></i>Logout
-          </span>
+              <i className="fas fa-sign-out-alt"></i>Logout
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

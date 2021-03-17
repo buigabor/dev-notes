@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BlockPicker, ColorResult } from 'react-color';
 import { Tools } from 'react-sketch';
-import sketchToolBoxStyles from '../styles/sketchToolboxStyles';
+import sketchToolBoxStyles from './styles/sketchToolboxStyles';
 
 interface SetToolBoxProps {
   canRedo: boolean;

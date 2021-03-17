@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useRef } from 'react';
-import previewStyles from '../styles/previewStyles';
+import previewStyles from './styles/previewStyles';
 
 interface PreviewProps {
   code: string;

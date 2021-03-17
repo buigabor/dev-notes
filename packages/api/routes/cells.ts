@@ -12,15 +12,10 @@ router.post('/', verify, async (req, res) => {
     const { data, orderOfCells } = cellsData;
     const dataParsed = JSON.parse(data);
     const orderParsed = JSON.parse(orderOfCells);
-    console.log(dataParsed);
-    console.log(orderParsed);
-
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: { cellsData: dataParsed, order: orderParsed },
-      });
+    res.status(200).json({
+      success: true,
+      data: { cellsData: dataParsed, order: orderParsed },
+    });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -34,9 +29,9 @@ router.post('/save', verify, async (req, res) => {
 
     const cellData = await saveCellData(projectId, dataString, orderString);
 
-    res.status(200).json({ success: true, data: cellData });
+    res.status(200).json({ success: true, data: cellData, error: null });
   } catch (error) {
-    res.status(400).json(error);
+    res.status(400).json({ success: false, error: error });
   }
 });
 

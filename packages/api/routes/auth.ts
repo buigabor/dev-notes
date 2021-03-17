@@ -33,10 +33,10 @@ router.post('/register', async (req, res) => {
     // Validate data
     const validation = registerValidation({ username, email, password });
     const { error } = validation;
+    console.log(error?.message);
+
     if (error) {
-      return res
-        .status(400)
-        .json({ success: false, error: error.details[0].message });
+      return res.status(400).json({ success: false, error: error.message });
     }
 
     // Check if username is already taken
@@ -109,7 +109,23 @@ router.post('/login', async (req, res) => {
       }),
     );
     await deleteExpiredSessions();
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, error: null });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error });
+  }
+});
+
+router.get('/logout', async (req, res) => {
+  try {
+    res.setHeader(
+      'Set-Cookie',
+      cookie.serialize('token', '', {
+        maxAge: -1,
+        path: '/',
+      }),
+    );
+    res.redirect('/');
+    res.status(200).json({ success: true, error: null });
   } catch (error) {
     res.status(400).json({ success: false, error: error });
   }

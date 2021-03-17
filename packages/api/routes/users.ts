@@ -10,11 +10,13 @@ router.get('/', async (req, res) => {
     const session = await getSessionByToken(token.token);
     const user = await getUserById(session.userId);
     if (!user) {
-      return res.status(200).json({ user: null });
+      return res.status(200).json({ user: null, error: 'User not found' });
     }
-    return res.status(200).json({ userId: user.id, username: user.username });
+    return res
+      .status(200)
+      .json({ userId: user.id, username: user.username, error: null });
   } catch (error) {
-    res.status(400).json(error);
+    res.status(400).json({ success: false, error: error });
   }
 });
 

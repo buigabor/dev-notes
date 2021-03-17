@@ -37,7 +37,13 @@ export const LoadProjectLayout: React.FC<LoadProjectLayoutProps> = ({
           <h1>Your Projects</h1>
           {projects
             ? projects.map((project) => {
-                return <ProjectCard key={project.id} project={project} />;
+                return (
+                  <ProjectCard
+                    setShowLoadOverlay={setShowLoadOverlay}
+                    key={project.id}
+                    project={project}
+                  />
+                );
               })
             : ''}
         </div>

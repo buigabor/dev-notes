@@ -6,10 +6,10 @@ import { useActions } from '../../hooks/useActions';
 import { useCumulativeCode } from '../../hooks/useCumulativeCode';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Cell } from '../../state';
-import linearProgressStyles from '../styles/linearProgressStyles';
 import { Resizable } from '../Utils/Resizable';
 import CodeEditor from './CodeEditor';
 import { Preview } from './Preview';
+import linearProgressStyles from './styles/linearProgressStyles';
 
 interface CodeCellProps {
   cell: Cell;

@@ -25,5 +25,5 @@ export const registerValidation = ({
     email: joi.string().email(),
   });
 
-  return schema.validate({ username, email, password });
+  return schema.validate({ username, email, password }, { abortEarly: false });
 };

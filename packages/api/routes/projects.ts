@@ -10,7 +10,7 @@ router.get('/', verify, async (req, res) => {
     const projects = await getAllProjectsByUserId(Number(userId));
     res.status(200).json({ success: true, data: { projects } });
   } catch (error) {
-    res.status(400).json(error);
+    res.status(400).json({ success: false, error: error });
   }
 });
 
@@ -21,9 +21,9 @@ router.post('/create', verify, async (req, res) => {
 
     const project = await insertProject(userId, title, subtitle, description);
 
-    res.status(200).json({ success: true, data: { project } });
+    res.status(200).json({ success: true, data: { project }, error: null });
   } catch (error) {
-    res.status(400).json(error);
+    res.status(400).json({ success: false, error: error });
   }
 });
 

@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useRef, useState } from 'react';
 import { SketchField, Tools } from 'react-sketch';
-import sketchStyles from '../styles/sketchStyles';
 import { Resizable } from '../Utils/Resizable';
 import { SketchToolBox } from './SketchToolBox';
+import sketchStyles from './styles/sketchStyles';
 
 export const Sketch: React.FC = () => {
   const sketchRef = useRef<any>();
