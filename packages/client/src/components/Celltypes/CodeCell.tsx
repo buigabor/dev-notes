@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
@@ -7,6 +6,7 @@ import { useActions } from '../../hooks/useActions';
 import { useCumulativeCode } from '../../hooks/useCumulativeCode';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Cell } from '../../state';
+import linearProgressStyles from '../styles/linearProgressStyles';
 import { Resizable } from '../Utils/Resizable';
 import CodeEditor from './CodeEditor';
 import { Preview } from './Preview';
@@ -14,34 +14,6 @@ import { Preview } from './Preview';
 interface CodeCellProps {
   cell: Cell;
 }
-
-const linearProgressStyles = css`
-  height: 100%;
-  flex-grow: 1;
-  background-color: #fff;
-  .progress-cover {
-    height: 100%;
-    width: 100%;
-    flex-grow: 1;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.5s;
-  }
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    50% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-`;
 
 const StyledLinearProgress = withStyles({
   root: {

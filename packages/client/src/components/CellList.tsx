@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
@@ -9,60 +8,10 @@ import { Project } from '../state/reducers/projectsReducer';
 import { CellListItem } from './CellListItem';
 import { AddProjectLayout } from './Layouts/AddProjectLayout';
 import { LoadProjectLayout } from './Layouts/LoadProjectLayout';
+import { actionButtonsWrapperStyles } from './styles/cellListActionButtonStyles';
 import cellListStyles from './styles/cellListStyles';
 import { AddCell } from './Utils/AddCell';
 import { Alert } from './Utils/Alert';
-
-const actionButtonStyles = css`
-  color: #fff;
-  border-radius: 4px;
-  background-color: #f5534f;
-  font-weight: 700;
-  border: none;
-  padding: 0.65rem 0.7rem;
-  font-size: 0.9em;
-  max-width: 135px;
-  cursor: pointer;
-  text-transform: uppercase;
-  outline: none;
-  transition: all 0.2s linear;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  &:hover {
-    background-color: #fb706e;
-  }
-`;
-
-const actionButtonsWrapperStyles = css`
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  padding-right: 1rem;
-  margin-bottom: 45px;
-
-  .delete-all-btn {
-    ${actionButtonStyles}
-  }
-
-  .load-btn {
-    ${actionButtonStyles}
-    background-color: #3c55e0;
-    &:hover {
-      background-color: #4e65eb;
-    }
-  }
-
-  .save-btn {
-    ${actionButtonStyles}
-    background-color: #00b5ad;
-    &:hover {
-      background-color: #05c7bd;
-    }
-  }
-
-  .fas {
-    margin-right: 5px;
-  }
-`;
 
 export const CellList: React.FC = () => {
   const [showAddOverlay, setShowAddOverlay] = useState(false);

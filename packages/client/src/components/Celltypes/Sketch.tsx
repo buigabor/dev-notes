@@ -1,23 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { SketchField, Tools } from 'react-sketch';
+import sketchStyles from '../styles/sketchStyles';
 import { Resizable } from '../Utils/Resizable';
 import { SketchToolBox } from './SketchToolBox';
-
-const sketchStyles = css`
-  div {
-    position: relative;
-    height: 100%;
-    background-color: #fff;
-  }
-  .canvas-container {
-    height: 100% !important;
-    canvas {
-      height: 100% !important;
-    }
-  }
-`;
 
 export const Sketch: React.FC = () => {
   const sketchRef = useRef<any>();
