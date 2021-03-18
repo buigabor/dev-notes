@@ -28,7 +28,6 @@ export const EditProjectLayout: React.FC<EditProjectLayoutProps> = ({
 
   useEffect(() => {
     setProject({
-      ...project,
       title: projectState.title,
       subtitle: projectState.subtitle,
       description: projectState.description,
@@ -90,7 +89,6 @@ export const EditProjectLayout: React.FC<EditProjectLayoutProps> = ({
           <TextField
             onChange={onChange}
             value={project.title}
-            id="filled-basic"
             label="Project Title"
             variant="filled"
             name="title"
@@ -98,7 +96,6 @@ export const EditProjectLayout: React.FC<EditProjectLayoutProps> = ({
           <TextField
             onChange={onChange}
             value={project.subtitle}
-            id="filled-basic"
             label="Sub-title"
             variant="filled"
             name="subtitle"

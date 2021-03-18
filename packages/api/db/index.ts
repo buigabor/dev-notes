@@ -150,6 +150,21 @@ export async function saveCellData(
   order: string,
 ) {
   const cell = await sql`
+  UPDATE cellsData
+  SET data=${data}, order_of_cells=${order}
+  WHERE project_id=${projectId}
+  RETURNING *
+  `;
+
+  return cell.map((c: Cell) => camelcaseKeys(c))[0];
+}
+
+export async function insertCellData(
+  projectId: number,
+  data: string,
+  order: string,
+) {
+  const cellsData = await sql`
     INSERT INTO cellsData
       (project_id, data, order_of_cells)
     VALUES
@@ -157,5 +172,5 @@ export async function saveCellData(
     RETURNING *;
   `;
 
-  return cell.map((c: Cell) => camelcaseKeys(c))[0];
+  return cellsData.map((c: Cell) => camelcaseKeys(c))[0];
 }

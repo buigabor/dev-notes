@@ -3,6 +3,7 @@ import express from 'express';
 import authRoute from './routes/auth';
 import cellsRoute from './routes/cells';
 import projectsRoute from './routes/projects';
+import roomserviceRoute from './routes/roomservice';
 import sessionsRoute from './routes/sessions';
 import usersRoute from './routes/user';
 
@@ -21,6 +22,7 @@ app.use('/auth', authRoute);
 app.use('/cells', cellsRoute);
 app.use('/projects', projectsRoute);
 app.use('/sessions', sessionsRoute);
+app.use('/roomservice', roomserviceRoute);
 
 // app.use((req, res, next) => {
 //   var token = csrfTokens;

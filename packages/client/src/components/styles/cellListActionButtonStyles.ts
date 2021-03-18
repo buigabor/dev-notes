@@ -22,9 +22,34 @@ export const actionButtonStyles = css`
 export const actionButtonsWrapperStyles = css`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 15px;
-  padding-right: 1rem;
+  padding: 0 2.3rem;
   margin-bottom: 45px;
+
+  .project-details {
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    h1 {
+      font-family: 'Architects Daughter';
+      margin: 10px 0;
+      color: #dddddd;
+      font-weight: 300;
+      font-size: 1.4em;
+    }
+    &__title {
+      font-family: 'Architects Daughter';
+      color: #f2a154;
+      font-weight: 500;
+      font-size: 2.25em;
+    }
+    &__subtitle {
+      font-family: 'Architects Daughter';
+      color: #cdd0cb;
+      font-size: 1.1em;
+    }
+  }
 
   .delete-all-btn {
     ${actionButtonStyles}

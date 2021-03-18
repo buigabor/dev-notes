@@ -2,7 +2,6 @@
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
-import { useHistory } from 'react-router';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import addProjectStyles from './styles/addProjectStyles';
@@ -21,9 +20,7 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
     subtitle: '',
     description: '',
   });
-  const history = useHistory();
   const cellsState = useTypedSelector((state) => state.cells);
-  const projectState = useTypedSelector((state) => state.projects);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProject({ ...project, [e.target.name]: e.target.value } as any);
@@ -73,7 +70,7 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
               setTimeout(() => {}, 100);
 
               axios.post(
-                'http://localhost:4005/cells/save',
+                'http://localhost:4005/cells/create',
                 { ...cellsState, projectId: projectCreated.id },
                 {
                   withCredentials: true,
@@ -93,7 +90,6 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
           <TextField
             onChange={onChange}
             value={project.title}
-            id="filled-basic"
             label="Project Title"
             variant="filled"
             name="title"
@@ -101,7 +97,6 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
           <TextField
             onChange={onChange}
             value={project.subtitle}
-            id="filled-basic"
             label="Sub-title"
             variant="filled"
             name="subtitle"

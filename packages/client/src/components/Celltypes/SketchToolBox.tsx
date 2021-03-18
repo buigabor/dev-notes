@@ -225,6 +225,7 @@ export const SketchToolBox: React.FC<SetToolBoxProps> = ({
         </div>
         <div className="toolbox-cell">
           <a
+            href={'/#'}
             className="toolbox-download-link"
             ref={anchorRef}
             onClick={download}

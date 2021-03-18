@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { ChangeEvent, useEffect } from 'react';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
+import React, { useEffect } from 'react';
 import { Project } from '../../state/reducers/projectsReducer';
 import { ProjectCard } from './ProjectCard';
 import loadProjectStyles from './styles/loadProjectStyles';
@@ -16,9 +15,6 @@ export const LoadProjectLayout: React.FC<LoadProjectLayoutProps> = ({
   setShowLoadOverlay,
   projects,
 }) => {
-  const projectState = useTypedSelector((state) => state.projects);
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {};
-
   useEffect(() => {}, []);
 
   return (

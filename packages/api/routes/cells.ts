@@ -1,14 +1,15 @@
 import express from 'express';
-import { getCellDataByProjectId, saveCellData } from '../db';
+import { getCellDataByProjectId, insertCellData, saveCellData } from '../db';
 import { verify } from './verifyToken';
 
 const router = express.Router();
 
-router.post('/', verify, async (req, res) => {
+// Get cells data by project id
+router.get('/:id', verify, async (req, res) => {
   try {
-    const { projectId } = req.body;
+    const id = req.params.id;
 
-    const cellsData = await getCellDataByProjectId(projectId);
+    const cellsData = await getCellDataByProjectId(Number(id));
     const { data, orderOfCells } = cellsData;
     const dataParsed = JSON.parse(data);
     const orderParsed = JSON.parse(orderOfCells);
@@ -21,6 +22,8 @@ router.post('/', verify, async (req, res) => {
   }
 });
 
+// Save cells data by project id
+
 router.post('/save', verify, async (req, res) => {
   try {
     const { projectId, data, order } = req.body;
@@ -28,6 +31,21 @@ router.post('/save', verify, async (req, res) => {
     const orderString = JSON.stringify(order);
 
     const cellData = await saveCellData(projectId, dataString, orderString);
+
+    res.status(200).json({ success: true, data: cellData, error: null });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error });
+  }
+});
+
+// Insert cells data by project id
+router.post('/create', verify, async (req, res) => {
+  try {
+    const { projectId, data, order } = req.body;
+    const dataString = JSON.stringify(data);
+    const orderString = JSON.stringify(order);
+
+    const cellData = await insertCellData(projectId, dataString, orderString);
 
     res.status(200).json({ success: true, data: cellData, error: null });
   } catch (error) {

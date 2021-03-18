@@ -120,7 +120,7 @@ export const NavBar = () => {
         setUser({ username, userId });
       })
       .catch((error) => {
-        setUser({ ...user, username: '', userId: null });
+        setUser({ username: '', userId: null });
         console.log('User not found');
       });
   }, [location, logoutClicked]);

@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import React from 'react';
 import { useActions } from '../../hooks/useActions';
-import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Project } from '../../state/reducers/projectsReducer';
 import { Alert } from '../Utils/Alert';
 
@@ -43,7 +42,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   setShowLoadOverlay,
 }) => {
   const { loadCells, showAlert, hideAlert, loadProject } = useActions();
-  const cellsState = useTypedSelector((state) => state.cells);
 
   const classes = useStyles();
   return (
@@ -68,9 +66,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           <Button
             onClick={async () => {
               try {
-                const res = await axios.post(
-                  'http://localhost:4005/cells',
-                  { projectId: project.id },
+                const res = await axios.get(
+                  `http://localhost:4005/cells/${project.id}`,
                   {
                     withCredentials: true,
                   },
@@ -96,6 +93,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           >
             Load Project
           </Button>
+          <Button color="secondary">Delete Project</Button>
         </CardActions>
       </Card>
     </>
