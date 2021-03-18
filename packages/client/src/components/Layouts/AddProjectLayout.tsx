@@ -104,7 +104,6 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
           <TextField
             onChange={onChange}
             value={project.description}
-            id="filled-multiline-static"
             label="Project description"
             multiline
             rows={4}

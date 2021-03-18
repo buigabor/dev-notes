@@ -29,7 +29,6 @@ async function myAuthFunction(params: {
       user: params.ctx.userID,
     }),
   });
-  console.log(response);
 
   if (response.status === 401) {
     throw new Error('Unauthorized!');
@@ -40,7 +39,7 @@ async function myAuthFunction(params: {
   }
 
   const body = await response.json();
-
+  console.log(body);
   return {
     user: body.user,
     resources: body.resources,

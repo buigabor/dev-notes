@@ -66,9 +66,8 @@ export const CellList: React.FC = () => {
           nextCellId={null}
         />
         {renderedCells}
+        <RoomService />
       </div>
-
-      <RoomService />
     </>
   );
 };
