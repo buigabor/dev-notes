@@ -134,6 +134,9 @@ export const NavBar = () => {
             <Link className={classes.logoText} to="/">
               <Typography>DEVNOTES</Typography>
             </Link>
+            <Link className={classes.logoText} to="/collab">
+              <Typography>COLLABORATION</Typography>
+            </Link>
             {user.username ? (
               <div
                 onClick={() => {

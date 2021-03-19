@@ -103,7 +103,7 @@ const syntaxHighlights = css`
   }
 
   & .mtk104.JsxElement.JsxText {
-    color: darkgoldenrod;
+    color: white;
   }
 
   & .mtk105.glyph.Identifier.JsxElement {

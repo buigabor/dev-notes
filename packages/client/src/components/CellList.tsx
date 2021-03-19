@@ -8,7 +8,6 @@ import { AddProjectLayout } from './Layouts/AddProjectLayout';
 import { EditProjectLayout } from './Layouts/EditProjectLayout';
 import { LoadProjectLayout } from './Layouts/LoadProjectLayout';
 import { ProjectActions } from './ProjectActions';
-import { RoomService } from './RoomService';
 import cellListStyles from './styles/cellListStyles';
 import { AddCell } from './Utils/AddCell';
 import { Alert } from './Utils/Alert';
@@ -66,7 +65,7 @@ export const CellList: React.FC = () => {
           nextCellId={null}
         />
         {renderedCells}
-        <RoomService />
+        {/* <RoomService /> */}
       </div>
     </>
   );

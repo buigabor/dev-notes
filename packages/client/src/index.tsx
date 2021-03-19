@@ -9,6 +9,7 @@ import { Login } from './components/Auth/Login';
 import { SignUp } from './components/Auth/SignUp';
 import { CellList } from './components/CellList';
 import { NavBar } from './components/NavBar';
+import { RoomService } from './components/RoomService';
 import { store } from './state';
 
 async function myAuthFunction(params: {
@@ -122,6 +123,7 @@ export const App = () => {
             <NavBar />
             <Switch>
               <Route path="/" exact component={CellList} />
+              <Route path="/collab" exact component={RoomService} />
               <Route path="/login" component={Login} />
               <Route path="/signup" component={SignUp} />
             </Switch>
