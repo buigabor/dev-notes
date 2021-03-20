@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: '1.5rem',
       flexGrow: 1,
       backgroundColor: '#10151f',
+      padding: '0 12px',
     },
     logoText: {
       textDecoration: 'none',
@@ -29,7 +30,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     username: {
-      marginLeft: 'auto',
+      justifyContent: 'flex-end',
+      marginLeft: 10,
       cursor: 'pointer',
       '& span': {
         color: '#fff',
@@ -56,6 +58,26 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#04ada5',
         border: '1px solid #04ada5',
         color: '#fff',
+      },
+    },
+
+    collabBtn: {
+      color: '#06c8bf',
+      border: '1px solid #06c8bf',
+      borderRadius: 4,
+      padding: '0px 8px',
+      margin: '0 8px',
+      marginLeft: 'auto',
+      transition: 'all 0.2s ease-in-out',
+      textDecoration: 'none',
+      '&:hover': {
+        backgroundColor: '#04ada5',
+        border: '1px solid #04ada5',
+        color: '#fff',
+      },
+
+      '& i': {
+        marginRight: 10,
       },
     },
 
@@ -134,18 +156,23 @@ export const NavBar = () => {
             <Link className={classes.logoText} to="/">
               <Typography>DEVNOTES</Typography>
             </Link>
-            <Link className={classes.logoText} to="/collab">
-              <Typography>COLLABORATION</Typography>
-            </Link>
+
             {user.username ? (
-              <div
-                onClick={() => {
-                  setProfileClicked(!profileClicked);
-                }}
-                className={classes.username}
-              >
-                <span>{user.username}</span>
-              </div>
+              <>
+                <Link className={classes.collabBtn} to="/collab">
+                  <Button color="inherit">
+                    <i className="fas fa-comments"></i> Collaborate
+                  </Button>
+                </Link>
+                <div
+                  onClick={() => {
+                    setProfileClicked(!profileClicked);
+                  }}
+                  className={classes.username}
+                >
+                  <span>{user.username}</span>
+                </div>
+              </>
             ) : (
               <div className={classes.buttonWrapper}>
                 <Link to="/signup">
