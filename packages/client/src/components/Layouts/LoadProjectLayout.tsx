@@ -8,12 +8,14 @@ interface LoadProjectLayoutProps {
   projects: Project[] | null;
   showLoadOverlay: boolean;
   setShowLoadOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+  setProjects: React.Dispatch<React.SetStateAction<Project[] | null>>;
 }
 
 export const LoadProjectLayout: React.FC<LoadProjectLayoutProps> = ({
   showLoadOverlay,
   setShowLoadOverlay,
   projects,
+  setProjects,
 }) => {
   useEffect(() => {}, []);
 
@@ -35,9 +37,11 @@ export const LoadProjectLayout: React.FC<LoadProjectLayoutProps> = ({
             ? projects.map((project) => {
                 return (
                   <ProjectCard
+                    setProjects={setProjects}
                     setShowLoadOverlay={setShowLoadOverlay}
                     key={project.id}
                     project={project}
+                    projects={projects}
                   />
                 );
               })

@@ -118,7 +118,7 @@ export async function insertProject(
   return project.map((p: Project) => camelcaseKeys(p))[0];
 }
 
-export async function updateProject(
+export async function updateProjectById(
   projectId: number,
   title: string,
   subtitle: string,
@@ -129,6 +129,14 @@ export async function updateProject(
     SET title=${title}, subtitle=${subtitle}, description=${description}
     WHERE id=${projectId}
     RETURNING *
+  `;
+
+  return project.map((p: Project) => camelcaseKeys(p))[0];
+}
+
+export async function deleteProjectById(projectId: number) {
+  const project = await sql`
+  DELETE FROM projects WHERE id=${projectId} RETURNING *
   `;
 
   return project.map((p: Project) => camelcaseKeys(p))[0];

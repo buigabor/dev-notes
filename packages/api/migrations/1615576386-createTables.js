@@ -23,7 +23,7 @@ exports.up = async (sql) => {
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 		data TEXT,
     order_of_cells TEXT,
-		project_id INT REFERENCES projects(id),
+		project_id INT REFERENCES projects(id) ON DELETE CASCADE,
 		cell_type_id INT REFERENCES cell_types(id)
 	)`;
 

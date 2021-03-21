@@ -33,13 +33,17 @@ const useStyles = makeStyles({
 });
 
 interface ProjectCardProps {
+  projects: Project[] | null;
   project: Project;
   setShowLoadOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+  setProjects: React.Dispatch<React.SetStateAction<Project[] | null>>;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
+  projects,
   project,
   setShowLoadOverlay,
+  setProjects,
 }) => {
   const { loadCells, showAlert, hideAlert, loadProject } = useActions();
 
@@ -93,7 +97,42 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           >
             Load Project
           </Button>
-          <Button color="secondary">Delete Project</Button>
+          <Button
+            onClick={async () => {
+              try {
+                const res = await axios.delete(
+                  `http://localhost:4005/projects/${project.id}`,
+                  { withCredentials: true },
+                );
+                const deletedProject = res.data.data.project;
+                if (!deletedProject) {
+                  showAlert('Project failed to delete', 'error');
+                  return setTimeout(() => {
+                    hideAlert();
+                  }, 1500);
+                }
+                if (projects && deletedProject) {
+                  setProjects(
+                    projects.filter(
+                      (project) => project.id !== deletedProject.id,
+                    ),
+                  );
+                  showAlert('Project successfully deleted!', 'success');
+                  return setTimeout(() => {
+                    hideAlert();
+                  }, 1500);
+                }
+              } catch (error) {
+                showAlert('Project failed to delete', 'error');
+                setTimeout(() => {
+                  hideAlert();
+                }, 1500);
+              }
+            }}
+            color="secondary"
+          >
+            Delete Project
+          </Button>
         </CardActions>
       </Card>
     </>

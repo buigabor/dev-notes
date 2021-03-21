@@ -1,9 +1,10 @@
 import express from 'express';
 import {
+  deleteProjectById,
   getAllProjectsByUserId,
   getProjectById,
   insertProject,
-  updateProject,
+  updateProjectById,
 } from '../db';
 import { verify } from './verifyToken';
 
@@ -51,7 +52,7 @@ router.patch('/:id', verify, async (req, res) => {
   try {
     const id = req.params.id;
     const { title, subtitle, description } = req.body;
-    const project = await updateProject(
+    const project = await updateProjectById(
       Number(id),
       title,
       subtitle,
@@ -66,6 +67,12 @@ router.patch('/:id', verify, async (req, res) => {
 
 router.delete('/:id', verify, async (req, res) => {
   try {
-  } catch (error) {}
+    const id = req.params.id;
+
+    const project = await deleteProjectById(Number(id));
+    res.status(200).json({ success: true, data: { project }, error: null });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error });
+  }
 });
 export default router;

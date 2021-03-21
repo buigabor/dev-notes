@@ -44,6 +44,7 @@ export const CellList: React.FC = () => {
       />
       <LoadProjectLayout
         projects={projects}
+        setProjects={setProjects}
         showLoadOverlay={showLoadOverlay}
         setShowLoadOverlay={setShowLoadOverlay}
       />
