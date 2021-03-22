@@ -26,6 +26,7 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
   const project = useTypedSelector((state) => state.projects);
   const cellsState = useTypedSelector((state) => state.cells);
   const history = useHistory();
+  console.log(project);
 
   const checkIfLoggedIn = async () => {
     return await axios
@@ -55,7 +56,22 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
         <span className="project-details__subtitle">{project.subtitle}</span>
       </div>
       <button
-        onClick={() => {
+        onClick={async () => {
+          const loggedIn = await checkIfLoggedIn();
+          if (!loggedIn) {
+            showAlert('Please login, to save your project.', 'error');
+            setTimeout(() => {
+              hideAlert();
+            }, 1500);
+            return;
+          }
+          if (!project.id) {
+            showAlert('Please create or load a project to save.', 'error');
+            setTimeout(() => {
+              hideAlert();
+            }, 1500);
+            return;
+          }
           axios.post(
             'http://localhost:4005/cells/save',
             { ...cellsState, projectId: project.id },
@@ -77,7 +93,7 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
         onClick={async () => {
           const loggedIn = await checkIfLoggedIn();
           if (!loggedIn) {
-            showAlert('Please login, to save your project.', 'error');
+            showAlert('Please login, to create a project.', 'error');
             setTimeout(() => {
               hideAlert();
             }, 1500);

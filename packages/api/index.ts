@@ -1,4 +1,3 @@
-import cors from 'cors';
 import express from 'express';
 import authRoute from './routes/auth';
 import cellsRoute from './routes/cells';
@@ -10,11 +9,32 @@ import usersRoute from './routes/user';
 const app = express();
 const port = 4005;
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', req.header('Origin'));
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
+  );
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  next();
+});
+// app.use(cors());
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: [
+//       'http://localhost:3000',
+//       'https://github.com',
+//       'http://localhost:4005',
+//     ],
+//     preflightContinue: true,
+//   }),
+// );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Enable CORS
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+// app.options('*', cors());
 
 // Route middleware
 app.use('/user', usersRoute);

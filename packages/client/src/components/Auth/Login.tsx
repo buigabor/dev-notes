@@ -80,6 +80,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: '#00b5ad',
     '&:hover': { backgroundColor: '#0cd1c7' },
   },
+  githubLink: {
+    textAlign: 'center',
+    width: '100%',
+    padding: '.5rem 1.2rem',
+    margin: theme.spacing(0, 0, 2),
+    backgroundColor: '#000000',
+    '& a': { color: 'white' },
+    '& a:hover': { textDecoration: 'none' },
+    '&:hover': { backgroundColor: '#1f1e1e' },
+    '& img': { color: 'white', width: '8%', marginRight: 15 },
+  },
 }));
 
 export const Login: React.FC = () => {
@@ -178,6 +189,15 @@ export const Login: React.FC = () => {
             >
               Sign In
             </Button>
+            <Button className={classes.githubLink}>
+              <img alt="Github logo" src="/GitHub-Mark-Light-64px.png" />
+              <Link
+                href={`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENTID}`}
+              >
+                Sign In with Github
+              </Link>
+            </Button>
+
             <Grid container justify="flex-end">
               <Grid item>
                 <Link className={classes.link} href="/signup" variant="body2">

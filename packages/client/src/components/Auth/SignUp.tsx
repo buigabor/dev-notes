@@ -207,7 +207,7 @@ export const SignUp: React.FC = () => {
               </Grid>
             </Grid>
             <div
-              style={{ visibility: error ? 'visible' : 'hidden' }}
+              style={{ display: error ? 'inline-block' : 'none' }}
               className={classes.errorMessages}
             >
               <ul>

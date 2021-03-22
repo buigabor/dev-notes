@@ -1,3 +1,4 @@
+import axios from 'axios';
 import bcrypt from 'bcrypt';
 import cookie from 'cookie';
 import express from 'express';
@@ -6,6 +7,7 @@ import {
   getUserByEmail,
   getUserByName,
   insertSession,
+  saveGithubUser,
   saveUser,
 } from '../db';
 import { generateToken } from '../utils/session';
@@ -78,7 +80,7 @@ router.post('/register', async (req, res) => {
     await deleteExpiredSessions();
     return res.status(200).json({ success: true, error: null });
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).json(error);
   }
 });
 
@@ -110,7 +112,7 @@ router.post('/login', async (req, res) => {
     await deleteExpiredSessions();
     return res.status(200).json({ success: true, error: null });
   } catch (error) {
-    res.status(400).json({ success: false, error: error });
+    return res.status(400).json({ success: false, error: error });
   }
 });
 
@@ -125,6 +127,67 @@ router.get('/logout', async (req, res) => {
     );
     req.headers.userId = '';
     res.status(200).json({ success: true, error: null });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error });
+  }
+});
+
+router.get('/github', async (req, res) => {
+  try {
+    const redirect_uri = 'http://localhost:4005/auth/oauth-callback';
+    // `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENTID}`,
+    res.redirect(
+      `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENTID}`,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get('/oauth-callback', async (req, res) => {
+  let token = null;
+  const body = {
+    client_id: process.env.GITHUB_CLIENTID,
+    client_secret: process.env.GITHUB_CLIENT_SECRET,
+    code: req.query.code,
+  };
+  const opts = {
+    headers: { accept: 'application/json' },
+    withCredentials: true,
+  };
+  try {
+    const response = await axios.post(
+      `https://github.com/login/oauth/access_token`,
+      body,
+      {
+        headers: {
+          accept: 'application/json',
+        },
+      },
+    );
+    token = response.data['access_token'];
+
+    const {
+      data: { login, id, name },
+    } = await axios.get('https://api.github.com/user', {
+      headers: { Authorization: `bearer ${token}` },
+    });
+    const user = await saveGithubUser(name, id);
+    await insertSession(token, id);
+
+    const maxAge = 60 * 60 * 72; // 24 hours
+    res.setHeader(
+      'Set-Cookie',
+      cookie.serialize('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge,
+        path: '/',
+      }),
+    );
+    await deleteExpiredSessions();
+    res.redirect('http://localhost:3000');
   } catch (error) {
     res.status(400).json({ success: false, error: error });
   }
