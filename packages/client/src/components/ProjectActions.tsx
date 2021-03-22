@@ -26,7 +26,6 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
   const project = useTypedSelector((state) => state.projects);
   const cellsState = useTypedSelector((state) => state.cells);
   const history = useHistory();
-  console.log(project);
 
   const checkIfLoggedIn = async () => {
     return await axios

@@ -48,30 +48,6 @@ async function myAuthFunction(params: {
   };
 }
 
-// const service = new RoomService({
-//   auth: async (params) => {
-//     const response = await fetch('http://localhost:8080/api/roomservice', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       credentials: 'include',
-//       body: JSON.stringify({
-//         room: params.room,
-//       }),
-//     });
-//     if (response.status === 401) {
-//       throw new Error('Unauthorized!');
-//     }
-//     const body = await response.json();
-//     return {
-//       user: body.user,
-//       resources: body.resources,
-//       token: body.token,
-//     };
-//   },
-// });
-
 export const App = () => {
   function useUserID(): string | null {
     const [userID, setUserID] = useState<string | null>(null);
@@ -126,6 +102,7 @@ export const App = () => {
               <Route path="/collab" exact component={RoomService} />
               <Route path="/login" component={Login} />
               <Route path="/signup" component={SignUp} />
+              <Route path="/room/:id" component={RoomService} />
             </Switch>
           </Router>
         </Provider>

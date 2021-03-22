@@ -130,9 +130,21 @@ export const NavBar = () => {
   const [user, setUser] = useState({ username: '', userId: null });
   const [profileClicked, setProfileClicked] = useState<boolean>(false);
   const [logoutClicked, setLogoutClicked] = useState(false);
+  const [roomId, setRoomId] = useState('');
   const { showAlert, hideAlert } = useActions();
   const history = useHistory();
   const location = useLocation();
+
+  const randomId = () => {
+    var S4 = function () {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substr(2, 7);
+    };
+    return S4() + S4() + '-' + S4() + S4() + '-' + S4() + S4() + S4();
+  };
+
+  useEffect(() => {
+    setRoomId(randomId());
+  }, []);
 
   useEffect(() => {
     axios
@@ -159,7 +171,7 @@ export const NavBar = () => {
 
             {user.username ? (
               <>
-                <Link className={classes.collabBtn} to="/collab">
+                <Link className={classes.collabBtn} to={`/room/${roomId}`}>
                   <Button color="inherit">
                     <i className="fas fa-comments"></i> Collaborate
                   </Button>

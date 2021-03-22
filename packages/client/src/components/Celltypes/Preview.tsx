@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import previewStyles from './styles/previewStyles';
 
 interface PreviewProps {
@@ -8,7 +8,9 @@ interface PreviewProps {
 }
 
 // HTML to inject into iframe
-const html = `<html>
+const html = `
+  <!DOCTYPE html>
+  <html>
   <head>
   <style></style>
   </head>
@@ -25,7 +27,6 @@ const html = `<html>
           event.preventDefault();
           handleError(event.error);
         })
-
       window.addEventListener('message', (event)=>{
         try{
          eval(event.data);
@@ -39,20 +40,27 @@ const html = `<html>
 
 export const Preview: React.FC<PreviewProps> = ({ code, error }) => {
   const iframe = useRef<any>();
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     // Inject the previously declared html
+
     iframe.current.srcdoc = html;
+
     // Send the bundled and transpiled code to the child iframe
     setTimeout(() => {
-      iframe.current.contentWindow.postMessage(code, '*');
+      if (!iframe.current) {
+        return;
+      }
+      iframe.current?.contentWindow.postMessage(code, '*');
     }, 50);
   }, [code]);
+
   return (
     <div css={previewStyles}>
       <iframe
-        title="code preview"
         ref={iframe}
+        title="code preview"
         sandbox="allow-scripts"
         srcDoc={html}
       />
