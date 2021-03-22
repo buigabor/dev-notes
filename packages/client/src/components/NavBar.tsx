@@ -9,6 +9,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useActions } from '../hooks/useActions';
+import RoomDialog from './RoomDialog';
 import { Alert } from './Utils/Alert';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#06c8bf',
       border: '1px solid #06c8bf',
       borderRadius: 4,
-      padding: '0px 8px',
+      padding: '5px 12px',
       margin: '0 8px',
       marginLeft: 'auto',
       transition: 'all 0.2s ease-in-out',
@@ -131,6 +132,9 @@ export const NavBar = () => {
   const [profileClicked, setProfileClicked] = useState<boolean>(false);
   const [logoutClicked, setLogoutClicked] = useState(false);
   const [roomId, setRoomId] = useState('');
+  const [roomUrl, setRoomUrl] = useState('');
+  const [openRoomDialog, setOpenRoomDialog] = useState(false);
+
   const { showAlert, hideAlert } = useActions();
   const history = useHistory();
   const location = useLocation();
@@ -161,6 +165,12 @@ export const NavBar = () => {
 
   return (
     <>
+      <RoomDialog
+        roomId={roomId}
+        roomUrl={roomUrl}
+        openRoomDialog={openRoomDialog}
+        setOpenRoomDialog={setOpenRoomDialog}
+      />
       <Alert />
       <div>
         <AppBar className={classes.root} position="static">
@@ -171,11 +181,17 @@ export const NavBar = () => {
 
             {user.username ? (
               <>
-                <Link className={classes.collabBtn} to={`/room/${roomId}`}>
-                  <Button color="inherit">
-                    <i className="fas fa-comments"></i> Collaborate
-                  </Button>
-                </Link>
+                <Button
+                  className={classes.collabBtn}
+                  onClick={() => {
+                    setRoomId(randomId());
+                    setRoomUrl(`http:localhost:3000/room/${roomId}`);
+                    setOpenRoomDialog(true);
+                  }}
+                  color="inherit"
+                >
+                  <i className="fas fa-comments"></i> Collaborate
+                </Button>
                 <div
                   onClick={() => {
                     setProfileClicked(!profileClicked);

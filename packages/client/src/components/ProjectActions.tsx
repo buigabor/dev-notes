@@ -11,7 +11,7 @@ interface ProjectActionsProps {
   setShowLoadOverlay: React.Dispatch<React.SetStateAction<boolean>>;
   setShowAddOverlay: React.Dispatch<React.SetStateAction<boolean>>;
   setShowEditOverlay: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenDeleteCellsDialog: React.Dispatch<React.SetStateAction<boolean>>;
   setProjects: React.Dispatch<React.SetStateAction<Project[] | null>>;
 }
 
@@ -19,7 +19,7 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
   setShowLoadOverlay,
   setShowAddOverlay,
   setShowEditOverlay,
-  setOpenDialog,
+  setOpenDeleteCellsDialog,
   setProjects,
 }) => {
   const { showAlert, hideAlert } = useActions();
@@ -157,7 +157,7 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
       </button>
       <button
         onClick={() => {
-          setOpenDialog(true);
+          setOpenDeleteCellsDialog(true);
         }}
         className="delete-all-btn"
       >

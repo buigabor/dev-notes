@@ -4,54 +4,82 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
-export default function FormDialog() {
-  const [open, setOpen] = React.useState(false);
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    goToRoomBtn: {
+      color: '#06c8bf',
+    },
+  }),
+);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+interface RoomDialogProps {
+  roomId: string;
+  roomUrl: string;
+  openRoomDialog: boolean;
+  setOpenRoomDialog: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+const RoomDialog: React.FC<RoomDialogProps> = ({
+  roomId,
+  roomUrl,
+  openRoomDialog,
+  setOpenRoomDialog,
+}) => {
+  const classes = useStyles();
+  const history = useHistory();
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open form dialog
-      </Button>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={openRoomDialog}
+        onClose={() => {
+          setOpenRoomDialog(false);
+        }}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogTitle id="form-dialog-title">Invite a friend</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
+            A Room has been created for you. Please copy and paste this link to
+            enter the room:
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Email Address"
-            type="email"
+            label="Link"
             fullWidth
+            value={roomUrl}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
+          <Button
+            onClick={() => {
+              navigator.clipboard.writeText(roomUrl);
+            }}
+            color="primary"
+          >
+            Copy
           </Button>
-          <Button onClick={handleClose} color="primary">
-            Subscribe
+
+          <Button
+            onClick={() => {
+              history.push(`/room/${roomId}`);
+              setOpenRoomDialog(false);
+            }}
+            className={classes.goToRoomBtn}
+          >
+            Go To Room
           </Button>
         </DialogActions>
       </Dialog>
     </div>
   );
-}
+};
+
+export default RoomDialog;

@@ -17,23 +17,23 @@ const Transition = React.forwardRef(function Transition(
 });
 
 interface DeleteCellsDialogProps {
-  openDialog: boolean;
-  setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  openDeleteCellsDialog: boolean;
+  setOpenDeleteCellsDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const DeleteCellsDialog: React.FC<DeleteCellsDialogProps> = ({
-  openDialog,
-  setOpenDialog,
+  openDeleteCellsDialog,
+  setOpenDeleteCellsDialog,
 }) => {
   const { loadCells } = useActions();
   return (
     <div>
       <Dialog
-        open={openDialog}
+        open={openDeleteCellsDialog}
         TransitionComponent={Transition}
         keepMounted
         onClose={() => {
-          setOpenDialog(false);
+          setOpenDeleteCellsDialog(false);
         }}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
@@ -52,7 +52,7 @@ export const DeleteCellsDialog: React.FC<DeleteCellsDialogProps> = ({
             onClick={() => {
               // Delete both cellsorder and data of cells
               loadCells([], {});
-              setOpenDialog(false);
+              setOpenDeleteCellsDialog(false);
             }}
             color="secondary"
           >
@@ -60,7 +60,7 @@ export const DeleteCellsDialog: React.FC<DeleteCellsDialogProps> = ({
           </Button>
           <Button
             onClick={() => {
-              setOpenDialog(false);
+              setOpenDeleteCellsDialog(false);
             }}
             color="primary"
           >

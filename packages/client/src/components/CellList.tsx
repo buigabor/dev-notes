@@ -11,13 +11,12 @@ import { ProjectActions } from './ProjectActions';
 import cellListStyles from './styles/cellListStyles';
 import { AddCell } from './Utils/AddCell';
 import { Alert } from './Utils/Alert';
-
 export const CellList: React.FC = () => {
   const [showAddOverlay, setShowAddOverlay] = useState(false);
   const [showLoadOverlay, setShowLoadOverlay] = useState(false);
   const [showEditOverlay, setShowEditOverlay] = useState(false);
   const [projects, setProjects] = useState<Project[] | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDeleteCellsDialog, setOpenDeleteCellsDialog] = useState(false);
 
   const orderedCellList = useTypedSelector(({ cells: { order, data } }) => {
     return order.map((cellId: string) => {
@@ -34,8 +33,8 @@ export const CellList: React.FC = () => {
   return (
     <>
       <DeleteCellsDialog
-        openDialog={openDialog}
-        setOpenDialog={setOpenDialog}
+        openDeleteCellsDialog={openDeleteCellsDialog}
+        setOpenDeleteCellsDialog={setOpenDeleteCellsDialog}
       />
       <Alert />
       <AddProjectLayout
@@ -57,7 +56,7 @@ export const CellList: React.FC = () => {
         setShowAddOverlay={setShowAddOverlay}
         setShowEditOverlay={setShowEditOverlay}
         setProjects={setProjects}
-        setOpenDialog={setOpenDialog}
+        setOpenDeleteCellsDialog={setOpenDeleteCellsDialog}
       />
 
       <div css={cellListStyles}>
