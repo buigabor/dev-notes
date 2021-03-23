@@ -8,7 +8,7 @@ import {
   getUserByEmail,
   getUserByName,
   insertSession,
-  saveGithubOrGoogleUser,
+  saveGithubUser,
   saveUser,
 } from '../db';
 import { generateToken } from '../utils/session';
@@ -173,7 +173,7 @@ router.get('/oauth-callback', async (req, res) => {
     } = await axios.get('https://api.github.com/user', {
       headers: { Authorization: `bearer ${token}` },
     });
-    const user = await saveGithubOrGoogleUser(name, id);
+    const user = await saveGithubUser(name, id);
     await insertSession(token, id);
 
     const maxAge = 60 * 60 * 72; // 24 hours
@@ -207,12 +207,12 @@ router.post('/google', async (req, res) => {
     });
     const payload = ticket.getPayload();
     if (payload && payload.name && payload.email) {
-      const userid = payload.sub;
       const name = payload.name;
       const email = payload.email;
-      const user = await saveUser({ username: name, password: 'N/A', email });
-      console.log(user);
-      await insertSession(sessionCookie, user.id);
+      const userId = Number(payload.sub.slice(10));
+
+      const user = await saveGithubUser(name, userId, email);
+      await insertSession(sessionCookie, userId);
     }
     // If request specified a G Suite domain:
     // const domain = payload['hd'];

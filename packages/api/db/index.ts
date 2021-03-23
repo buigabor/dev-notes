@@ -48,18 +48,20 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function saveUser({ username, password, email }: UserInDB) {
-  const currentUser = await sql`INSERT INTO users (username, password, email) VALUES(${username},${password}, ${email}) ON CONFLICT(id) DO UPDATE SET username=${username} RETURNING *;`;
+  const currentUser = await sql`INSERT INTO users (username, password, email) VALUES(${username},${password}, ${email})`;
   return currentUser.map((c: UserInDB) => camelcaseKeys(c))[0];
 }
 
-export async function saveGithubOrGoogleUser(username: string, userid: number) {
+export async function saveGithubUser(
+  username: string,
+  userid: number | string,
+  email = 'N/A',
+) {
   const currentUser = await sql`INSERT INTO users (id, username, password, email)
    OVERRIDING SYSTEM VALUE
-   VALUES (${userid},${username}, ${'N/A'},${'N/A'} )
+   VALUES (${userid},${username}, ${'N/A'},${email} )
     ON CONFLICT(id) DO UPDATE SET username=${username} RETURNING *;
    `;
-  console.log(currentUser);
-
   return currentUser.map((c: UserInDB) => camelcaseKeys(c))[0];
 }
 

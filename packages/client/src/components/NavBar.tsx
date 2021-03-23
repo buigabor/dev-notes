@@ -7,6 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { GoogleLogout, useGoogleLogout } from 'react-google-login';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useActions } from '../hooks/useActions';
 import RoomDialog from './RoomDialog';
@@ -135,6 +136,11 @@ export const NavBar = () => {
   const [roomUrl, setRoomUrl] = useState('');
   const [openRoomDialog, setOpenRoomDialog] = useState(false);
 
+  const { signOut, loaded } = useGoogleLogout({
+    clientId:
+      '177265743848-cu6brt5pur5s7dgcpdfobnu489hfhvlu.apps.googleusercontent.com',
+  });
+
   const { showAlert, hideAlert } = useActions();
   const history = useHistory();
   const location = useLocation();
@@ -251,28 +257,38 @@ export const NavBar = () => {
               setProfileClicked(false);
             }}
           >
-            <span
-              onClick={async () => {
-                try {
-                  await axios.get('http://localhost:4005/auth/logout', {
-                    withCredentials: true,
-                  });
-                  setLogoutClicked(!logoutClicked);
-                  showAlert('Logout successful!', 'success');
-                  setTimeout(() => {
-                    hideAlert();
-                  }, 1500);
-                  history.push('/');
-                } catch (error) {
-                  showAlert('Logout failed!', 'error');
-                  setTimeout(() => {
-                    hideAlert();
-                  }, 1500);
-                }
+            <GoogleLogout
+              clientId="177265743848-cu6brt5pur5s7dgcpdfobnu489hfhvlu.apps.googleusercontent.com"
+              buttonText="Logout"
+              render={(renderProps) => (
+                <span
+                  onClick={async () => {
+                    try {
+                      await axios.get('http://localhost:4005/auth/logout', {
+                        withCredentials: true,
+                      });
+                      renderProps.onClick();
+                      setLogoutClicked(!logoutClicked);
+                      showAlert('Logout successful!', 'success');
+                      setTimeout(() => {
+                        hideAlert();
+                      }, 1500);
+                      history.push('/');
+                    } catch (error) {
+                      showAlert('Logout failed!', 'error');
+                      setTimeout(() => {
+                        hideAlert();
+                      }, 1500);
+                    }
+                  }}
+                >
+                  <i className="fas fa-sign-out-alt"></i>Logout
+                </span>
+              )}
+              onLogoutSuccess={() => {
+                console.log('Logged out');
               }}
-            >
-              <i className="fas fa-sign-out-alt"></i>Logout
-            </span>
+            ></GoogleLogout>
           </div>
         </div>
       </div>

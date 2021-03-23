@@ -31,7 +31,7 @@ exports.up = async (sql) => {
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 		token text,
 		expiry_timestamp TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '72 hours',
-		user_id INT REFERENCES users(id) ON DELETE CASCADE
+		user_id BIGINT REFERENCES users(id) ON DELETE CASCADE
 	)`;
 };
 

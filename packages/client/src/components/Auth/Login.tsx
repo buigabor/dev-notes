@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import { makeStyles, Theme, withStyles } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -76,6 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
   },
   submit: {
+    padding: '0.5rem 0',
     color: 'white',
     margin: theme.spacing(3, 0, 2),
     backgroundColor: '#00b5ad',
@@ -92,7 +95,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': { backgroundColor: '#1f1e1e' },
     '& img': { color: 'white', width: '8%', marginRight: 15 },
   },
+  googleSignInBtn: {
+    textAlign: 'center',
+    width: '100%',
+    padding: '.5rem 1.2rem',
+  },
 }));
+
+const googleSignInBtn = css`
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+`;
 
 export const Login: React.FC = () => {
   const [user, setUser] = useState({
@@ -130,13 +146,6 @@ export const Login: React.FC = () => {
       }, 1200);
     }
   };
-
-  // function signOut() {
-  //   var auth2 = gapi.auth2.getAuthInstance();
-  //   auth2.signOut().then(function () {
-  //     console.log('User signed out.');
-  //   });
-  // }
 
   const classes = useStyles();
   return (
@@ -222,21 +231,14 @@ export const Login: React.FC = () => {
               Sign In
             </Button>
             <GoogleLogin
+              css={googleSignInBtn}
               clientId="177265743848-cu6brt5pur5s7dgcpdfobnu489hfhvlu.apps.googleusercontent.com"
-              buttonText="Login"
+              buttonText="SIGN IN WITH GOOGLE"
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
               cookiePolicy={'single_host_origin'}
             />
             ,
-            {/* <a
-              href="#"
-              onClick={() => {
-                signOut();
-              }}
-            >
-              Sign out
-            </a> */}
             <Button className={classes.githubLink}>
               <img alt="Github logo" src="/GitHub-Mark-Light-64px.png" />
               <Link
