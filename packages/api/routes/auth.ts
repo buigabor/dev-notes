@@ -2,12 +2,13 @@ import axios from 'axios';
 import bcrypt from 'bcrypt';
 import cookie from 'cookie';
 import express from 'express';
+import { OAuth2Client } from 'google-auth-library';
 import {
   deleteExpiredSessions,
   getUserByEmail,
   getUserByName,
   insertSession,
-  saveGithubUser,
+  saveGithubOrGoogleUser,
   saveUser,
 } from '../db';
 import { generateToken } from '../utils/session';
@@ -172,7 +173,7 @@ router.get('/oauth-callback', async (req, res) => {
     } = await axios.get('https://api.github.com/user', {
       headers: { Authorization: `bearer ${token}` },
     });
-    const user = await saveGithubUser(name, id);
+    const user = await saveGithubOrGoogleUser(name, id);
     await insertSession(token, id);
 
     const maxAge = 60 * 60 * 72; // 24 hours
@@ -188,6 +189,49 @@ router.get('/oauth-callback', async (req, res) => {
     );
     await deleteExpiredSessions();
     res.redirect('http://localhost:3000');
+  } catch (error) {
+    res.status(400).json({ success: false, error: error });
+  }
+});
+
+router.post('/google', async (req, res) => {
+  const token = req.body.token;
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
+  const sessionCookie = generateToken();
+  async function verify() {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENTID, // Specify the CLIENT_ID of the app that accesses the backend
+      // Or, if multiple clients access the backend:
+      //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+    });
+    const payload = ticket.getPayload();
+    if (payload && payload.name && payload.email) {
+      const userid = payload.sub;
+      const name = payload.name;
+      const email = payload.email;
+      const user = await saveUser({ username: name, password: 'N/A', email });
+      console.log(user);
+      await insertSession(sessionCookie, user.id);
+    }
+    // If request specified a G Suite domain:
+    // const domain = payload['hd'];
+  }
+  try {
+    await verify();
+
+    const maxAge = 60 * 60 * 72; // 24 hours
+    res.setHeader(
+      'Set-Cookie',
+      cookie.serialize('token', sessionCookie, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge,
+        path: '/',
+      }),
+    );
+    res.status(200).json({ success: true, error: null });
   } catch (error) {
     res.status(400).json({ success: false, error: error });
   }

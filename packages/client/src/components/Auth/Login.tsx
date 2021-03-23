@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
+import GoogleLogin from 'react-google-login';
 import { useHistory } from 'react-router';
 import { useActions } from '../../hooks/useActions';
 import { Alert } from '../Utils/Alert';
@@ -106,6 +107,37 @@ export const Login: React.FC = () => {
     setUser({ ...user, [e.target.name]: e.target.value } as any);
   };
 
+  const responseGoogle = async (response: any) => {
+    const token = response.tokenId;
+    try {
+      await axios.post(
+        'http://localhost:4005/auth/google',
+        {
+          token,
+        },
+        { withCredentials: true },
+      );
+      showAlert('Login successful!', 'success');
+      setTimeout(() => {
+        hideAlert();
+        history.goBack();
+      }, 1200);
+    } catch (error) {
+      showAlert('Login failed!', 'error');
+      setTimeout(() => {
+        hideAlert();
+        history.goBack();
+      }, 1200);
+    }
+  };
+
+  // function signOut() {
+  //   var auth2 = gapi.auth2.getAuthInstance();
+  //   auth2.signOut().then(function () {
+  //     console.log('User signed out.');
+  //   });
+  // }
+
   const classes = useStyles();
   return (
     <>
@@ -189,6 +221,22 @@ export const Login: React.FC = () => {
             >
               Sign In
             </Button>
+            <GoogleLogin
+              clientId="177265743848-cu6brt5pur5s7dgcpdfobnu489hfhvlu.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={'single_host_origin'}
+            />
+            ,
+            {/* <a
+              href="#"
+              onClick={() => {
+                signOut();
+              }}
+            >
+              Sign out
+            </a> */}
             <Button className={classes.githubLink}>
               <img alt="Github logo" src="/GitHub-Mark-Light-64px.png" />
               <Link
@@ -197,7 +245,6 @@ export const Login: React.FC = () => {
                 Sign In with Github
               </Link>
             </Button>
-
             <Grid container justify="flex-end">
               <Grid item>
                 <Link className={classes.link} href="/signup" variant="body2">

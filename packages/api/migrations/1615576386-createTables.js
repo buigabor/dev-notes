@@ -1,6 +1,6 @@
 exports.up = async (sql) => {
   await sql`CREATE TABLE users (
-    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 		username VARCHAR (50) NOT NULL,
     email VARCHAR (50) NOT NULL,
 		password TEXT NOT NULL
@@ -29,7 +29,7 @@ exports.up = async (sql) => {
 
   await sql`CREATE TABLE sessions (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-		token VARCHAR(50),
+		token text,
 		expiry_timestamp TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '72 hours',
 		user_id INT REFERENCES users(id) ON DELETE CASCADE
 	)`;

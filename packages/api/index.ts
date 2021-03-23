@@ -7,7 +7,7 @@ import sessionsRoute from './routes/sessions';
 import usersRoute from './routes/user';
 
 const app = express();
-const port = 4005;
+const port = process.env.PORT || 4005;
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', req.header('Origin'));
