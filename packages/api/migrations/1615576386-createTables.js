@@ -2,7 +2,7 @@ exports.up = async (sql) => {
   await sql`CREATE TABLE users (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 		username VARCHAR (50) NOT NULL,
-    email VARCHAR (50) NOT NULL,
+    email VARCHAR (50) NOT NULL UNIQUE,
 		password TEXT NOT NULL
 	)`;
 
@@ -11,7 +11,7 @@ exports.up = async (sql) => {
     title VARCHAR(70) NOT NULL,
     subtitle VARCHAR(70),
     description TEXT,
-		user_id INT REFERENCES users (id)
+		user_id BIGINT REFERENCES users (id)
 	)`;
 
   await sql`CREATE TABLE cell_types (

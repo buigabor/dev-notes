@@ -66,16 +66,6 @@ const RoomDialog: React.FC<RoomDialogProps> = ({
           >
             Copy
           </Button>
-
-          <Button
-            onClick={() => {
-              history.push(`/room/${roomId}`);
-              setOpenRoomDialog(false);
-            }}
-            className={classes.goToRoomBtn}
-          >
-            Go To Room
-          </Button>
         </DialogActions>
       </Dialog>
     </div>

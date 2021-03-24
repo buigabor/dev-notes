@@ -1,11 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { SketchField, Tools } from 'react-sketch';
+import { useActions } from '../../hooks/useActions';
+import { Cell } from '../../state';
 import { Resizable } from '../Utils/Resizable';
 import { SketchToolBox } from './SketchToolBox';
 import sketchStyles from './styles/sketchStyles';
 
-export const Sketch: React.FC = () => {
+interface SketchCellProps {
+  cell: Cell;
+}
+
+export const Sketch: React.FC<SketchCellProps> = ({ cell }) => {
   const sketchRef = useRef<any>();
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
@@ -13,8 +19,7 @@ export const Sketch: React.FC = () => {
   const [color, setColor] = useState('black');
   const [eraserClicked, setEraserClicked] = useState(false);
   const [lineWidth, setLineWidth] = useState(3);
-
-  useEffect(() => {}, []);
+  const { updateCell } = useActions();
 
   return (
     <>
@@ -41,7 +46,9 @@ export const Sketch: React.FC = () => {
             onChange={() => {
               setCanUndo(sketchRef.current.canUndo());
               setCanRedo(sketchRef.current.canRedo());
+              updateCell(cell.id, JSON.stringify(sketchRef.current.toJSON()));
             }}
+            defaultValue={cell.content || ''}
             backgroundColor={'white'}
             ref={sketchRef}
             css={sketchStyles}

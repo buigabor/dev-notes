@@ -48,13 +48,13 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function saveUser({ username, password, email }: UserInDB) {
-  const currentUser = await sql`INSERT INTO users (username, password, email) VALUES(${username},${password}, ${email})`;
+  const currentUser = await sql`INSERT INTO users (username, password, email) VALUES(${username},${password}, ${email}) ON CONFLICT (email) DO UPDATE SET username=${username} RETURNING *`;
   return currentUser.map((c: UserInDB) => camelcaseKeys(c))[0];
 }
 
-export async function saveGithubUser(
+export async function saveGithubOrGoogleUser(
   username: string,
-  userid: number | string,
+  userid: number,
   email = 'N/A',
 ) {
   const currentUser = await sql`INSERT INTO users (id, username, password, email)

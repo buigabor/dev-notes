@@ -7,10 +7,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { GoogleLogout, useGoogleLogout } from 'react-google-login';
+import { GoogleLogout } from 'react-google-login';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useActions } from '../hooks/useActions';
-import RoomDialog from './RoomDialog';
+import RoomDialog from './RoomService/RoomDialog';
 import { Alert } from './Utils/Alert';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -127,34 +127,27 @@ const dropdownStyles = css`
   }
 `;
 
+const randomId = () => {
+  var S4 = function () {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substr(2, 7);
+  };
+  return S4() + S4() + '-' + S4() + S4() + '-' + S4() + S4() + S4();
+};
+
 export const NavBar = () => {
   const classes = useStyles();
   const [user, setUser] = useState({ username: '', userId: null });
   const [profileClicked, setProfileClicked] = useState<boolean>(false);
   const [logoutClicked, setLogoutClicked] = useState(false);
-  const [roomId, setRoomId] = useState('');
-  const [roomUrl, setRoomUrl] = useState('');
+  const [roomId, setRoomId] = useState(randomId());
+  const [roomUrl, setRoomUrl] = useState(`http:localhost:3000/room/${roomId}`);
   const [openRoomDialog, setOpenRoomDialog] = useState(false);
-
-  const { signOut, loaded } = useGoogleLogout({
-    clientId:
-      '177265743848-cu6brt5pur5s7dgcpdfobnu489hfhvlu.apps.googleusercontent.com',
-  });
 
   const { showAlert, hideAlert } = useActions();
   const history = useHistory();
   const location = useLocation();
 
-  const randomId = () => {
-    var S4 = function () {
-      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substr(2, 7);
-    };
-    return S4() + S4() + '-' + S4() + S4() + '-' + S4() + S4() + S4();
-  };
-
-  useEffect(() => {
-    setRoomId(randomId());
-  }, []);
+  useEffect(() => {}, [openRoomDialog]);
 
   useEffect(() => {
     axios

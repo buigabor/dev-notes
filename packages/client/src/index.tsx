@@ -9,7 +9,7 @@ import { Login } from './components/Auth/Login';
 import { SignUp } from './components/Auth/SignUp';
 import { CellList } from './components/CellList';
 import { NavBar } from './components/NavBar';
-import { RoomService } from './components/RoomService';
+import { RoomService } from './components/RoomService/RoomService';
 import { store } from './state';
 
 async function myAuthFunction(params: {

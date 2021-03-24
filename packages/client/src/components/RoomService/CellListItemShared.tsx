@@ -1,18 +1,31 @@
 /** @jsxImportSource @emotion/react */
+import { MapClient } from '@roomservice/browser';
 import { AnimateSharedLayout, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
-import { Cell } from '../state';
-import CodeCell from './Celltypes/CodeCell';
-import { Sketch } from './Celltypes/Sketch';
-import { TextEditor } from './Celltypes/TextEditor';
-import cellListItemStyles from './styles/cellListItemStyles';
-import { ActionBar } from './Utils/ActionBar';
+import cellListItemStyles from '../styles/cellListItemStyles';
+import { ActionBarShared } from './ActionBarShared';
+import { CodeCellShared } from './CodeCellShared';
+import { TextEditorShared } from './TextEditorShared';
 
-interface CellListItemProps {
-  cell: Cell;
+interface CellListItemSharedProps {
+  cell: { id: string; type: string; content: string };
+  dataMap: MapClient<any> | undefined;
+  data: {
+    [key: string]: {
+      id: string;
+      type: string;
+      content: string;
+    };
+  };
+  deleteCell: (id: string) => void;
 }
 
-export const CellListItem: React.FC<CellListItemProps> = ({ cell }) => {
+export const CellListItemShared: React.FC<CellListItemSharedProps> = ({
+  cell,
+  dataMap,
+  data,
+  deleteCell,
+}) => {
   const [cellToRender, setCellToRender] = useState<JSX.Element>();
 
   useEffect(() => {
@@ -27,9 +40,10 @@ export const CellListItem: React.FC<CellListItemProps> = ({ cell }) => {
               transition={{ duration: 0.6 }}
             >
               <div className="action-bar-wrapper">
-                <ActionBar id={cell.id} />
+                <ActionBarShared deleteCell={deleteCell} id={cell.id} />
               </div>
-              <CodeCell cell={cell} />
+
+              <CodeCellShared data={data} dataMap={dataMap} cell={cell} />
             </motion.div>
           </AnimateSharedLayout>
         </>,
@@ -44,26 +58,8 @@ export const CellListItem: React.FC<CellListItemProps> = ({ cell }) => {
               }}
               transition={{ duration: 0.6 }}
             >
-              <ActionBar id={cell.id} />
-              <TextEditor cell={cell} />
-            </motion.div>
-          </AnimateSharedLayout>
-        </>,
-      );
-    } else if (cell.type === 'sketch') {
-      setCellToRender(
-        <>
-          <AnimateSharedLayout>
-            <motion.div
-              animate={{
-                scale: [1, 1.02, 1],
-              }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="action-bar-wrapper">
-                <ActionBar id={cell.id} />
-              </div>
-              <Sketch cell={cell} />
+              <ActionBarShared deleteCell={deleteCell} id={cell.id} />
+              <TextEditorShared data={data} dataMap={dataMap} cell={cell} />
             </motion.div>
           </AnimateSharedLayout>
         </>,

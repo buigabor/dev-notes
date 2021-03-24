@@ -21,7 +21,7 @@
     "@types/react-redux": "7.1.15",
     "@types/react-resizable": "1.7.2",
     "@types/react-router-dom": "^5.1.7",
-    "@uiw/react-md-editor": "2.1.1",
+    "@uiw/react-md-editor": "^3.0.0-beta.3",
     "axios": "0.21.1",
     "bulmaswatch": "^0.8.1",
     "customize-cra": "^1.0.0",
