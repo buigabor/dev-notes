@@ -16,21 +16,13 @@ app.use(function (req, res, next) {
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',
   );
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.header(
+    'Access-Control-Allow-Methods',
+    'GET, POST, OPTIONS, PUT, DELETE, PATCH',
+  );
   next();
 });
-// app.use(cors());
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: [
-//       'http://localhost:3000',
-//       'https://github.com',
-//       'http://localhost:4005',
-//     ],
-//     preflightContinue: true,
-//   }),
-// );
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -43,14 +35,6 @@ app.use('/cells', cellsRoute);
 app.use('/projects', projectsRoute);
 app.use('/sessions', sessionsRoute);
 app.use('/roomservice', roomserviceRoute);
-
-// app.use((req, res, next) => {
-//   var token = csrfTokens;
-//   res.cookie('XSRF-TOKEN', token);
-//   res.locals.csrfToken = token;
-
-//   next();
-// });
 
 app.get('/', async (req, res) => {
   res.status(200).json({ info: 'Node.js, Express, and Postgres API' });

@@ -35,15 +35,18 @@ export const CellList: React.FC = () => {
   return (
     <>
       <DeleteCellsDialog
+        collaboration={false}
         openDeleteCellsDialog={openDeleteCellsDialog}
         setOpenDeleteCellsDialog={setOpenDeleteCellsDialog}
       />
       <Alert />
       <AddProjectLayout
+        collaboration={false}
         setShowAddOverlay={setShowAddOverlay}
         showAddOverlay={showAddOverlay}
       />
       <LoadProjectLayout
+        collaboration={false}
         projects={projects}
         setProjects={setProjects}
         showLoadOverlay={showLoadOverlay}
@@ -54,6 +57,7 @@ export const CellList: React.FC = () => {
         setShowEditOverlay={setShowEditOverlay}
       />
       <ProjectActions
+        collaboration={false}
         setShowLoadOverlay={setShowLoadOverlay}
         setShowAddOverlay={setShowAddOverlay}
         setShowEditOverlay={setShowEditOverlay}

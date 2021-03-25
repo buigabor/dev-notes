@@ -6,6 +6,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
+import { MapClient } from '@roomservice/browser';
 import React from 'react';
 import { useActions } from '../hooks/useActions';
 
@@ -19,11 +20,33 @@ const Transition = React.forwardRef(function Transition(
 interface DeleteCellsDialogProps {
   openDeleteCellsDialog: boolean;
   setOpenDeleteCellsDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  data?: {
+    [key: string]: {
+      id: string;
+      type: string;
+      content: string;
+    };
+  };
+  orderMap?: MapClient<{
+    order: string[];
+  }>;
+  dataMap?: MapClient<{
+    [key: string]: {
+      id: string;
+      type: string;
+      content: string;
+    };
+  }>;
+  collaboration: boolean;
 }
 
 export const DeleteCellsDialog: React.FC<DeleteCellsDialogProps> = ({
   openDeleteCellsDialog,
   setOpenDeleteCellsDialog,
+  data,
+  orderMap,
+  dataMap,
+  collaboration,
 }) => {
   const { loadCells } = useActions();
   return (
@@ -51,7 +74,14 @@ export const DeleteCellsDialog: React.FC<DeleteCellsDialogProps> = ({
           <Button
             onClick={() => {
               // Delete both cellsorder and data of cells
-              loadCells([], {});
+              if (!collaboration) {
+                loadCells([], {});
+              } else {
+                for (const key in data) {
+                  dataMap?.delete(key);
+                }
+                orderMap?.set('order', []);
+              }
               setOpenDeleteCellsDialog(false);
             }}
             color="secondary"

@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { MapClient } from '@roomservice/browser';
 import React, { useEffect } from 'react';
 import { Project } from '../../state/reducers/projectsReducer';
 import { ProjectCard } from './ProjectCard';
@@ -9,6 +10,17 @@ interface LoadProjectLayoutProps {
   showLoadOverlay: boolean;
   setShowLoadOverlay: React.Dispatch<React.SetStateAction<boolean>>;
   setProjects: React.Dispatch<React.SetStateAction<Project[] | null>>;
+  orderMap?: MapClient<{
+    order: string[];
+  }>;
+  dataMap?: MapClient<{
+    [key: string]: {
+      id: string;
+      type: string;
+      content: string;
+    };
+  }>;
+  collaboration: boolean;
 }
 
 export const LoadProjectLayout: React.FC<LoadProjectLayoutProps> = ({
@@ -16,6 +28,9 @@ export const LoadProjectLayout: React.FC<LoadProjectLayoutProps> = ({
   setShowLoadOverlay,
   projects,
   setProjects,
+  collaboration,
+  dataMap,
+  orderMap,
 }) => {
   useEffect(() => {}, []);
 
@@ -37,6 +52,9 @@ export const LoadProjectLayout: React.FC<LoadProjectLayoutProps> = ({
             ? projects.map((project) => {
                 return (
                   <ProjectCard
+                    orderMap={orderMap}
+                    dataMap={dataMap}
+                    collaboration={collaboration}
                     setProjects={setProjects}
                     setShowLoadOverlay={setShowLoadOverlay}
                     key={project.id}

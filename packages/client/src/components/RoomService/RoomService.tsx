@@ -1,8 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import { useList, useMap, useRoom } from '@roomservice/react';
-import { default as React } from 'react';
+import { css } from '@emotion/react';
+import { useMap, usePresence, useRoom } from '@roomservice/react';
+import { default as React, useEffect, useState } from 'react';
+import Loader from 'react-loader-spinner';
 import { RouteComponentProps } from 'react-router';
+import { Project } from '../../state/reducers/projectsReducer';
+import { DeleteCellsDialog } from '../DeleteCellsDialog';
+import { AddProjectLayout } from '../Layouts/AddProjectLayout';
+import { EditProjectLayout } from '../Layouts/EditProjectLayout';
+import { LoadProjectLayout } from '../Layouts/LoadProjectLayout';
+import { ProjectActions } from '../ProjectActions';
 import cellListStyles from '../styles/cellListStyles';
+import { Alert } from '../Utils/Alert';
 import { AddCellShared } from './AddCellShared';
 import { CellListItemShared } from './CellListItemShared';
 
@@ -17,13 +26,41 @@ const randomId = () => {
   return S4() + S4() + '-' + S4() + '-' + S4() + S4() + S4();
 };
 
+const spinnerStyles = css`
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateY(-50%);
+  transform: translateX(-50%);
+`;
+
 export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
   match,
 }) => {
+  const [showAddOverlay, setShowAddOverlay] = useState(false);
+  const [showLoadOverlay, setShowLoadOverlay] = useState(false);
+  const [showEditOverlay, setShowEditOverlay] = useState(false);
+  const [projects, setProjects] = useState<Project[] | null>(null);
+  const [openDeleteCellsDialog, setOpenDeleteCellsDialog] = useState(false);
+
+  // ROOM SERVICE STATES
+  const [joined, joinedClient] = usePresence('myroom', 'joined');
   const [data, dataMap] = useMap<{
     [key: string]: { id: string; type: string; content: string };
   }>(match.params?.id, 'mydata');
-  const [cellsOrder, order] = useList(match.params?.id, 'cellsOrderMap');
+
+  const [orderCells, orderMap] = useMap<{ order: string[] }>(
+    match.params?.id,
+    'myorder',
+  );
+  useEffect(() => {
+    orderMap?.set('order', []);
+    return () => {};
+  }, [orderMap]);
+  useEffect(() => {
+    joinedClient.set(true);
+  }, []);
+  console.log(joinedClient.getAll());
 
   const insertAfterCell = (id: string | null, type: string) => {
     const cell = {
@@ -33,72 +70,128 @@ export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
     };
     dataMap?.set(cell.id, cell);
 
-    const index = cellsOrder.findIndex((cellId) => cellId === id);
-
-    if (index && index < 0) {
-      order?.insertAt(0, cell.id);
+    const index = orderCells.order.findIndex((cellId) => cellId === id);
+    if (index < 0) {
+      orderCells.order.unshift(cell.id);
+      const newOrder = [...orderCells.order];
+      orderMap?.set('order', newOrder);
     } else {
-      if (index) {
-        order?.insertAfter(index, cell.id);
-      }
+      orderCells.order.splice(index + 1, 0, cell.id);
+      const newOrder = [...orderCells.order];
+      orderMap?.set('order', newOrder);
     }
-    return;
   };
 
   const deleteCell = (id: string) => {
-    console.log(id);
-
-    const cellToDeleteIndex = cellsOrder.findIndex((cellId) => cellId === id);
-    console.log(cellToDeleteIndex);
-
-    order?.delete(cellToDeleteIndex);
+    const newOrder = orderCells.order.filter((cellId) => {
+      return cellId !== id;
+    });
+    orderMap?.set('order', newOrder);
     dataMap?.delete(id);
   };
 
-  const orderedCellList = cellsOrder.map((cellId) => {
-    return data[cellId];
-  });
+  const moveCell = (id: string, direction: 'up' | 'down') => {
+    const index = orderCells.order.findIndex((cellId) => cellId === id);
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
 
-  const renderedCells = orderedCellList.map((cell) => {
-    if (!cell) {
-      return 'emppty';
+    // if target index is out of bound
+    if (targetIndex < 0 || targetIndex > orderCells.order.length - 1) {
+      return;
     }
-    return (
-      <React.Fragment key={cell.id}>
-        <CellListItemShared
-          deleteCell={deleteCell}
-          data={data}
-          dataMap={dataMap}
-          cell={cell}
-        />
-        <AddCellShared insertAfterCell={insertAfterCell} nextCellId={cell.id} />
-      </React.Fragment>
-    );
-  });
 
+    // Swap the cells
+    const newOrder = [...orderCells.order];
+    newOrder[index] = newOrder[targetIndex];
+    newOrder[targetIndex] = id;
+    orderMap?.set('order', newOrder);
+  };
+
+  let orderedCellList;
+  if (orderCells.order) {
+    orderedCellList = orderCells.order.map((cellId) => {
+      return data[cellId];
+    });
+  }
+
+  let renderedCells;
+  if (orderedCellList) {
+    renderedCells = orderedCellList.map((cell) => {
+      if (!cell) {
+        return 'emppty';
+      }
+      return (
+        <React.Fragment key={cell.id}>
+          <CellListItemShared
+            moveCell={moveCell}
+            deleteCell={deleteCell}
+            data={data}
+            dataMap={dataMap}
+            cell={cell}
+          />
+          <AddCellShared
+            insertAfterCell={insertAfterCell}
+            nextCellId={cell.id}
+          />
+        </React.Fragment>
+      );
+    });
+  }
   const room = useRoom(match.params?.id);
-  console.log(cellsOrder);
-  console.log(data);
 
-  // **** CODECELL ****
-
-  // **** SKETCH STATES ****
-  // const sketchRef = useRef<any>();
-  // const [canUndo, setCanUndo] = useState(false);
-  // const [canRedo, setCanRedo] = useState(false);
-  // const [tool, setTool] = useState(Tools.Pencil);
-  // const [color, setColor] = useState('black');
-  // const [eraserClicked, setEraserClicked] = useState(false);
-  // const [lineWidth, setLineWidth] = useState(3);
-  // const [sketchContent, setSketchContent] = useState('');
-
-  // Get the accumulated code content of the previous code cells
-
-  if (!dataMap || !order || !order.toArray() || !cellsOrder) {
-    return <div>Loading...</div>;
+  if (!dataMap || !orderMap || !orderCells || !data || !orderedCellList) {
+    return (
+      <div css={spinnerStyles}>
+        <Loader
+          type="Puff"
+          color="#00b5ad"
+          height={250}
+          width={250}
+          timeout={3000} //3 secs
+        />
+      </div>
+    );
   }
   return (
     <>
+      <DeleteCellsDialog
+        data={data}
+        orderMap={orderMap}
+        dataMap={dataMap}
+        collaboration={true}
+        openDeleteCellsDialog={openDeleteCellsDialog}
+        setOpenDeleteCellsDialog={setOpenDeleteCellsDialog}
+      />
+      <Alert />
+      <AddProjectLayout
+        data={data}
+        orderCells={orderCells}
+        collaboration={true}
+        setShowAddOverlay={setShowAddOverlay}
+        showAddOverlay={showAddOverlay}
+      />
+      <LoadProjectLayout
+        collaboration={true}
+        orderMap={orderMap}
+        dataMap={dataMap}
+        projects={projects}
+        setProjects={setProjects}
+        showLoadOverlay={showLoadOverlay}
+        setShowLoadOverlay={setShowLoadOverlay}
+      />
+      <EditProjectLayout
+        showEditOverlay={showEditOverlay}
+        setShowEditOverlay={setShowEditOverlay}
+      />
+      <ProjectActions
+        collaboration={true}
+        setShowLoadOverlay={setShowLoadOverlay}
+        setShowAddOverlay={setShowAddOverlay}
+        setShowEditOverlay={setShowEditOverlay}
+        setOpenDeleteCellsDialog={setOpenDeleteCellsDialog}
+        setProjects={setProjects}
+        data={data}
+        orderCells={orderCells}
+      />
       <div css={cellListStyles}>
         <AddCellShared
           insertAfterCell={insertAfterCell}
@@ -106,56 +199,6 @@ export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
           nextCellId={null}
         />
         {renderedCells}
-        {/* <div>
-          <SketchToolBox
-            setEraserClicked={setEraserClicked}
-            setLineWidth={setLineWidth}
-            setColor={setColor}
-            canRedo={canRedo}
-            canUndo={canUndo}
-            setCanRedo={setCanRedo}
-            setCanUndo={setCanUndo}
-            sketchRef={sketchRef}
-            setTool={setTool}
-            color={color}
-          />
-          <Resizable direction="vertical-sketch">
-            <div
-              style={{
-                height: 'calc(100% - 10px)',
-              }}
-            >
-              <SketchField
-                lineColor={eraserClicked ? 'white' : color}
-                onChange={() => {
-                  setCanUndo(sketchRef.current.canUndo());
-                  setCanRedo(sketchRef.current.canRedo());
-                  map.set(
-                    'sketchContent',
-                    JSON.stringify(sketchRef.current.toJSON()),
-                  );
-                }}
-                value={sketchContent}
-                backgroundColor={'white'}
-                ref={sketchRef}
-                css={sketchStyles}
-                style={{ border: '1px solid gray' }}
-                width="100%"
-                height="100%"
-                tool={tool}
-                lineWidth={lineWidth}
-                undoSteps={15}
-              />
-            </div>
-          </Resizable>
-        </div> */}
-        <button
-          onClick={() => {
-            order?.delete(0);
-          }}
-        >
-          clear
-        </button>
       </div>
     </>
   );

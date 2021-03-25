@@ -13,6 +13,17 @@ interface ProjectActionsProps {
   setShowEditOverlay: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenDeleteCellsDialog: React.Dispatch<React.SetStateAction<boolean>>;
   setProjects: React.Dispatch<React.SetStateAction<Project[] | null>>;
+  data?: {
+    [key: string]: {
+      id: string;
+      type: string;
+      content: string;
+    };
+  };
+  orderCells?: {
+    order: string[];
+  };
+  collaboration: boolean;
 }
 
 export const ProjectActions: React.FC<ProjectActionsProps> = ({
@@ -21,6 +32,9 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
   setShowEditOverlay,
   setOpenDeleteCellsDialog,
   setProjects,
+  data,
+  orderCells,
+  collaboration,
 }) => {
   const { showAlert, hideAlert } = useActions();
   const project = useTypedSelector((state) => state.projects);
@@ -71,13 +85,23 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
             }, 1500);
             return;
           }
-          axios.post(
-            'http://localhost:4005/cells/save',
-            { ...cellsState, projectId: project.id },
-            {
-              withCredentials: true,
-            },
-          );
+          if (!collaboration) {
+            axios.post(
+              'http://localhost:4005/cells/save',
+              { ...cellsState, projectId: project.id },
+              {
+                withCredentials: true,
+              },
+            );
+          } else {
+            axios.post(
+              'http://localhost:4005/cells/save',
+              { data, order: orderCells?.order, projectId: project.id },
+              {
+                withCredentials: true,
+              },
+            );
+          }
           showAlert('Project Saved!', 'success');
           setTimeout(() => {
             hideAlert();

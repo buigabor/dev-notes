@@ -5,6 +5,7 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import { MapClient } from '@roomservice/browser';
 import axios from 'axios';
 import React from 'react';
 import { useActions } from '../../hooks/useActions';
@@ -37,6 +38,17 @@ interface ProjectCardProps {
   project: Project;
   setShowLoadOverlay: React.Dispatch<React.SetStateAction<boolean>>;
   setProjects: React.Dispatch<React.SetStateAction<Project[] | null>>;
+  orderMap?: MapClient<{
+    order: string[];
+  }>;
+  dataMap?: MapClient<{
+    [key: string]: {
+      id: string;
+      type: string;
+      content: string;
+    };
+  }>;
+  collaboration: boolean;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -44,6 +56,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
   setShowLoadOverlay,
   setProjects,
+  orderMap,
+  dataMap,
+  collaboration,
 }) => {
   const { loadCells, showAlert, hideAlert, loadProject } = useActions();
 
@@ -78,8 +93,16 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                 );
                 const data = res.data.data.cellsData;
                 const order = res.data.data.order;
-                loadCells(order, data);
+                console.log(data);
                 loadProject(project);
+                if (!collaboration) {
+                  loadCells(order, data);
+                } else {
+                  for (const key in data) {
+                    dataMap?.set(key, data[key]);
+                  }
+                  orderMap?.set('order', order);
+                }
                 setShowLoadOverlay(false);
                 showAlert('Project loaded!', 'success');
                 setTimeout(() => {

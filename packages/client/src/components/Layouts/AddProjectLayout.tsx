@@ -8,11 +8,25 @@ import addProjectStyles from './styles/addProjectStyles';
 interface AddProjectLayoutProps {
   showAddOverlay: boolean;
   setShowAddOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+  data?: {
+    [key: string]: {
+      id: string;
+      type: string;
+      content: string;
+    };
+  };
+  orderCells?: {
+    order: string[];
+  };
+  collaboration: boolean;
 }
 
 export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
-  showAddOverlay: showOverlay,
+  showAddOverlay,
   setShowAddOverlay,
+  data,
+  orderCells,
+  collaboration,
 }) => {
   const { showAlert, hideAlert, createProject } = useActions();
   const [project, setProject] = useState({
@@ -30,7 +44,7 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
     <div
       className="overlay"
       style={{
-        visibility: showOverlay ? 'visible' : 'hidden',
+        visibility: showAddOverlay ? 'visible' : 'hidden',
       }}
       css={addProjectStyles}
       onClick={(e) => {
@@ -41,8 +55,8 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
     >
       <div
         style={{
-          transform: showOverlay ? 'translateY(0)' : 'translateY(-40rem)',
-          opacity: showOverlay ? 100 : 0,
+          transform: showAddOverlay ? 'translateY(0)' : 'translateY(-40rem)',
+          opacity: showAddOverlay ? 100 : 0,
         }}
         className="add-project-wrapper"
       >
@@ -68,14 +82,27 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
               const projectCreated = res.data.data.project;
               createProject(projectCreated);
               setTimeout(() => {}, 100);
-
-              axios.post(
-                'http://localhost:4005/cells/create',
-                { ...cellsState, projectId: projectCreated.id },
-                {
-                  withCredentials: true,
-                },
-              );
+              if (!collaboration) {
+                axios.post(
+                  'http://localhost:4005/cells/create',
+                  { ...cellsState, projectId: projectCreated.id },
+                  {
+                    withCredentials: true,
+                  },
+                );
+              } else {
+                axios.post(
+                  'http://localhost:4005/cells/create',
+                  {
+                    data,
+                    order: orderCells?.order,
+                    projectId: projectCreated.id,
+                  },
+                  {
+                    withCredentials: true,
+                  },
+                );
+              }
               showAlert('Project created!', 'success');
               setTimeout(() => {
                 hideAlert();

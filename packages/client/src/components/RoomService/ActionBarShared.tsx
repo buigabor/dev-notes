@@ -1,18 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
-import { useActions } from '../../hooks/useActions';
 import actionBarStyles from '../Utils/styles/actionBarStyles';
 
 interface ActionBarSharedProps {
   id: string;
   deleteCell: (id: string) => void;
+  moveCell: (id: string, direction: 'up' | 'down') => void;
 }
 
 export const ActionBarShared: React.FC<ActionBarSharedProps> = ({
   id,
   deleteCell,
+  moveCell,
 }) => {
-  const { moveCell } = useActions();
   return (
     <div css={actionBarStyles}>
       <button

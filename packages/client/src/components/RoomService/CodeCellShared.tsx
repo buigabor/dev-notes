@@ -124,7 +124,7 @@ export const CodeCellShared: React.FC<CodeCellSharedProps> = ({
                 onChange={(event: any, value: any) => {
                   setCodeDebounced(value);
                 }}
-                value={data[cell.id].content}
+                value={data[cell.id].content || ''}
                 options={{
                   wordWrap: 'on',
                   minimap: { enabled: false },

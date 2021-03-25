@@ -18,6 +18,7 @@ interface CellListItemSharedProps {
     };
   };
   deleteCell: (id: string) => void;
+  moveCell: (id: string, direction: 'up' | 'down') => void;
 }
 
 export const CellListItemShared: React.FC<CellListItemSharedProps> = ({
@@ -25,6 +26,7 @@ export const CellListItemShared: React.FC<CellListItemSharedProps> = ({
   dataMap,
   data,
   deleteCell,
+  moveCell,
 }) => {
   const [cellToRender, setCellToRender] = useState<JSX.Element>();
 
@@ -40,7 +42,11 @@ export const CellListItemShared: React.FC<CellListItemSharedProps> = ({
               transition={{ duration: 0.6 }}
             >
               <div className="action-bar-wrapper">
-                <ActionBarShared deleteCell={deleteCell} id={cell.id} />
+                <ActionBarShared
+                  moveCell={moveCell}
+                  deleteCell={deleteCell}
+                  id={cell.id}
+                />
               </div>
 
               <CodeCellShared data={data} dataMap={dataMap} cell={cell} />
@@ -58,14 +64,18 @@ export const CellListItemShared: React.FC<CellListItemSharedProps> = ({
               }}
               transition={{ duration: 0.6 }}
             >
-              <ActionBarShared deleteCell={deleteCell} id={cell.id} />
+              <ActionBarShared
+                moveCell={moveCell}
+                deleteCell={deleteCell}
+                id={cell.id}
+              />
               <TextEditorShared data={data} dataMap={dataMap} cell={cell} />
             </motion.div>
           </AnimateSharedLayout>
         </>,
       );
     }
-  }, [cell, cell.type]);
+  }, [cell, cell.type, data, dataMap, deleteCell]);
 
   return <div css={cellListItemStyles}>{cellToRender}</div>;
 };
