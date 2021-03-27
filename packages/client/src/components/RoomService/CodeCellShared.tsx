@@ -4,7 +4,9 @@ import { ControlledEditor } from '@monaco-editor/react';
 import { MapClient } from '@roomservice/browser';
 import codeShift from 'jscodeshift';
 import MonacoJSXHighlighter from 'monaco-jsx-highlighter';
-import React, { useEffect, useState } from 'react';
+import prettier from 'prettier';
+import parser from 'prettier/parser-babel';
+import React, { useEffect, useRef, useState } from 'react';
 import bundlerHandler from '../../bundler';
 import { useCumulativeCodeShared } from '../../hooks/useCumulativeCodeShared';
 import { Preview } from '../Celltypes/Preview';
@@ -33,6 +35,7 @@ export const CodeCellShared: React.FC<CodeCellSharedProps> = ({
   const [bundleError, setBundleError] = useState('');
   const [bundleLoading, setBundleLoading] = useState(false);
   const [codeDebounced, setCodeDebounced] = useState('');
+  const editorRef = useRef<any>();
 
   const cumulativeCode = useCumulativeCodeShared();
 
@@ -80,6 +83,7 @@ export const CodeCellShared: React.FC<CodeCellSharedProps> = ({
   }, [codeDebounced]);
 
   const onEditorDidMount = (getValue: any, monacoEditor: any) => {
+    editorRef.current = monacoEditor;
     // Highlight JSX syntax inside editor
     const highlighter = new MonacoJSXHighlighter(
       // @ts-ignore
@@ -87,7 +91,6 @@ export const CodeCellShared: React.FC<CodeCellSharedProps> = ({
       codeShift,
       monacoEditor,
     );
-
     // Call empty functions when errors occurs
     highlighter.highLightOnDidChangeModelContent(
       () => {},
@@ -95,6 +98,27 @@ export const CodeCellShared: React.FC<CodeCellSharedProps> = ({
       undefined,
       () => {},
     );
+  };
+
+  const onFormatClick = () => {
+    // get current value from editor
+    try {
+      const currentCode = editorRef.current.getModel().getValue();
+      // format that value
+      const formattedCode = prettier
+        .format(currentCode, {
+          parser: 'babel',
+          plugins: [parser],
+          useTabs: false,
+          semi: true,
+          singleQuote: true,
+        })
+        .replace(/\n$/, '');
+      // set it as the new value
+      editorRef.current?.setValue(formattedCode);
+    } catch (error) {
+      bundleCode(error.message);
+    }
   };
 
   const StyledLinearProgress = withStyles({
@@ -118,7 +142,9 @@ export const CodeCellShared: React.FC<CodeCellSharedProps> = ({
         >
           <Resizable direction="horizontal">
             <div css={editorStyles}>
-              <button className="format-btn">Format</button>
+              <button className="format-btn" onClick={onFormatClick}>
+                Format
+              </button>
               <ControlledEditor
                 editorDidMount={onEditorDidMount}
                 onChange={(event: any, value: any) => {

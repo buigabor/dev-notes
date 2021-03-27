@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState } from 'react';
-import { SketchField, Tools } from 'react-sketch';
+import { SketchField, Tools } from 'react-sketch2';
 import { useActions } from '../../hooks/useActions';
 import { Cell } from '../../state';
 import { Resizable } from '../Utils/Resizable';

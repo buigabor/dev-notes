@@ -1,4 +1,5 @@
 import express from 'express';
+import http from 'http';
 import authRoute from './routes/auth';
 import cellsRoute from './routes/cells';
 import projectsRoute from './routes/projects';
@@ -7,6 +8,8 @@ import sessionsRoute from './routes/sessions';
 import usersRoute from './routes/user';
 
 const app = express();
+const server = http.createServer(app);
+const io = require('socket.io')(server);
 const port = process.env.PORT || 4005;
 
 app.use(function (req, res, next) {
@@ -26,6 +29,12 @@ app.use(function (req, res, next) {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+io.on('connection', (socket: any) => {
+  console.log('New client connected');
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
 // app.options('*', cors());
 
 // Route middleware

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useRef, useState } from 'react';
 import { BlockPicker, ColorResult } from 'react-color';
-import { Tools } from 'react-sketch';
+import { Tools } from 'react-sketch2';
 import sketchToolBoxStyles from './styles/sketchToolboxStyles';
 
 interface SetToolBoxProps {

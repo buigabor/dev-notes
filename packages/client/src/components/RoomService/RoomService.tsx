@@ -1,4 +1,12 @@
 /** @jsxImportSource @emotion/react */
+import {
+  ChatContainer,
+  MainContainer,
+  Message,
+  MessageInput,
+  MessageList,
+} from '@chatscope/chat-ui-kit-react';
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { css } from '@emotion/react';
 import { useMap, usePresence, useRoom } from '@roomservice/react';
 import { default as React, useEffect, useState } from 'react';
@@ -32,6 +40,30 @@ const spinnerStyles = css`
   left: 50%;
   transform: translateY(-50%);
   transform: translateX(-50%);
+`;
+const chatIcon = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #00b5ad;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  cursor: pointer;
+  i {
+    color: #fff;
+    font-size: 1.75em;
+  }
+`;
+
+const chatStyles = css`
+  position: relative;
+  height: 500px;
+  width: 400px;
+  border-radius: 10px;
 `;
 
 export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
@@ -138,6 +170,14 @@ export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
   }
   const room = useRoom(match.params?.id);
 
+  // CHAT
+  // useEffect(() => {
+  //   const socket = socketIOClient('http://localhost:4005');
+  //   socket.on('FromAPI', (data: any) => {
+  //     setResponse(data);
+  //   });
+  // }, []);
+
   if (!dataMap || !orderMap || !orderCells || !data || !orderedCellList) {
     return (
       <div css={spinnerStyles}>
@@ -199,6 +239,25 @@ export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
           nextCellId={null}
         />
         {renderedCells}
+        <div css={chatIcon}>
+          <i className="fas fa-comment-alt"></i>
+        </div>
+        <div css={chatStyles}>
+          <MainContainer>
+            <ChatContainer>
+              <MessageList>
+                <Message
+                  model={{
+                    message: 'Hello my friend',
+                    sentTime: 'just now',
+                    sender: 'Joe',
+                  }}
+                />
+              </MessageList>
+              <MessageInput placeholder="Type message here" />
+            </ChatContainer>
+          </MainContainer>
+        </div>
       </div>
     </>
   );
