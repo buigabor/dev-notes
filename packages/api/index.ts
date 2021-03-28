@@ -1,5 +1,6 @@
 import express from 'express';
-import http from 'http';
+import { createServer } from 'http';
+import { Socket } from 'socket.io';
 import authRoute from './routes/auth';
 import cellsRoute from './routes/cells';
 import projectsRoute from './routes/projects';
@@ -8,10 +9,14 @@ import sessionsRoute from './routes/sessions';
 import usersRoute from './routes/user';
 
 const app = express();
-const server = http.createServer(app);
-const io = require('socket.io')(server);
+const httpServer = createServer();
 const port = process.env.PORT || 4005;
-
+const io = require('socket.io')(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000',
+  },
+});
+httpServer.listen(5000);
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', req.header('Origin'));
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -29,8 +34,17 @@ app.use(function (req, res, next) {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-io.on('connection', (socket: any) => {
-  console.log('New client connected');
+io.on('connection', (socket: Socket) => {
+  const id = socket.handshake.query.id;
+
+  if (id) {
+    socket.join(id);
+
+    socket.on('send-message', ({ text, sender, date }) => {
+      socket.broadcast.to(id).emit('receive-message', { text, sender, date });
+      socket.emit('receive-message-me', { text, sender, date });
+    });
+  }
   socket.on('disconnect', () => {
     console.log('Client disconnected');
   });

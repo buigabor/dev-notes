@@ -9,9 +9,13 @@ import {
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { css } from '@emotion/react';
 import { useMap, usePresence, useRoom } from '@roomservice/react';
+import axios from 'axios';
+import dateFormat from 'dateformat';
 import { default as React, useEffect, useState } from 'react';
 import Loader from 'react-loader-spinner';
 import { RouteComponentProps } from 'react-router';
+import { io, Socket } from 'socket.io-client';
+import { DefaultEventsMap } from 'socket.io-client/build/typed-events';
 import { Project } from '../../state/reducers/projectsReducer';
 import { DeleteCellsDialog } from '../DeleteCellsDialog';
 import { AddProjectLayout } from '../Layouts/AddProjectLayout';
@@ -60,11 +64,31 @@ const chatIcon = css`
 `;
 
 const chatStyles = css`
-  position: relative;
-  height: 500px;
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  height: 540px;
   width: 400px;
   border-radius: 10px;
+  .cs-main-container {
+    width: 100%;
+  }
+  .cs-message--incoming .cs-message__sender-name {
+    display: block;
+  }
+  .cs-message--incoming .cs-message__sent-time {
+    display: block;
+  }
+  .chat-header {
+  }
 `;
+
+interface Message {
+  text: string;
+  sender: string;
+  date: Date;
+  direction: 'outgoing' | 'incoming';
+}
 
 export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
   match,
@@ -74,6 +98,52 @@ export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
   const [showEditOverlay, setShowEditOverlay] = useState(false);
   const [projects, setProjects] = useState<Project[] | null>(null);
   const [openDeleteCellsDialog, setOpenDeleteCellsDialog] = useState(false);
+  const [currentUser, setCurrentUser] = useState({ userId: '', username: '' });
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await axios.get('http://localhost:4005/user', {
+        withCredentials: true,
+      });
+      const { userId, username } = res.data;
+      setCurrentUser({ userId, username });
+      // const userId = res.data;
+    };
+    fetchUser();
+  }, []);
+
+  // SOCKET.IO
+
+  const [socket, setSocket] = useState<
+    Socket<DefaultEventsMap, DefaultEventsMap> | undefined
+  >();
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:5000', {
+      query: { id: match.params?.id },
+    });
+    setSocket(newSocket);
+    return () => {
+      newSocket.close();
+    };
+  }, [match.params?.id]);
+
+  console.log(messages);
+
+  useEffect(() => {
+    // if (socket == null) return;
+    socket?.on('receive-message-me', (message) => {
+      setMessages([...messages, { ...message, direction: 'outgoing' }]);
+    });
+    socket?.on('receive-message', (message) => {
+      setMessages([...messages, { ...message, direction: 'incoming' }]);
+    });
+    return () => {
+      socket?.off('receive-message-me');
+      socket?.off('receive-message');
+    };
+  }, [messages, socket]);
 
   // ROOM SERVICE STATES
   const [joined, joinedClient] = usePresence('myroom', 'joined');
@@ -89,10 +159,10 @@ export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
     orderMap?.set('order', []);
     return () => {};
   }, [orderMap]);
+
   useEffect(() => {
     joinedClient.set(true);
   }, []);
-  console.log(joinedClient.getAll());
 
   const insertAfterCell = (id: string | null, type: string) => {
     const cell = {
@@ -170,14 +240,6 @@ export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
   }
   const room = useRoom(match.params?.id);
 
-  // CHAT
-  // useEffect(() => {
-  //   const socket = socketIOClient('http://localhost:4005');
-  //   socket.on('FromAPI', (data: any) => {
-  //     setResponse(data);
-  //   });
-  // }, []);
-
   if (!dataMap || !orderMap || !orderCells || !data || !orderedCellList) {
     return (
       <div css={spinnerStyles}>
@@ -246,15 +308,35 @@ export const RoomService: React.FC<RouteComponentProps<IReactRouterParams>> = ({
           <MainContainer>
             <ChatContainer>
               <MessageList>
-                <Message
-                  model={{
-                    message: 'Hello my friend',
-                    sentTime: 'just now',
-                    sender: 'Joe',
-                  }}
-                />
+                {messages.map((message) => {
+                  return (
+                    <Message
+                      key={'message-id-' + new Date().getTime() + Math.random()}
+                      model={{
+                        message: message.text,
+                        direction: message.direction,
+                      }}
+                    >
+                      <Message.Header
+                        className="chat-header"
+                        sender={message.sender}
+                        sentTime={message.date}
+                      />
+                    </Message>
+                  );
+                })}
               </MessageList>
-              <MessageInput placeholder="Type message here" />
+              <MessageInput
+                attachButton={false}
+                onSend={(value: string) => {
+                  socket?.emit('send-message', {
+                    text: value,
+                    sender: currentUser.username,
+                    date: dateFormat(new Date(), 'HH:MM'),
+                  });
+                }}
+                placeholder="Type message here"
+              />
             </ChatContainer>
           </MainContainer>
         </div>
