@@ -12,4 +12,5 @@ export enum ActionType {
   EDIT_PROJECT = 'edit_project',
   LOAD_PROJECT = 'load_project',
   SAVE_PROJECT = 'save_project',
+  SET_USER = 'set_user',
 }

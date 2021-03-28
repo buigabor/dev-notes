@@ -30,6 +30,39 @@ interface UserInDB {
   email: string;
 }
 
+// ROOMS
+
+export async function getUserFromRoom(
+  userId: number,
+  roomId: string | string[],
+) {
+  const user = await sql`SELECT * FROM rooms WHERE room_id=${roomId} AND user_id=${userId}`;
+  return user.map((u: any) => camelcaseKeys(u))[0];
+}
+
+export async function saveUserToRoom(
+  userId: number,
+  roomId: string | string[],
+) {
+  const room = await sql`INSERT INTO rooms(user_id,room_id)
+  VALUES(${userId},${roomId}) RETURNING *
+  `;
+}
+
+export async function getUsersFromRoom(roomId: string | string[]) {
+  const users = await sql`SELECT * FROM rooms
+  JOIN users ON users.id = rooms.user_id WHERE room_id=${roomId}`;
+  return users.map((u: any) => camelcaseKeys(u));
+}
+
+export async function deleteUserFromRoom(
+  userId: number,
+  roomId: string | string[],
+) {
+  const deletedUser = await sql`DELETE FROM rooms WHERE user_id=${userId} AND room_id=${roomId} RETURNING user_id`;
+  const user = await getUserById(deletedUser[0].user_id);
+  return user;
+}
 // USERS
 
 export async function getUserById(id: number) {

@@ -33,6 +33,11 @@ exports.up = async (sql) => {
 		expiry_timestamp TIMESTAMP NOT NULL DEFAULT NOW() + INTERVAL '72 hours',
 		user_id BIGINT REFERENCES users(id) ON DELETE CASCADE
 	)`;
+
+  await sql`CREATE TABLE rooms (
+    room_id VARCHAR(100),
+    user_id BIGINT REFERENCES users (id)
+  )`;
 };
 
 exports.down = async (sql) => {
@@ -41,4 +46,5 @@ exports.down = async (sql) => {
   await sql`DROP TABLE IF EXISTS cell_types CASCADE`;
   await sql`DROP TABLE IF EXISTS projects CASCADE`;
   await sql`DROP TABLE IF EXISTS users CASCADE`;
+  await sql`DROP TABLE IF EXISTS rooms CASCADE`;
 };

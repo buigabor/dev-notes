@@ -92,6 +92,11 @@ export interface SaveProjectAction {
   };
 }
 
+export interface SetUserAction {
+  type: ActionType.SET_USER;
+  payload: { username: string | null; userId: number | null };
+}
+
 export type Action =
   | LoadCellsAction
   | MoveCellAction
@@ -105,4 +110,5 @@ export type Action =
   | AddProjectAction
   | EditProjectAction
   | LoadProjectAction
-  | SaveProjectAction;
+  | SaveProjectAction
+  | SetUserAction;

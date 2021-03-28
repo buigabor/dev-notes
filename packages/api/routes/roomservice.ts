@@ -1,5 +1,5 @@
-import axios from 'axios';
 import express from 'express';
+import fetch from 'node-fetch';
 import { verify } from './verifyToken';
 
 const router = express.Router();
@@ -9,7 +9,7 @@ router.post('/', verify, async (req, res) => {
   // { room: 'myroom', user: '0.6779191095925778' }
 
   // Check if this is a valid user
-  const userID = req.body.user;
+  const userID = String(req.body.user);
   if (!userID) {
     return res.send(401);
   }
@@ -24,30 +24,29 @@ router.post('/', verify, async (req, res) => {
       permission: 'join',
     },
   ];
-  // const r = await fetch('https://super.roomservice.dev/provision', {
-  //   method: 'POST',
-  //   headers: {
-  //     Authorization: `Bearer: ${process.env.ROOMSERVICE_API_KEY}`,
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({
-  //     user: userID,
-  //     resources: resources,
-  //   }),
-  // });
-
-  const r = await axios.post(
-    'https://super.roomservice.dev/provision',
-    { user: userID, resources },
-    {
-      headers: {
-        Authorization: `Bearer: ${process.env.ROOMSERVICE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
+  const r = await fetch('https://super.roomservice.dev/provision', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer: ${process.env.ROOMSERVICE_API_KEY}`,
+      'Content-Type': 'application/json',
     },
-  );
+    body: JSON.stringify({
+      user: userID,
+      resources: resources,
+    }),
+  });
 
-  console.log(r.data);
+  // const r = await axios.post(
+  //   'https://super.roomservice.dev/provision',
+  //   { user: userID, resources },
+  //   {
+  //     headers: {
+  //       Authorization: `Bearer: ${process.env.ROOMSERVICE_API_KEY}`,
+  //       'Content-Type': 'application/json',
+  //     },
+  //   },
+  // );
+
   //   {
   //   object: 'session',
   //   token: 'msZAdJ5ZQ6tULvm5hzbjb',
@@ -59,7 +58,7 @@ router.post('/', verify, async (req, res) => {
   //   ]
   // }
 
-  return res.json(r.data);
+  return res.json(await r.json());
 });
 
 export default router;

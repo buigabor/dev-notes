@@ -12,11 +12,13 @@ import {
   LoadCellsAction,
   LoadProjectAction,
   MoveCellAction,
+  SetUserAction,
   ShowAlertAction,
   UpdateCellAction,
 } from '../actions';
 import { Cell, CellTypes } from '../cell';
 import { ProjectState } from '../reducers/projectsReducer';
+import { UserState } from '../reducers/userReducer';
 
 export const showAlert = (
   message: string,
@@ -108,5 +110,13 @@ export const loadProject = (project: ProjectState): LoadProjectAction => {
   return {
     type: ActionType.LOAD_PROJECT,
     payload: { id, title, subtitle, description, userId },
+  };
+};
+
+export const setUser = (user: UserState): SetUserAction => {
+  const { username, userId } = user;
+  return {
+    type: ActionType.SET_USER,
+    payload: { username, userId },
   };
 };

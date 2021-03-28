@@ -25,4 +25,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => {
+  try {
+    const usernames = [];
+    const userIdsInRoom = req.body;
+    console.log(req.body);
+
+    for (const id in userIdsInRoom) {
+      const user = await getUserById(Number(id));
+      usernames.push(user.username);
+    }
+    res.status(200).json({ users: usernames, error: null });
+  } catch (error) {}
+});
+
 export default router;

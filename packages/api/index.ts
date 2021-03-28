@@ -1,9 +1,16 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Socket } from 'socket.io';
+import {
+  deleteUserFromRoom,
+  getUserFromRoom,
+  getUsersFromRoom,
+  saveUserToRoom,
+} from './db';
 import authRoute from './routes/auth';
 import cellsRoute from './routes/cells';
 import projectsRoute from './routes/projects';
+import roomsRoute from './routes/rooms';
 import roomserviceRoute from './routes/roomservice';
 import sessionsRoute from './routes/sessions';
 import usersRoute from './routes/user';
@@ -34,24 +41,38 @@ app.use(function (req, res, next) {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-io.on('connection', (socket: Socket) => {
+io.on('connection', async (socket: Socket) => {
   const id = socket.handshake.query.id;
+  const userId = socket.handshake.query.user;
 
-  if (id) {
+  if (id && userId) {
     socket.join(id);
+    const isUserAlreadyThere = await getUserFromRoom(Number(userId), id);
+    if (!isUserAlreadyThere) {
+      await saveUserToRoom(Number(userId), id);
+    }
+    const usersInRoom = await getUsersFromRoom(id);
+
+    let usernamesInRoom = usersInRoom.map((user: any) => user.username);
+    io.to(id).emit('users-in-room', usernamesInRoom);
 
     socket.on('send-message', ({ text, sender, date }) => {
       socket.broadcast.to(id).emit('receive-message', { text, sender, date });
       socket.emit('receive-message-me', { text, sender, date });
     });
   }
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
+  socket.on('disconnect', async () => {
+    console.log('disconnected');
+    if (id) {
+      const deletedUser = await deleteUserFromRoom(Number(userId), id);
+      io.to(id).emit('user-disconnected', deletedUser.username);
+    }
   });
 });
 // app.options('*', cors());
 
 // Route middleware
+app.use('/rooms', roomsRoute);
 app.use('/user', usersRoute);
 app.use('/auth', authRoute);
 app.use('/cells', cellsRoute);

@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { GoogleLogout } from 'react-google-login';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useActions } from '../hooks/useActions';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import RoomDialog from './RoomService/RoomDialog';
 import { Alert } from './Utils/Alert';
 
@@ -136,16 +137,16 @@ const randomId = () => {
 
 export const NavBar = () => {
   const classes = useStyles();
-  const [user, setUser] = useState({ username: '', userId: null });
   const [profileClicked, setProfileClicked] = useState<boolean>(false);
   const [logoutClicked, setLogoutClicked] = useState(false);
   const [roomId, setRoomId] = useState(randomId());
   const [roomUrl, setRoomUrl] = useState(`http:localhost:3000/room/${roomId}`);
   const [openRoomDialog, setOpenRoomDialog] = useState(false);
 
-  const { showAlert, hideAlert } = useActions();
+  const { showAlert, hideAlert, setUser } = useActions();
   const history = useHistory();
   const location = useLocation();
+  const user = useTypedSelector((state) => state.user);
 
   useEffect(() => {}, [openRoomDialog]);
 
@@ -160,7 +161,7 @@ export const NavBar = () => {
         setUser({ username: '', userId: null });
         console.log('User not found');
       });
-  }, [location, logoutClicked]);
+  }, [location, logoutClicked, setUser]);
 
   return (
     <>
