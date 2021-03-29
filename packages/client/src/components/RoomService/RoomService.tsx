@@ -13,13 +13,15 @@ import {
 } from '@chatscope/chat-ui-kit-react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { css } from '@emotion/react';
-import { useMap, useRoom } from '@roomservice/react';
+import { useMap } from '@roomservice/react';
 import dateFormat from 'dateformat';
 import { default as React, useEffect, useState } from 'react';
 import Loader from 'react-loader-spinner';
 import { match } from 'react-router';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io-client/build/typed-events';
+import useSound from 'use-sound';
+import chatNotificationSound from '../../audio/chat-notification-sound.mp3';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Project } from '../../state/reducers/projectsReducer';
 import { DeleteCellsDialog } from '../DeleteCellsDialog';
@@ -59,6 +61,20 @@ const chatIcon = css`
   bottom: 25px;
   right: 25px;
   cursor: pointer;
+  .chat-unread-count {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    min-height: 20px;
+    min-width: 15px;
+    padding: 0.5px 3px;
+    border-radius: 20%;
+    color: #fff;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   i {
     color: #fff;
     font-size: 1.85em;
@@ -71,6 +87,13 @@ const chatStyles = css`
   bottom: 70px;
   height: 500px;
   width: 450px;
+
+  .mute-btn {
+    color: #00b5ad;
+    margin-left: 1.6rem;
+    font-size: 1.4em;
+    cursor: pointer;
+  }
 
   .chat-container {
     display: flex;
@@ -138,6 +161,7 @@ interface IMessage {
   sender: string;
   date: Date;
   direction: 'outgoing' | 'incoming';
+  seen: 'seen' | 'not seen';
 }
 
 interface RoomServiceProps {
@@ -155,7 +179,31 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
   const [messagesToShow, setMessagesToShow] = useState<IMessage[]>([]);
   const [showChat, setShowChat] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState<number>(0);
+  const [playNotification] = useSound(chatNotificationSound);
+  const [mute, setMute] = useState(false);
+
   const user = useTypedSelector((state) => state.user);
+
+  useEffect(() => {
+    if (showChat) {
+      // Change unread messages to read
+      const messagesRead = messages.map((message) => {
+        message.seen = 'seen';
+        return message;
+      });
+      setMessages([...messagesRead]);
+      setUnreadMessagesCount(0);
+    }
+  }, [showChat]);
+
+  useEffect(() => {
+    const unreadMessages = messages.filter((m) => m.seen === 'not seen');
+    if (unreadMessages.length > 0 && !mute) {
+      playNotification();
+    }
+    setUnreadMessagesCount(unreadMessages.length);
+  }, [messages]);
 
   // SOCKET.IO
 
@@ -199,23 +247,6 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
   );
 
   useEffect(() => {
-    // if (joinedClient) {
-    //   const fetchAllUsersInRoom = async () => {
-    //     const res = await axios.post(
-    //       'http://localhost:4005/user',
-    //       joinedClient.getAll(),
-    //       {
-    //         withCredentials: true,
-    //       },
-    //     );
-    //     const users = res.data.users;
-    //     setUsers([...users]);
-    //   };
-    //   fetchAllUsersInRoom();
-    // }
-  }, []);
-
-  useEffect(() => {
     orderMap?.set('order', []);
   }, [orderMap]);
 
@@ -234,22 +265,65 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
     socket?.on('receive-message-me', (message) => {
       setMessages([
         ...messages,
-        { ...message, direction: 'outgoing', status: 'available' },
+        {
+          ...message,
+          direction: 'outgoing',
+          status: 'available',
+          seen: 'seen',
+        },
       ]);
       setMessagesToShow([
         ...messagesToShow,
-        { ...message, direction: 'outgoing', status: 'available' },
+        {
+          ...message,
+          direction: 'outgoing',
+          status: 'available',
+          seen: 'seen',
+        },
       ]);
     });
     socket?.on('receive-message', (message) => {
-      setMessages([
-        ...messages,
-        { ...message, direction: 'incoming', status: 'available' },
-      ]);
-      setMessagesToShow([
-        ...messagesToShow,
-        { ...message, direction: 'incoming', status: 'available' },
-      ]);
+      if (showChat) {
+        setMessages([
+          ...messages,
+          {
+            ...message,
+            direction: 'incoming',
+            status: 'available',
+            seen: 'seen',
+          },
+        ]);
+        setMessagesToShow([
+          ...messagesToShow,
+          {
+            ...message,
+            direction: 'incoming',
+            status: 'available',
+            seen: 'seen',
+          },
+        ]);
+      } else if (!showChat) {
+        setMessages([
+          ...messages,
+          {
+            ...message,
+            direction: 'incoming',
+            status: 'available',
+            seen: 'not seen',
+          },
+        ]);
+        setMessagesToShow([
+          ...messagesToShow,
+          {
+            ...message,
+            direction: 'incoming',
+            status: 'available',
+            seen: 'not seen',
+          },
+        ]);
+      }
+      // const unreadMessages = messages.filter((m) => m.seen === 'not seen');
+      // setUnreadMessagesCount(unreadMessages.length);
     });
     return () => {
       socket?.off('receive-message-me');
@@ -257,7 +331,7 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
       socket?.off('user-joined');
       socket?.off('user-disconnected');
     };
-  }, [messages, messagesToShow, socket, users]);
+  }, [messages, messagesToShow, showChat, socket, users]);
 
   const insertAfterCell = (id: string | null, type: string) => {
     const cell = {
@@ -333,7 +407,6 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
       );
     });
   }
-  const room = useRoom(match.params?.id);
 
   if (!dataMap || !orderMap || !orderCells || !data || !orderedCellList) {
     return (
@@ -403,6 +476,14 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
           style={{ visibility: showChat ? 'hidden' : 'visible' }}
           css={chatIcon}
         >
+          <span
+            className="chat-unread-count"
+            style={{
+              visibility: unreadMessagesCount === 0 ? 'hidden' : 'visible',
+            }}
+          >
+            {unreadMessagesCount}
+          </span>
           <i className="fas fa-comment-alt"></i>
         </div>
         <div
@@ -411,6 +492,7 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
         >
           <div className="chat-header">
             <span>Team Chat</span>
+
             <i
               onClick={() => {
                 setShowChat(false);
@@ -442,6 +524,23 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
                         onChange={(v: string) => setSearchValue(v)}
                         onClearClick={() => setSearchValue('')}
                       />
+                      <span className="mute-btn">
+                        {mute ? (
+                          <i
+                            onClick={() => {
+                              setMute(!mute);
+                            }}
+                            className="fas fa-volume-mute"
+                          ></i>
+                        ) : (
+                          <i
+                            onClick={() => {
+                              setMute(!mute);
+                            }}
+                            className="fas fa-volume-off"
+                          ></i>
+                        )}
+                      </span>
                     </ConversationHeader.Actions>
                   </ConversationHeader>
                   <MessageList>
