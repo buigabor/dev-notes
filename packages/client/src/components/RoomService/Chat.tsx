@@ -12,6 +12,7 @@ import {
   Status,
 } from '@chatscope/chat-ui-kit-react';
 import dateFormat from 'dateformat';
+import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io-client/build/typed-events';
@@ -160,10 +161,18 @@ export const Chat: React.FC<ChatProps> = ({
     setMessagesToShow([...messagesThatIncludeSearchValue]);
   }, [searchValue]);
 
+  const variants = {
+    closed: { opacity: 0, y: '100px' },
+    open: { opacity: 1, y: 0 },
+  };
+
   return (
-    <div
+    <motion.div
       css={chatStyles}
-      style={{ visibility: showChat ? 'visible' : 'hidden' }}
+      variants={variants}
+      animate={showChat ? 'open' : 'closed'}
+      transition={{ duration: 0.25 }}
+      style={{ display: showChat ? 'inline-block' : 'none' }}
     >
       <div className="chat-header">
         <span>Team Chat</span>
@@ -251,6 +260,6 @@ export const Chat: React.FC<ChatProps> = ({
           </MainContainer>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

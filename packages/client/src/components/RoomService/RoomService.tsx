@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { useMap } from '@roomservice/react';
+import { motion } from 'framer-motion';
 import { default as React, useEffect, useState } from 'react';
 import Loader from 'react-loader-spinner';
 import { match } from 'react-router';
@@ -154,6 +155,11 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
     });
   }
 
+  const variants = {
+    closed: { opacity: 0 },
+    open: { opacity: 1 },
+  };
+
   if (!dataMap || !orderMap || !orderCells || !data || !orderedCellList) {
     return (
       <div css={spinnerStyles}>
@@ -215,12 +221,14 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
           nextCellId={null}
         />
         {renderedCells}
-        <div
+        <motion.div
           onClick={() => {
             setShowChat(true);
           }}
           style={{ visibility: showChat ? 'hidden' : 'visible' }}
           css={chatIcon}
+          variants={variants}
+          animate={showChat ? 'closed' : 'open'}
         >
           <span
             className="chat-unread-count"
@@ -231,7 +239,7 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
             {unreadMessagesCount}
           </span>
           <i className="fas fa-comment-alt"></i>
-        </div>
+        </motion.div>
         <Chat
           setShowChat={setShowChat}
           showChat={showChat}
