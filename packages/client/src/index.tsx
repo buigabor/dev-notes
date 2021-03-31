@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Login } from './components/Auth/Login';
 import { SignUp } from './components/Auth/SignUp';
 import { CellList } from './components/CellList';
-import { Home } from './components/Home';
+import { Home } from './components/Home/Home';
 import { NavBar } from './components/NavBar';
 import { RoomServiceHome } from './components/RoomService/RoomServiceHome';
 import { store } from './state';

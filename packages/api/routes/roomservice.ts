@@ -1,12 +1,14 @@
 import express from 'express';
-import fetch from 'node-fetch';
 import { verify } from './verifyToken';
+
+const fetch = require('node-fetch');
 
 const router = express.Router();
 
 router.post('/', verify, async (req, res) => {
   const body2 = req.body;
   // { room: 'myroom', user: '0.6779191095925778' }
+  console.log(body2);
 
   // Check if this is a valid user
   const userID = String(req.body.user);
@@ -24,17 +26,23 @@ router.post('/', verify, async (req, res) => {
       permission: 'join',
     },
   ];
-  const r = await fetch('https://super.roomservice.dev/provision', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer: ${process.env.ROOMSERVICE_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      user: userID,
-      resources: resources,
-    }),
-  });
+  try {
+    const r = await fetch('https://super.roomservice.dev/provision', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer: ${process.env.ROOMSERVICE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: userID,
+        resources: resources,
+      }),
+    });
+
+    return res.json(await r.json());
+  } catch (error) {
+    console.log(error);
+  }
 
   // const r = await axios.post(
   //   'https://super.roomservice.dev/provision',
@@ -57,8 +65,6 @@ router.post('/', verify, async (req, res) => {
   //     { object: 'document', id: '6172c8a0-1790-4090-9b3f-645d028a8c13' }
   //   ]
   // }
-
-  return res.json(await r.json());
 });
 
 export default router;

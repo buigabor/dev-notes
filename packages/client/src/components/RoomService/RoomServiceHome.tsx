@@ -25,8 +25,6 @@ async function myAuthFunction(params: {
   room: string;
   ctx: { userID: number };
 }) {
-  console.log(params);
-
   const response = await fetch('http://localhost:4005/roomservice', {
     method: 'POST',
     headers: {

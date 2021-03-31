@@ -185,7 +185,7 @@ export const NavBar = () => {
                   className={classes.collabBtn}
                   onClick={() => {
                     setRoomId(randomId());
-                    setRoomUrl(`http:localhost:3000/room/${roomId}`);
+                    setRoomUrl(`http://localhost:3000/room/${roomId}`);
                     setOpenRoomDialog(true);
                   }}
                   color="inherit"
