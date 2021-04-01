@@ -81,9 +81,11 @@
     ]
   },
   "devDependencies": {
+    "@types/aos": "^3.0.3",
     "@types/dateformat": "^3.0.1",
     "@types/react-color": "^3.0.4",
     "@types/react-typist": "^2.0.1",
+    "aos": "^2.3.4",
     "react-color": "^2.19.3",
     "react-typist": "^2.0.5"
   }
