@@ -12,18 +12,6 @@ import { NavBar } from './components/NavBar';
 import { RoomServiceHome } from './components/RoomService/RoomServiceHome';
 import { store } from './state';
 
-const HomeContainer = () => (
-  <div className="container">
-    <Route path="/" component={Home} />
-  </div>
-);
-
-const PlaygroundContainer = () => (
-  <div className="container">
-    <Route path="/" component={Home} />
-  </div>
-);
-
 export const App = () => {
   return (
     <>
@@ -32,7 +20,7 @@ export const App = () => {
           body {
             margin: 0;
             padding: 0;
-            background: #1c2536;
+            background: #1c2536 !important;
           }
           ol,
           ul {

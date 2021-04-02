@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 
 const chatStyles = css`
   position: fixed;
+  z-index: 9999;
   right: 25px;
   bottom: 70px;
   height: 500px;

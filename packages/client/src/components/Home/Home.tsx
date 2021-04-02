@@ -2,9 +2,13 @@
 import { css } from '@emotion/react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import Typist from 'react-typist';
+import { useActions } from '../../hooks/useActions';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 
 const homeStyles = css`
   background: rgb(7, 7, 8);
@@ -13,7 +17,7 @@ const homeStyles = css`
   display: flex;
   flex-direction: column;
 
-  .loginBtn {
+  .login-btn {
     color: #fff;
     border: 1px solid #fff;
     padding: 12px 13px;
@@ -30,7 +34,7 @@ const homeStyles = css`
     }
   }
 
-  .signUpBtn {
+  .sign-up-btn {
     color: #06c8bf;
     border: 1px solid #06c8bf;
     background-color: transparent;
@@ -173,11 +177,10 @@ const homeStyles = css`
   }
 
   .what-we-do {
-
     display: flex;
     justify-content: center;
     gap: 45px;
-    padding:10rem 0;
+    padding: 10rem 0;
 
     &-container {
       display: flex;
@@ -201,7 +204,7 @@ const homeStyles = css`
         font-size: 1.45em;
       }
       p {
-        text-align:center;
+        text-align: center;
         color: rgb(153, 153, 153);
       }
     }
@@ -233,10 +236,25 @@ const homeStyles = css`
   }
 
   .copyright {
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
     padding-top: 5rem;
     color: rgb(153, 153, 153);
+  }
+  .playground-btn {
+    color: #06c8bf;
+    background-color: transparent;
+    border:none;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 20px;
+    cursor: pointer;
+    font-size: 1.1em;
+    i {
+      font-size: 0.9em;
+      margin-left: 10px;
+    }
   }
 `;
 
@@ -291,10 +309,26 @@ const containerSketchVariants = {
   },
 };
 
-export const Home: React.FC = () => {
+export const Home:React.FC = () => {
   const [showCodePic, setShowCodePic] = useState(false)
   const [showTextPic, setShowTextPic] = useState(false);
   const [showSketchPic, setShowSketchPic] = useState(false);
+  const { setUser } = useActions();
+  const user = useTypedSelector((state) => state.user);
+
+  const history = useHistory();
+
+  useEffect(() => {
+      axios.get('http://localhost:4005/user', { withCredentials: true })
+      .then((res) => {
+        const { username, userId } = res.data;
+        setUser({ username, userId });
+      })
+      .catch((error) => {
+        setUser({ username: '', userId: null });
+        console.log('User not found');
+      });
+  }, [setUser]);
 
   useEffect(() => {
     AOS.init();
@@ -320,10 +354,33 @@ export const Home: React.FC = () => {
     <div css={homeStyles}>
       <div className="navbar">
         <span className="logo">DEVNOTES</span>
-        <div className="navbar-buttons">
-          <button className="signUpBtn">SIGN UP</button>
-          <button className="loginBtn">LOGIN</button>
-        </div>
+        {user.username ? (
+          <div className="navbar-buttons">
+            <button
+              onClick={() => {
+                history.push('/login');
+              }}
+              className="sign-up-btn"
+            >
+              SIGN UP
+            </button>
+            <button
+              onClick={() => {
+                history.push('/signup');
+              }}
+              className="login-btn"
+            >
+              LOGIN
+            </button>
+          </div>
+        ) : (
+          <button onClick={()=>{
+            history.push('/playground')
+          }} className='playground-btn'>
+            <span>Playground</span>
+            <i className="fas fa-arrow-right"></i>
+          </button>
+        )}
       </div>
       <motion.div
         initial={{ y: 100, opacity: 0 }}
@@ -384,7 +441,13 @@ export const Home: React.FC = () => {
         animate={{ opacity: 1, transition: { delay: 8, duration: 0.8 } }}
         className="get-started-wrapper"
       >
-        <button type="button" className="get-started-btn">
+        <button
+          onClick={() => {
+            history.push('/playground');
+          }}
+          type="button"
+          className="get-started-btn"
+        >
           Get Started <i className="fas fa-arrow-alt-circle-right"></i>
         </button>
       </motion.div>
@@ -400,9 +463,7 @@ export const Home: React.FC = () => {
           <h1>Code collaboration made easy</h1>
           <p>A link is all you need to hop into a room and share your notes.</p>
         </div>
-        <div className="collaboration-img">
-          {/* <img src="/images/collaboration.png" alt="Collaboration" /> */}
-        </div>
+        <div className="collaboration-img"></div>
       </div>
       <div
         data-aos="fade-up"

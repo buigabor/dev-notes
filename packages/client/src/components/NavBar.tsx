@@ -94,6 +94,7 @@ const useStyles = makeStyles((theme: Theme) =>
         color: '#262d3b',
       },
     },
+
   }),
 );
 
@@ -175,12 +176,13 @@ export const NavBar = () => {
       <div>
         <AppBar className={classes.root} position="static">
           <Toolbar>
-            <Link className={classes.logoText} to="/">
+            <Link className={classes.logoText} to="/playground">
               <Typography>DEVNOTES</Typography>
             </Link>
 
             {user.username ? (
               <>
+                <Button className={classes.collabBtn}>Quiz</Button>
                 <Button
                   className={classes.collabBtn}
                   onClick={() => {
@@ -267,7 +269,7 @@ export const NavBar = () => {
                       setTimeout(() => {
                         hideAlert();
                       }, 1500);
-                      history.push('/');
+                      history.push('/playground');
                     } catch (error) {
                       showAlert('Logout failed!', 'error');
                       setTimeout(() => {

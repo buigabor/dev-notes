@@ -9,7 +9,7 @@ import {
   getUserByName,
   insertSession,
   saveGithubOrGoogleUser,
-  saveUser,
+  saveUser
 } from '../db';
 import { generateToken } from '../utils/session';
 import { registerValidation } from './../utils/validation';
