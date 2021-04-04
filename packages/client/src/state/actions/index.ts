@@ -1,5 +1,6 @@
 import { ActionType } from '../action-types';
 import { Cell, CellTypes } from '../cell';
+import { Quiz } from '../quiz';
 
 export type Direction = 'up' | 'down';
 
@@ -97,6 +98,14 @@ export interface SetUserAction {
   payload: { username: string | null; userId: number | null };
 }
 
+export interface SetQuizAction{
+  type:ActionType.SET_QUIZ;
+  payload:{
+    userId:number;
+    quizSet: Quiz[]
+  }
+}
+
 export type Action =
   | LoadCellsAction
   | MoveCellAction
@@ -111,4 +120,5 @@ export type Action =
   | EditProjectAction
   | LoadProjectAction
   | SaveProjectAction
-  | SetUserAction;
+  | SetUserAction
+  | SetQuizAction;

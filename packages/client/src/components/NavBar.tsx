@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 4,
       padding: '5px 12px',
       margin: '0 8px',
-      marginLeft: 'auto',
+     justifySelf: 'flex-end',
       transition: 'all 0.2s ease-in-out',
       textDecoration: 'none',
       '&:hover': {
@@ -94,7 +94,27 @@ const useStyles = makeStyles((theme: Theme) =>
         color: '#262d3b',
       },
     },
+    quizBtn: {
+      color: '#06c8bf',
+      border: '1px solid #06c8bf',
+      borderRadius: 4,
+      padding: '5px 12px',
+      margin: '0 8px',
+      marginLeft: 'auto',
+      transition: 'all 0.2s ease-in-out',
+      textDecoration: 'none',
 
+      '&:hover': {
+        backgroundColor: '#04ada5',
+        border: '1px solid #04ada5',
+        color: '#fff',
+      },
+
+      '& i': {
+        marginRight: 7,
+        fontSize: 16
+      },
+    },
   }),
 );
 
@@ -182,18 +202,24 @@ export const NavBar = () => {
 
             {user.username ? (
               <>
-                <Button className={classes.collabBtn}>Quiz</Button>
-                <Button
-                  className={classes.collabBtn}
-                  onClick={() => {
-                    setRoomId(randomId());
-                    setRoomUrl(`http://localhost:3000/room/${roomId}`);
-                    setOpenRoomDialog(true);
-                  }}
-                  color="inherit"
-                >
-                  <i className="fas fa-comments"></i> Collaborate
-                </Button>
+                <div className={classes.buttonWrapper}>
+                  <Link to="/quiz">
+                    <Button className={classes.quizBtn}>
+                      <i className="far fa-question-circle"></i>Quiz
+                    </Button>
+                  </Link>
+                  <Button
+                    className={classes.collabBtn}
+                    onClick={() => {
+                      setRoomId(randomId());
+                      setRoomUrl(`http://localhost:3000/room/${roomId}`);
+                      setOpenRoomDialog(true);
+                    }}
+                    color="inherit"
+                  >
+                    <i className="fas fa-comments"></i> Collaborate
+                  </Button>
+                </div>
                 <div
                   onClick={() => {
                     setProfileClicked(!profileClicked);
