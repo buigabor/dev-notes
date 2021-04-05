@@ -1,10 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Button } from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
 import React, { useState } from 'react';
+import { UserState } from '../../state/reducers/userReducer';
+import { QuestionContainer } from './QuestionContainer';
 
 const quizOverlayStyles = css`
   position: fixed;
@@ -24,12 +25,14 @@ const quizOverlayStyles = css`
     position: relative;
     background-color: #fff;
     width: 40vw;
+    height: 80vh;
     padding: 2rem 4rem;
     border-radius: 10px;
     transition: all 0.25s ease-in-out;
     display: flex;
     align-items: center;
     flex-direction: column;
+    overflow-y: scroll;
     .fa-times {
       cursor: pointer;
       font-size: 1.5em;
@@ -54,8 +57,8 @@ const quizOverlayStyles = css`
       gap: 25px;
       margin-bottom: 15px;
     }
-    &-box{
-      display:flex;
+    &-box {
+      display: flex;
       justify-content: space-between;
       width: 100%;
     }
@@ -73,6 +76,12 @@ const quizOverlayStyles = css`
   .add-question-btn {
     display: flex;
     justify-content: center;
+  }
+
+  .create-quiz-btn{
+    margin-left:auto;
+    display:flex;
+    justify-content:flex-end;
   }
 `;
 
@@ -92,25 +101,42 @@ const useStyles = makeStyles((theme: Theme) =>
     addQuestionBtn: {
       color: '#00b5ad',
     },
+
+    createBtn: {
+      backgroundColor: '#00b5ad',
+      color: '#fff',
+      '&:hover': {
+        backgroundColor: '#04a39b',
+      },
+    },
   }),
 );
+
+
+
 
 interface CreateQuizProps {
   setShowCreateQuiz: React.Dispatch<React.SetStateAction<boolean>>;
   showCreateQuiz: boolean;
+  user:UserState
 }
 
-export const CreateQuiz: React.FC<CreateQuizProps> = (
- { setShowCreateQuiz,
-  showCreateQuiz,}
-) => {
-const classes = useStyles();
-const [questions, setQuestions] = useState([{index:1, question:'', correctAnswer:'', incorrectAnswers:[]}])
-const [quizTitle, setQuizTitle] = useState('');
-
-const handleOnChange = ()=>{
-
+export interface Question {
+  id: number;
+  question: string;
+  correctAnswers: string[] | [];
+  incorrectAnswers: string[] | [];
 }
+
+export const CreateQuiz: React.FC<CreateQuizProps> = ({
+  setShowCreateQuiz,
+  showCreateQuiz,
+  user,
+}) => {
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [quizTitle, setQuizTitle] = useState('');
+  const classes = useStyles();
+
   return (
     <div
       style={{ visibility: showCreateQuiz ? 'visible' : 'hidden' }}
@@ -141,75 +167,48 @@ const handleOnChange = ()=>{
             className={classes.textField}
             id="standard-basic"
             label="Quiz Title"
-            onChange={(e)=>{
-            setQuizTitle(e.target.value)
+            onChange={(e) => {
+              setQuizTitle(e.target.value);
             }}
           />
-          <div className="quiz-container">
-            <span className="quiz-number">Question 1</span>
-            <div className="quiz-question">
-              <TextField
-                className={classes.textField}
-                id="outlined-basic"
-                label="Question"
-                variant="outlined"
+          {questions.map((q) => {
+            return (
+              <QuestionContainer
+                key={q.id}
+                questions={questions}
+                setQuestions={setQuestions}
+                question={q}
               />
-            </div>
-            <div className="quiz-answer-row">
-              <div className="quiz-answer-box">
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="Answer 1"
-                  variant="outlined"
-                />
-                <Checkbox
-                  color="primary"
-                  inputProps={{ 'aria-label': 'secondary checkbox' }}
-                />
-              </div>
-              <div className="quiz-answer-box">
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="Answer 2"
-                  variant="outlined"
-                />
-                <Checkbox
-                  color="primary"
-                  inputProps={{ 'aria-label': 'secondary checkbox' }}
-                />
-              </div>
-            </div>
-            <div className="quiz-answer-row">
-              <div className="quiz-answer-box">
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="Answer 3"
-                  variant="outlined"
-                />
-                <Checkbox
-                  color="primary"
-                  inputProps={{ 'aria-label': 'secondary checkbox' }}
-                />
-              </div>
-              <div className="quiz-answer-box">
-                <TextField
-                  className={classes.textField}
-                  id="outlined-basic"
-                  label="Answer 4"
-                  variant="outlined"
-                />
-                <Checkbox
-                  color="primary"
-                  inputProps={{ 'aria-label': 'secondary checkbox' }}
-                />
-              </div>
-            </div>
-          </div>
+            );
+          })}
           <div className="add-question-btn">
-            <Button className={classes.addQuestionBtn}>Add Question</Button>
+            <Button
+              onClick={() => {
+                setQuestions([
+                  ...questions,
+                  {
+                    id: questions.length,
+                    question: '',
+                    correctAnswers: [],
+                    incorrectAnswers: [],
+                  },
+                ]);
+              }}
+              className={classes.addQuestionBtn}
+            >
+              Add Question
+            </Button>
+          </div>
+          <div className="create-quiz-btn">
+            <Button onClick={()=>{
+                axios.post(
+                  'http://localhost:4005/quiz/create',
+                  { user:user.userId, quizSet: questions,quizTitle},
+                  {
+                    withCredentials: true,
+                  },
+                );
+            }} className={classes.createBtn}> Create</Button>
           </div>
         </div>
       </div>

@@ -3,14 +3,18 @@ import { ActionType } from '../action-types';
 import { Action } from '../actions';
 import { Quiz } from '../quiz';
 
-interface QuizState {
+export interface QuizState {
+  id:number | null;
   userId: number | null;
   quizSet: Quiz[]
+  quizTitle:string | null;
 }
 
 const initialState: QuizState = {
+  id:null,
   userId:null,
-  quizSet: []
+  quizSet: [],
+  quizTitle: null,
 };
 
 const projectsReducer = produce(

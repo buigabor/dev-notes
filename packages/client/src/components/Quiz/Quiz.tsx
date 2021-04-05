@@ -1,8 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import React, { useState } from 'react';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { QuizState } from '../../state/reducers/quizReducer';
 import { actionButtonsWrapperStyles } from '../styles/cellListActionButtonStyles';
 import { CreateQuiz } from './CreateQuiz';
+import { LoadQuiz } from './LoadQuiz';
 
 const quizStyles = css`
   .quiz-wrapper {
@@ -52,27 +55,35 @@ const quizStyles = css`
   }
 `;
 
+
 export const Quiz:React.FC = () => {
   const [showCreateQuiz, setShowCreateQuiz] = useState(false)
+  const [showLoadQuiz, setShowLoadQuiz] = useState(false);
+  const [quizes, setQuizes] = useState<QuizState[]>([]);
+  const user = useTypedSelector((state)=>state.user)
 
   return (
     <>
+      <LoadQuiz showLoadQuiz={showLoadQuiz} setShowLoadQuiz={setShowLoadQuiz} />
       <CreateQuiz
+        user={user}
         showCreateQuiz={showCreateQuiz}
         setShowCreateQuiz={setShowCreateQuiz}
       />
       <div css={quizStyles}>
         <div css={actionButtonsWrapperStyles}>
-          <button className="save-btn">
-            <i className="fas fa-save"></i>
-            <span style={{ fontFamily: 'Architects Daughter' }}>Save</span>
+          <button className="load-btn">
+            <i className="fas fa-file-upload"></i>
+            <span style={{ fontFamily: 'Architects Daughter' }}>Load</span>
           </button>
-          <button onClick={()=>{
-            setShowCreateQuiz(true)
-          }} className="load-btn">
+          <button
+            onClick={() => {
+              setShowCreateQuiz(true);
+            }}
+            className="load-btn"
+          >
             <i className="fas fa-folder-plus"></i>{' '}
             <span style={{ fontFamily: 'Architects Daughter' }}>Create</span>
-
           </button>
         </div>
         {/* ////////////////////////////////////////////////////////////////////////////////////////// */}

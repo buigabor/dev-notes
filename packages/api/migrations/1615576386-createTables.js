@@ -38,6 +38,13 @@ exports.up = async (sql) => {
     room_id VARCHAR(100),
     user_id BIGINT REFERENCES users (id)
   )`;
+
+  await sql`CREATE TABLE quiz (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    quiz_set TEXT,
+    quiz_title VARCHAR(100),
+    user_id BIGINT REFERENCES users (id)
+  )`;
 };
 
 exports.down = async (sql) => {

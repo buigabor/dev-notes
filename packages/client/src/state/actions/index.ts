@@ -98,12 +98,14 @@ export interface SetUserAction {
   payload: { username: string | null; userId: number | null };
 }
 
-export interface SetQuizAction{
-  type:ActionType.SET_QUIZ;
-  payload:{
-    userId:number;
-    quizSet: Quiz[]
-  }
+export interface SetQuizAction {
+  type: ActionType.SET_QUIZ;
+  payload: {
+    id: number;
+    userId: number;
+    quizSet: Quiz[];
+    quizTitle: string;
+  };
 }
 
 export type Action =

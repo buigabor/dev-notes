@@ -4,6 +4,12 @@ require('dotenv').config();
 const postgres = require('postgres');
 const sql = postgres();
 
+interface Quiz {
+  id:number;
+  question: string;
+  correctAnswers: string[] | [];
+  incorrectAnswers: string[] | [];
+}
 interface Cell {
   id: number;
   content: string;
@@ -229,3 +235,7 @@ export async function insertCellData(
 
   return cellsData.map((c: Cell) => camelcaseKeys(c))[0];
 }
+
+// QUIZ
+
+export async function insertQuiz(userId: number, quizSet: Quiz[], quizTitle: string) {}

@@ -5,11 +5,12 @@ import {
   deleteUserFromRoom,
   getUserFromRoom,
   getUsersFromRoom,
-  saveUserToRoom,
+  saveUserToRoom
 } from './db';
 import authRoute from './routes/auth';
 import cellsRoute from './routes/cells';
 import projectsRoute from './routes/projects';
+import quizRoute from './routes/quiz';
 import roomsRoute from './routes/rooms';
 import roomserviceRoute from './routes/roomservice';
 import sessionsRoute from './routes/sessions';
@@ -77,6 +78,7 @@ app.use('/user', usersRoute);
 app.use('/auth', authRoute);
 app.use('/cells', cellsRoute);
 app.use('/projects', projectsRoute);
+app.use('/quiz', quizRoute)
 app.use('/sessions', sessionsRoute);
 app.use('/roomservice', roomserviceRoute);
 
