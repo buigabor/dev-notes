@@ -3,6 +3,7 @@ import alerstReducer from './alertsReducer';
 import bundlesReducer from './bundlesReducer';
 import cellsReducer from './cellsReducer';
 import projectsReducer from './projectsReducer';
+import quizReducer from './quizReducer';
 import userReducer from './userReducer';
 
 const reducers = combineReducers({
@@ -11,6 +12,7 @@ const reducers = combineReducers({
   alerts: alerstReducer,
   projects: projectsReducer,
   user: userReducer,
+  quiz: quizReducer,
 });
 
 export default reducers;

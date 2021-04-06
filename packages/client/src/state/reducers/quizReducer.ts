@@ -17,10 +17,12 @@ const initialState: QuizState = {
   quizTitle: null,
 };
 
-const projectsReducer = produce(
+const quizReducer = produce(
   (state: QuizState = initialState, action: Action): QuizState => {
     switch (action.type) {
-      case ActionType.SET_QUIZ:
+      case ActionType.LOAD_QUIZ:
+      state.id = action.payload.id;
+      state.quizTitle = action.payload.quizTitle;
       state.userId = action.payload.userId;
       state.quizSet = action.payload.quizSet;
         return state;
@@ -30,4 +32,4 @@ const projectsReducer = produce(
   },
 );
 
-export default projectsReducer;
+export default quizReducer;

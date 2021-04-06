@@ -13,5 +13,5 @@ export enum ActionType {
   LOAD_PROJECT = 'load_project',
   SAVE_PROJECT = 'save_project',
   SET_USER = 'set_user',
-  SET_QUIZ='set_quiz'
+  LOAD_QUIZ='load_quiz'
 }

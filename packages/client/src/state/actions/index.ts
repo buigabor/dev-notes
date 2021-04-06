@@ -99,12 +99,12 @@ export interface SetUserAction {
 }
 
 export interface SetQuizAction {
-  type: ActionType.SET_QUIZ;
+  type: ActionType.LOAD_QUIZ;
   payload: {
-    id: number;
-    userId: number;
+    id: number | null;
+    userId: number | null;
     quizSet: Quiz[];
-    quizTitle: string;
+    quizTitle: string | null;
   };
 }
 

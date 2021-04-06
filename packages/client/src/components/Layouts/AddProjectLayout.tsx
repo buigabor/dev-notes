@@ -109,7 +109,11 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
               }, 1000);
               setShowAddOverlay(false);
             } catch (error) {
-              console.log(error);
+              showAlert('Project creation failed!', 'error');
+              setTimeout(() => {
+                hideAlert();
+              }, 1000);
+              setShowAddOverlay(false);
             }
           }}
           autoComplete="off"

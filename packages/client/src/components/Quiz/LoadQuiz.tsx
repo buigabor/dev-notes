@@ -2,6 +2,8 @@
 import { css } from '@emotion/react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
+import { QuizState } from '../../state/reducers/quizReducer';
+import { QuizCard } from './QuizCard';
 
 const quizOverlayStyles = css`
   position: fixed;
@@ -37,6 +39,10 @@ const quizOverlayStyles = css`
       right: 30px;
     }
   }
+
+  .quizes-list-wrapper{
+    width:100%;
+  }
 `;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,12 +58,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface LoadQuizProps {
   setShowLoadQuiz: React.Dispatch<React.SetStateAction<boolean>>;
-  showLoadQuiz:boolean
+  showLoadQuiz: boolean;
+  quizes: QuizState[];
 }
 
 export const LoadQuiz: React.FC<LoadQuizProps> = ({
   setShowLoadQuiz,
   showLoadQuiz,
+  quizes,
 }) => {
   const classes = useStyles();
 
@@ -86,9 +94,15 @@ export const LoadQuiz: React.FC<LoadQuizProps> = ({
           className="fas fa-times"
         ></i>
         <h1>Load A Quiz</h1>
-        <div>
-
-        </div>
+        <div className='quizes-list-wrapper'>{quizes?quizes.map((quiz)=>{
+          return (
+            <QuizCard
+              setShowLoadQuiz={setShowLoadQuiz}
+              key={quiz.id}
+              quiz={quiz}
+            />
+          );
+        }):''}</div>
       </div>
     </div>
   );

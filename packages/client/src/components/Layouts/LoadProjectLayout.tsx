@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { MapClient } from '@roomservice/browser';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Project } from '../../state/reducers/projectsReducer';
 import { ProjectCard } from './ProjectCard';
 import loadProjectStyles from './styles/loadProjectStyles';
@@ -32,8 +32,6 @@ export const LoadProjectLayout: React.FC<LoadProjectLayoutProps> = ({
   dataMap,
   orderMap,
 }) => {
-  useEffect(() => {}, []);
-
   return (
     <div
       className="overlay"

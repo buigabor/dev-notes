@@ -18,7 +18,6 @@ export const CellList: React.FC = () => {
   const [projects, setProjects] = useState<Project[] | null>(null);
   const [openDeleteCellsDialog, setOpenDeleteCellsDialog] = useState(false);
   const cells = useTypedSelector((state) => state.cells);
-  console.log(cells);
 
   const orderedCellList = useTypedSelector(({ cells: { order, data } }) => {
     return order.map((cellId: string) => {

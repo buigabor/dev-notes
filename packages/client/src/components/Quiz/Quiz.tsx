@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { QuizState } from '../../state/reducers/quizReducer';
@@ -61,10 +62,15 @@ export const Quiz:React.FC = () => {
   const [showLoadQuiz, setShowLoadQuiz] = useState(false);
   const [quizes, setQuizes] = useState<QuizState[]>([]);
   const user = useTypedSelector((state)=>state.user)
-
+  const quiz = useTypedSelector((state)=>state.quiz)
+console.log(quiz)
   return (
     <>
-      <LoadQuiz showLoadQuiz={showLoadQuiz} setShowLoadQuiz={setShowLoadQuiz} />
+      <LoadQuiz
+        quizes={quizes}
+        showLoadQuiz={showLoadQuiz}
+        setShowLoadQuiz={setShowLoadQuiz}
+      />
       <CreateQuiz
         user={user}
         showCreateQuiz={showCreateQuiz}
@@ -72,7 +78,22 @@ export const Quiz:React.FC = () => {
       />
       <div css={quizStyles}>
         <div css={actionButtonsWrapperStyles}>
-          <button className="load-btn">
+          <button
+            onClick={async () => {
+              const fetchAllQuizes = async () => {
+                const res = await axios.get('http://localhost:4005/quiz', {
+                  withCredentials: true,
+                });
+                const quizes = res.data.data.quizes;
+                console.log(quizes);
+
+                setQuizes(quizes);
+              };
+              fetchAllQuizes();
+              setShowLoadQuiz(true);
+            }}
+            className="load-btn"
+          >
             <i className="fas fa-file-upload"></i>
             <span style={{ fontFamily: 'Architects Daughter' }}>Load</span>
           </button>

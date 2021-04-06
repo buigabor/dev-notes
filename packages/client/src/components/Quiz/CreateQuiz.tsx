@@ -4,6 +4,7 @@ import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useActions } from '../../hooks/useActions';
 import { UserState } from '../../state/reducers/userReducer';
 import { QuestionContainer } from './QuestionContainer';
 
@@ -78,10 +79,10 @@ const quizOverlayStyles = css`
     justify-content: center;
   }
 
-  .create-quiz-btn{
-    margin-left:auto;
-    display:flex;
-    justify-content:flex-end;
+  .create-quiz-btn {
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
   }
 `;
 
@@ -112,13 +113,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
-
-
 interface CreateQuizProps {
   setShowCreateQuiz: React.Dispatch<React.SetStateAction<boolean>>;
   showCreateQuiz: boolean;
-  user:UserState
+  user: UserState;
 }
 
 export interface Question {
@@ -135,6 +133,7 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
 }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [quizTitle, setQuizTitle] = useState('');
+  const { showAlert, hideAlert } = useActions();
   const classes = useStyles();
 
   return (
@@ -200,15 +199,34 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
             </Button>
           </div>
           <div className="create-quiz-btn">
-            <Button onClick={()=>{
-                axios.post(
-                  'http://localhost:4005/quiz/create',
-                  { user:user.userId, quizSet: questions,quizTitle},
-                  {
-                    withCredentials: true,
-                  },
-                );
-            }} className={classes.createBtn}> Create</Button>
+            <Button
+              onClick={async () => {
+                try {
+                  const res = await axios.post(
+                    'http://localhost:4005/quiz/create',
+                    { userId: user.userId, quizSet: questions, quizTitle },
+                    {
+                      withCredentials: true,
+                    },
+                  );
+                  showAlert('Quiz created!', 'success');
+                  setTimeout(() => {
+                    hideAlert();
+                  }, 1000);
+                  setShowCreateQuiz(false);
+                } catch (error) {
+                  showAlert('Quiz creation failed!', 'error');
+                  setTimeout(() => {
+                    hideAlert();
+                  }, 1000);
+                  setShowCreateQuiz(false);
+                }
+              }}
+              className={classes.createBtn}
+            >
+              {' '}
+              Create
+            </Button>
           </div>
         </div>
       </div>

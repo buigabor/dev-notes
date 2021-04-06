@@ -12,12 +12,14 @@ import {
   LoadCellsAction,
   LoadProjectAction,
   MoveCellAction,
+  SetQuizAction,
   SetUserAction,
   ShowAlertAction,
-  UpdateCellAction,
+  UpdateCellAction
 } from '../actions';
 import { Cell, CellTypes } from '../cell';
 import { ProjectState } from '../reducers/projectsReducer';
+import { QuizState } from '../reducers/quizReducer';
 import { UserState } from '../reducers/userReducer';
 
 export const showAlert = (
@@ -120,3 +122,11 @@ export const setUser = (user: UserState): SetUserAction => {
     payload: { username, userId },
   };
 };
+
+export const loadQuiz = (quiz:QuizState):SetQuizAction=>{
+  const {userId, quizTitle, id, quizSet} = quiz
+    return {
+      type: ActionType.LOAD_QUIZ,
+      payload: { userId, id, quizTitle, quizSet },
+    };
+}

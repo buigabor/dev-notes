@@ -214,7 +214,7 @@ export async function saveCellData(
   UPDATE cellsData
   SET data=${data}, order_of_cells=${order}
   WHERE project_id=${projectId}
-  RETURNING *
+  RETURNING *;
   `;
 
   return cell.map((c: Cell) => camelcaseKeys(c))[0];
@@ -238,4 +238,21 @@ export async function insertCellData(
 
 // QUIZ
 
-export async function insertQuiz(userId: number, quizSet: Quiz[], quizTitle: string) {}
+export async function insertQuiz(userId: number, quizSet: string, quizTitle: string) {
+    const quiz = await sql` INSERT INTO quiz
+    (user_id, quiz_set, quiz_title)
+    VALUES
+    (${userId}, ${quizSet}, ${quizTitle})
+    RETURNING *;
+    `
+
+    return quiz.map((q: Quiz) => camelcaseKeys(q))[0];
+}
+
+export async function getAllQuizesByUserId(userId:number){
+  const quizes = await sql`
+  SELECT * from quiz WHERE user_id=${userId}
+  `;
+
+  return quizes.map((q: Quiz) => camelcaseKeys(q));
+}
