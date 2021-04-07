@@ -187,9 +187,9 @@ export async function updateProjectById(
   return project.map((p: Project) => camelcaseKeys(p))[0];
 }
 
-export async function deleteProjectById(projectId: number) {
+export async function deleteProjectByIdAndUserId(projectId: number, userId:number) {
   const project = await sql`
-  DELETE FROM projects WHERE id=${projectId} RETURNING *
+  DELETE FROM projects WHERE id=${projectId} AND user_id=${userId} RETURNING *
   `;
 
   return project.map((p: Project) => camelcaseKeys(p))[0];

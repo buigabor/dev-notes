@@ -1,10 +1,10 @@
 import express from 'express';
 import {
-  deleteProjectById,
+  deleteProjectByIdAndUserId,
   getAllProjectsByUserId,
   getProjectById,
   insertProject,
-  updateProjectById,
+  updateProjectById
 } from '../db';
 import { verify } from './verifyToken';
 
@@ -68,8 +68,14 @@ router.patch('/:id', verify, async (req, res) => {
 router.delete('/:id', verify, async (req, res) => {
   try {
     const id = req.params.id;
-
-    const project = await deleteProjectById(Number(id));
+    const userId = req.headers.userId
+    if (!userId) {
+      return res
+        .status(401)
+        .send({ success: true, error: 'Unauthorized' });
+    }
+    console.log(userId);
+    const project = await deleteProjectByIdAndUserId(Number(id), Number(userId));
     res.status(200).json({ success: true, data: { project }, error: null });
   } catch (error) {
     res.status(400).json({ success: false, error: error });
