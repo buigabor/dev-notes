@@ -60,12 +60,14 @@ interface LoadQuizProps {
   setShowLoadQuiz: React.Dispatch<React.SetStateAction<boolean>>;
   showLoadQuiz: boolean;
   quizes: QuizState[];
+  resetQuizStates: () => void;
 }
 
 export const LoadQuiz: React.FC<LoadQuizProps> = ({
   setShowLoadQuiz,
   showLoadQuiz,
   quizes,
+  resetQuizStates,
 }) => {
   const classes = useStyles();
 
@@ -94,15 +96,20 @@ export const LoadQuiz: React.FC<LoadQuizProps> = ({
           className="fas fa-times"
         ></i>
         <h1>Load A Quiz</h1>
-        <div className='quizes-list-wrapper'>{quizes?quizes.map((quiz)=>{
-          return (
-            <QuizCard
-              setShowLoadQuiz={setShowLoadQuiz}
-              key={quiz.id}
-              quiz={quiz}
-            />
-          );
-        }):''}</div>
+        <div className="quizes-list-wrapper">
+          {quizes
+            ? quizes.map((quiz) => {
+                return (
+                  <QuizCard
+                    resetQuizStates={resetQuizStates}
+                    setShowLoadQuiz={setShowLoadQuiz}
+                    key={quiz.id}
+                    quiz={quiz}
+                  />
+                );
+              })
+            : ''}
+        </div>
       </div>
     </div>
   );

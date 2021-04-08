@@ -124,6 +124,7 @@ export interface Question {
   question: string;
   correctAnswers: string[] | [];
   incorrectAnswers: string[] | [];
+  answers: string[] | [];
 }
 
 export const CreateQuiz: React.FC<CreateQuizProps> = ({
@@ -190,6 +191,7 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
                     question: '',
                     correctAnswers: [],
                     incorrectAnswers: [],
+                    answers: []
                   },
                 ]);
               }}

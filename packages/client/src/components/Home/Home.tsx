@@ -318,6 +318,8 @@ export const Home:React.FC = () => {
 
   const history = useHistory();
 
+  console.log(user)
+
   useEffect(() => {
       axios.get('http://localhost:4005/user', { withCredentials: true })
       .then((res) => {
@@ -354,7 +356,7 @@ export const Home:React.FC = () => {
     <div css={homeStyles}>
       <div className="navbar">
         <span className="logo">DEVNOTES</span>
-        {user.username ? (
+        {!user.username ? (
           <div className="navbar-buttons">
             <button
               onClick={() => {

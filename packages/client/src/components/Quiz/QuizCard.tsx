@@ -29,9 +29,14 @@ const useStyles = makeStyles({
 interface QuizCardProps {
   quiz: QuizState;
   setShowLoadQuiz: React.Dispatch<React.SetStateAction<boolean>>;
+  resetQuizStates:()=>void;
 }
 
-export const QuizCard: React.FC<QuizCardProps> = ({ quiz, setShowLoadQuiz }) => {
+export const QuizCard: React.FC<QuizCardProps> = ({
+  quiz,
+  setShowLoadQuiz,
+  resetQuizStates,
+}) => {
   const { showAlert, hideAlert, loadQuiz } = useActions();
 
   const classes = useStyles();
@@ -46,6 +51,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ quiz, setShowLoadQuiz }) => 
           <Button
             onClick={() => {
               loadQuiz(quiz);
+              resetQuizStates()
               setShowLoadQuiz(false);
             }}
             className={classes.loadBtn}

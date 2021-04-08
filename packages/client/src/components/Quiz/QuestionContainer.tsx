@@ -73,9 +73,11 @@ export const QuestionContainer: React.FC<IQuestionContainer> = ({
       }
     }
 
+    const allAnswers = [...correctAnswersArray, ...incorrectAnswersArray];
     currentQuestion.correctAnswers = [...correctAnswersArray];
     currentQuestion.incorrectAnswers = [...incorrectAnswersArray];
     currentQuestion.question = quizQuestion;
+    currentQuestion.answers = allAnswers;
 
     const newQuestionsArray = [...questions]
     newQuestionsArray.splice(question.id, 1, currentQuestion);
