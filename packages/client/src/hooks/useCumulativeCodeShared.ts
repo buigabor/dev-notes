@@ -17,7 +17,5 @@ export const useCumulativeCodeShared = () => {
     }
     `;
 
-  const showFnNoOperation = 'var show = ()=>{}';
-
   return showFn;
 };

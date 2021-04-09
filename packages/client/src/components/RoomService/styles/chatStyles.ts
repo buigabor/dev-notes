@@ -8,6 +8,15 @@ const chatStyles = css`
   height: 500px;
   width: 450px;
 
+  .cs-conversation__name{
+    margin-left: 15px;
+  }
+  .cs-status__bullet {
+    position: relative;
+    top: 25px;
+    left: 7px;
+  }
+
   .mute-btn {
     color: #00b5ad;
     margin-left: 1.6rem;

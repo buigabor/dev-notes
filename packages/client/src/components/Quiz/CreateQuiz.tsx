@@ -204,7 +204,7 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
             <Button
               onClick={async () => {
                 try {
-                  const res = await axios.post(
+                    await axios.post(
                     'http://localhost:4005/quiz/create',
                     { userId: user.userId, quizSet: questions, quizTitle },
                     {

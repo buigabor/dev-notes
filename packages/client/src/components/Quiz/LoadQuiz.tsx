@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
 import { QuizState } from '../../state/reducers/quizReducer';
 import { QuizCard } from './QuizCard';
@@ -44,17 +43,6 @@ const quizOverlayStyles = css`
     width:100%;
   }
 `;
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-        width: '25ch',
-      },
-    },
-  }),
-);
 
 interface LoadQuizProps {
   quizes: QuizState[];

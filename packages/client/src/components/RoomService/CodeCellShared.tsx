@@ -80,7 +80,7 @@ export const CodeCellShared: React.FC<CodeCellSharedProps> = ({
     return () => {
       clearTimeout(timer);
     };
-  }, [codeDebounced]);
+  }, [cell.id, cell.type, codeDebounced, dataMap]);
 
   const onEditorDidMount = (getValue: any, monacoEditor: any) => {
     editorRef.current = monacoEditor;

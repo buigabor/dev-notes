@@ -9,7 +9,7 @@ import {
   MessageInput,
   MessageList,
   Search,
-  Status,
+  Status
 } from '@chatscope/chat-ui-kit-react';
 import dateFormat from 'dateformat';
 import { motion } from 'framer-motion';
@@ -159,7 +159,7 @@ export const Chat: React.FC<ChatProps> = ({
     });
 
     setMessagesToShow([...messagesThatIncludeSearchValue]);
-  }, [searchValue]);
+  }, [messages, searchValue]);
 
   const variants = {
     closed: { opacity: 0, y: '100px' },
@@ -187,14 +187,20 @@ export const Chat: React.FC<ChatProps> = ({
       <div className="chat-container">
         <div className="chat-sidebar">
           <ConversationList>
-            {users.map((username) => {
-              return (
-                <div key={username} className="chat-sidebar__users-online">
-                  <Status status="available" />
-                  <Conversation name={username}></Conversation>
-                </div>
-              );
-            })}
+            {socket ? (
+              users.map((username) => {
+                return (
+                  // <div key={username} className="chat-sidebar__users-online">
+                  <React.Fragment key={username}>
+                    <Status status="available" />
+                    <Conversation name={username}></Conversation>
+                  </React.Fragment>
+                  // </div>
+                );
+              })
+            ) : (
+              <Conversation name={'empty'}></Conversation>
+            )}
           </ConversationList>
         </div>
         <div className="chat-message-container">

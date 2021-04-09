@@ -82,8 +82,7 @@ export const QuestionContainer: React.FC<IQuestionContainer> = ({
     const newQuestionsArray = [...questions]
     newQuestionsArray.splice(question.id, 1, currentQuestion);
     setQuestions([...newQuestionsArray]);
-    console.log(newQuestionsArray);
-  }, [answers, correctAnswers, question.id, quizQuestion, setQuestions]
+  }, [answers, correctAnswers, question.id, questions, quizQuestion, setQuestions]
   )
 
   useEffect(() => {

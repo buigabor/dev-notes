@@ -142,18 +142,13 @@ export const SignUp: React.FC = () => {
                     showAlert('Registration successful!', 'success');
                     setTimeout(() => {
                       hideAlert();
-                      history.push('/');
+                      history.push('/playground');
                     }, 1200);
                   }
                 })
                 .catch((error) => {
                   const errorMessage = error.response.data.error;
                   setError(errorMessage);
-
-                  // showAlert(errorMessage, 'error');
-                  // setTimeout(() => {
-                  //   hideAlert();
-                  // }, 3000);
                 });
             }}
             className={classes.form}

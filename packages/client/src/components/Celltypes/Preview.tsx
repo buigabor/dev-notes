@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import previewStyles from './styles/previewStyles';
 
 interface PreviewProps {
@@ -40,7 +40,6 @@ const html = `
 
 export const Preview: React.FC<PreviewProps> = ({ code, error }) => {
   const iframe = useRef<any>();
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     // Inject the previously declared html

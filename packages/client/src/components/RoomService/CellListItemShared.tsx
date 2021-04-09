@@ -75,7 +75,7 @@ export const CellListItemShared: React.FC<CellListItemSharedProps> = ({
         </>,
       );
     }
-  }, [cell, cell.type, data, dataMap, deleteCell]);
+  }, [cell, cell.type, data, dataMap, deleteCell, moveCell]);
 
   return <div css={cellListItemStyles}>{cellToRender}</div>;
 };

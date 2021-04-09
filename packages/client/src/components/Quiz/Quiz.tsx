@@ -366,7 +366,6 @@ export const Quiz:React.FC = () => {
               bgColor="#04ada5"
               completed={calculateProgress()}
               width="50vw"
-              transitionDuration={'0.6'}
             />
             <div className="quiz-wrapper">
               {isThereMoreQuestionsLeft &&

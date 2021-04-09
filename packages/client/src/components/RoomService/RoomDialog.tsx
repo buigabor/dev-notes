@@ -4,18 +4,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    goToRoomBtn: {
-      color: '#06c8bf',
-    },
-  }),
-);
 
 interface RoomDialogProps {
   roomId: string;
@@ -30,8 +20,6 @@ const RoomDialog: React.FC<RoomDialogProps> = ({
   openRoomDialog,
   setOpenRoomDialog,
 }) => {
-  const classes = useStyles();
-  const history = useHistory();
 
   return (
     <div>

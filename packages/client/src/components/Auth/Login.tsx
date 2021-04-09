@@ -136,13 +136,13 @@ export const Login: React.FC = () => {
       showAlert('Login successful!', 'success');
       setTimeout(() => {
         hideAlert();
-        history.goBack();
+        history.push('/playground');
       }, 1200);
     } catch (error) {
       showAlert('Login failed!', 'error');
       setTimeout(() => {
         hideAlert();
-        history.goBack();
+        history.push('/playground');
       }, 1200);
     }
   };

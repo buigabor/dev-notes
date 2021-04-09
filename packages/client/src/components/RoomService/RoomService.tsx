@@ -54,17 +54,17 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
     'myorder',
   );
 
-  useEffect(() => {
-    if (showChat) {
-      // Change unread messages to read
-      const messagesRead = messages.map((message) => {
-        message.seen = 'seen';
-        return message;
-      });
-      setMessages([...messagesRead]);
-      setUnreadMessagesCount(0);
-    }
-  }, [showChat]);
+  // useEffect(() => {
+  //   if (showChat) {
+  //     // Change unread messages to read
+  //     const messagesRead = messages.map((message) => {
+  //       message.seen = 'seen';
+  //       return message;
+  //     });
+  //     setMessages([...messagesRead]);
+  //     setUnreadMessagesCount(0);
+  //   }
+  // }, [showChat]);
 
   useEffect(() => {
     const unreadMessages = messages.filter((m) => m.seen === 'not seen');
@@ -72,7 +72,7 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
       playNotification();
     }
     setUnreadMessagesCount(unreadMessages.length);
-  }, [messages, mute]);
+  }, [messages, mute, playNotification]);
 
   // ROOM SERVICE STATES
 
@@ -224,6 +224,12 @@ export const RoomService: React.FC<RoomServiceProps> = ({ match }) => {
         <motion.div
           onClick={() => {
             setShowChat(true);
+            const messagesRead = messages.map((message) => {
+              message.seen = 'seen';
+              return message;
+            });
+            setMessages([...messagesRead]);
+            setUnreadMessagesCount(0);
           }}
           style={{ visibility: showChat ? 'hidden' : 'visible' }}
           css={chatIcon}
