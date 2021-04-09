@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllQuizesByUserId, insertQuiz } from '../db';
+import { deleteQuizByIdAndUserId, getAllQuizesByUserId, insertQuiz } from '../db';
 import { verify } from './verifyToken';
 
 const router = express.Router();
@@ -11,7 +11,7 @@ interface QuizStringified {
   userId:number;
 }
 
-// Get all projects
+// Get all quizes
 router.get('/', verify, async (req, res) => {
   try {
     const userId = req.headers.userId;
@@ -28,15 +28,7 @@ router.get('/', verify, async (req, res) => {
   }
 });
 
-// Get a single project by project id
-router.get('/:id', verify, async (req, res) => {
-  try {
-  } catch (error) {
-    res.status(400).json({ success: false, error: error });
-  }
-});
-
-// Create a project
+// Create a quiz
 router.post('/create', verify, async (req, res) => {
   try {
     const {userId, quizSet, quizTitle} = req.body
@@ -54,16 +46,21 @@ router.post('/create', verify, async (req, res) => {
   }
 });
 
-// Update a project
-router.patch('/:id', verify, async (req, res) => {
-  try {
-  } catch (error) {
-    res.status(400).json({ success: false, error: error });
-  }
-});
+// Delete a quiz
 
 router.delete('/:id', verify, async (req, res) => {
   try {
+    const id = req.params.id;
+    const userId = req.headers.userId;
+    if (!userId) {
+      return res.status(401).send({ success: true, error: 'Unauthorized' });
+    }
+
+    const quiz = await deleteQuizByIdAndUserId(
+      Number(id),
+      Number(userId),
+    );
+    res.status(200).json({ success: true, data: { quiz }, error: null });
   } catch (error) {
     res.status(400).json({ success: false, error: error });
   }

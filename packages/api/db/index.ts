@@ -256,3 +256,14 @@ export async function getAllQuizesByUserId(userId:number){
 
   return quizes.map((q: Quiz) => camelcaseKeys(q));
 }
+
+export async function deleteQuizByIdAndUserId(
+  quizId: number,
+  userId: number,
+) {
+  const quiz = await sql`
+  DELETE FROM quiz WHERE id=${quizId} AND user_id=${userId} RETURNING *
+  `;
+
+  return quiz.map((q: Quiz) => camelcaseKeys(q))[0];
+}

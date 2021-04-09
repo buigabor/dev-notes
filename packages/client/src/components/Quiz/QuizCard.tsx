@@ -4,9 +4,9 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
 import { useActions } from '../../hooks/useActions';
 import { QuizState } from '../../state/reducers/quizReducer';
-import { Alert } from '../Utils/Alert';
 
 const useStyles = makeStyles({
   root: {
@@ -29,20 +29,23 @@ const useStyles = makeStyles({
 interface QuizCardProps {
   quiz: QuizState;
   setShowLoadQuiz: React.Dispatch<React.SetStateAction<boolean>>;
-  resetQuizStates:()=>void;
+  resetQuizStates: () => void;
+  quizes: QuizState[];
+  setQuizes: React.Dispatch<React.SetStateAction<QuizState[]>>;
 }
 
 export const QuizCard: React.FC<QuizCardProps> = ({
   quiz,
   setShowLoadQuiz,
   resetQuizStates,
+  quizes,
+  setQuizes,
 }) => {
   const { showAlert, hideAlert, loadQuiz } = useActions();
 
   const classes = useStyles();
   return (
     <>
-      <Alert />
       <Card className={classes.root}>
         <CardContent>
           <Typography className={classes.title}>{quiz.quizTitle}</Typography>
@@ -51,8 +54,12 @@ export const QuizCard: React.FC<QuizCardProps> = ({
           <Button
             onClick={() => {
               loadQuiz(quiz);
-              resetQuizStates()
+              resetQuizStates();
               setShowLoadQuiz(false);
+              showAlert('Quiz loaded!', 'success');
+              setTimeout(() => {
+                hideAlert();
+              }, 1500);
             }}
             className={classes.loadBtn}
             size="small"
@@ -62,6 +69,27 @@ export const QuizCard: React.FC<QuizCardProps> = ({
           <Button
             onClick={async () => {
               try {
+                console.log('clicked')
+                const res = await axios.delete(
+                  `http://localhost:4005/quiz/${quiz.id}`,
+                  { withCredentials: true },
+                );
+                const deletedQuiz = res.data.data.quiz;
+                if (!deletedQuiz) {
+                  showAlert('Quiz failed to delete', 'error');
+                  return setTimeout(() => {
+                    hideAlert();
+                  }, 1500);
+                }
+                if (quizes && deletedQuiz) {
+                  setQuizes(
+                    quizes.filter((quiz) => quiz.id !== deletedQuiz.id),
+                  );
+                  showAlert('Quiz successfully deleted!', 'success');
+                  return setTimeout(() => {
+                    hideAlert();
+                  }, 1500);
+                }
               } catch (error) {
                 showAlert('Quiz failed to delete', 'error');
                 setTimeout(() => {

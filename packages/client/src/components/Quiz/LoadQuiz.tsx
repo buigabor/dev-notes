@@ -13,7 +13,7 @@ const quizOverlayStyles = css`
   height: 100%;
   transition: all 0.2s linear;
   background: rgba(26, 26, 26, 0.7);
-  z-index: 2;
+  z-index: 100;
   visibility: 'visible';
   display: flex;
   justify-content: center;
@@ -57,19 +57,20 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface LoadQuizProps {
+  quizes: QuizState[];
+  setQuizes:React.Dispatch<React.SetStateAction<QuizState[]>>;
   setShowLoadQuiz: React.Dispatch<React.SetStateAction<boolean>>;
   showLoadQuiz: boolean;
-  quizes: QuizState[];
   resetQuizStates: () => void;
 }
 
 export const LoadQuiz: React.FC<LoadQuizProps> = ({
   setShowLoadQuiz,
+  setQuizes,
   showLoadQuiz,
   quizes,
   resetQuizStates,
 }) => {
-  const classes = useStyles();
 
   return (
     <div
@@ -105,6 +106,8 @@ export const LoadQuiz: React.FC<LoadQuizProps> = ({
                     setShowLoadQuiz={setShowLoadQuiz}
                     key={quiz.id}
                     quiz={quiz}
+                    quizes={quizes}
+                    setQuizes={setQuizes}
                   />
                 );
               })

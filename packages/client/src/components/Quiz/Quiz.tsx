@@ -1,15 +1,34 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import ProgressBar from "@ramonak/react-progress-bar";
 import axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { QuizState } from '../../state/reducers/quizReducer';
 import { actionButtonsWrapperStyles } from '../styles/cellListActionButtonStyles';
+import { Alert } from '../Utils/Alert';
 import { CreateQuiz } from './CreateQuiz';
 import { LoadQuiz } from './LoadQuiz';
 
 const quizStyles = css`
-  .quiz-next-btn{background-color:transparent;color:#04ada5; border:none; position:absolute; top: 52%; right: 3rem; font-size: 2.1em; opacity: 0.8; cursor: pointer;}
+  padding-bottom: 10rem;
+  .progress-bar{
+    position:absolute;
+    left: 24.75%;
+    bottom: 5%;
+    z-index: 5;
+  }
+   .quiz-next-btn {
+    background-color: transparent;
+    color: #04ada5;
+    border: none;
+    position: absolute;
+    top: 52%;
+    right: 3rem;
+    font-size: 2.1em;
+    opacity: 0.8;
+    cursor: pointer;
+  }
   .correct-answer {
     color: #48c548;
     padding-bottom: 10px;
@@ -32,6 +51,13 @@ const quizStyles = css`
     &:hover {
       background-color: #05958e;
     }
+  }
+  .divider-result {
+    height: 0.3px;
+    background-color: gray;
+    width: 50%;
+    margin-bottom: 3rem;
+    transform: translateY(-20px);
   }
   .divider {
     height: 0.3px;
@@ -65,7 +91,7 @@ const quizStyles = css`
     margin-top: -20px;
     background-color: #fff;
     width: 50vw;
-    height: 50vh;
+    height: 55vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -186,6 +212,11 @@ export const Quiz:React.FC = () => {
     });
   }
 
+  const  calculateProgress = ()=>{
+    const progress = (currentQuestionIndex / quiz.quizSet.length) * 100;
+    return progress
+  }
+
   const memoizedCheckIfThereIsNoMoreQuestions = useCallback(()=>{
     if (currentQuestionIndex + 1  > quiz.quizSet.length) {
       return setIsThereMoreQuestionsLeft(false);
@@ -280,7 +311,9 @@ export const Quiz:React.FC = () => {
 
   return (
     <>
+      <Alert />
       <LoadQuiz
+        setQuizes={setQuizes}
         resetQuizStates={resetQuizStates}
         quizes={quizes}
         showLoadQuiz={showLoadQuiz}
@@ -327,165 +360,181 @@ export const Quiz:React.FC = () => {
         </div>
         {/* ////////////////////////////////////////////////////////////////////////////////////////// */}
         {quiz.quizTitle ? (
-          <div className="quiz-wrapper">
-            {isThereMoreQuestionsLeft && quiz.quizSet[currentQuestionIndex] ? (
-              <>
-                <div className="quiz-question__header">
-                  <span className="quiz-question__header-number">
-                    Question {currentQuestionIndex + 1} of {quiz.quizSet.length}
-                  </span>
-                  <span className="quiz-question__header-score">
-                    Score {numberOfCorrectAnswers} / {quiz.quizSet.length}
-                  </span>
-                </div>
-                <div className="quiz-question__title">
-                  <span className="quiz-question__text">
-                    {quiz.quizSet[currentQuestionIndex].question}
-                  </span>
-                </div>
-                <hr className="divider"></hr>
-                <div className="quiz-answers-wrapper">
-                  <div className="quiz-answer-row">
-                    <div
-                      onClick={() => {
-                        setActiveAnswers({
-                          ...activeAnswers,
-                          answerOne: !activeAnswers.answerOne,
-                        });
-                      }}
-                      ref={answerOneBox}
-                      className={`quiz-answer-box ${
-                        activeAnswers.answerOne ? 'selected' : ''
-                      }`}
-                    >
-                      {
-                        quiz.quizSet[currentQuestionIndex].answers[
-                          randomOrderForAnswers[0]
-                        ]
-                      }
+          <>
+            <ProgressBar
+              className="progress-bar"
+              bgColor="#04ada5"
+              completed={calculateProgress()}
+              width="50vw"
+              transitionDuration={'0.6'}
+            />
+            <div className="quiz-wrapper">
+              {isThereMoreQuestionsLeft &&
+              quiz.quizSet[currentQuestionIndex] ? (
+                <>
+                  <div className="quiz-question__header">
+                    <span className="quiz-question__header-number">
+                      Question {currentQuestionIndex + 1} of{' '}
+                      {quiz.quizSet.length}
+                    </span>
+                    <span className="quiz-question__header-score">
+                      Score {numberOfCorrectAnswers} / {quiz.quizSet.length}
+                    </span>
+                  </div>
+                  <div className="quiz-question__title">
+                    <span className="quiz-question__text">
+                      {quiz.quizSet[currentQuestionIndex].question}
+                    </span>
+                  </div>
+                  <hr className="divider"></hr>
+                  <div className="quiz-answers-wrapper">
+                    <div className="quiz-answer-row">
+                      <div
+                        onClick={() => {
+                          setActiveAnswers({
+                            ...activeAnswers,
+                            answerOne: !activeAnswers.answerOne,
+                          });
+                        }}
+                        ref={answerOneBox}
+                        className={`quiz-answer-box ${
+                          activeAnswers.answerOne ? 'selected' : ''
+                        }`}
+                      >
+                        {
+                          quiz.quizSet[currentQuestionIndex].answers[
+                            randomOrderForAnswers[0]
+                          ]
+                        }
+                      </div>
+                      <div
+                        ref={answerTwoBox}
+                        onClick={() => {
+                          setActiveAnswers({
+                            ...activeAnswers,
+                            answerTwo: !activeAnswers.answerTwo,
+                          });
+                        }}
+                        className={`quiz-answer-box ${
+                          activeAnswers.answerTwo ? 'selected' : ''
+                        }`}
+                      >
+                        {
+                          quiz.quizSet[currentQuestionIndex].answers[
+                            randomOrderForAnswers[1]
+                          ]
+                        }
+                      </div>
                     </div>
-                    <div
-                      ref={answerTwoBox}
-                      onClick={() => {
-                        setActiveAnswers({
-                          ...activeAnswers,
-                          answerTwo: !activeAnswers.answerTwo,
-                        });
-                      }}
-                      className={`quiz-answer-box ${
-                        activeAnswers.answerTwo ? 'selected' : ''
-                      }`}
-                    >
-                      {
-                        quiz.quizSet[currentQuestionIndex].answers[
-                          randomOrderForAnswers[1]
-                        ]
-                      }
+                    <div className="quiz-answer-row">
+                      <div
+                        ref={answerThreeBox}
+                        onClick={() => {
+                          setActiveAnswers({
+                            ...activeAnswers,
+                            answerThree: !activeAnswers.answerThree,
+                          });
+                        }}
+                        className={`quiz-answer-box ${
+                          activeAnswers.answerThree ? 'selected' : ''
+                        }`}
+                      >
+                        {
+                          quiz.quizSet[currentQuestionIndex].answers[
+                            randomOrderForAnswers[2]
+                          ]
+                        }
+                      </div>
+                      <div
+                        ref={answerFourBox}
+                        onClick={() => {
+                          setActiveAnswers({
+                            ...activeAnswers,
+                            answerFour: !activeAnswers.answerFour,
+                          });
+                        }}
+                        className={`quiz-answer-box ${
+                          activeAnswers.answerFour ? 'selected' : ''
+                        }`}
+                      >
+                        {
+                          quiz.quizSet[currentQuestionIndex].answers[
+                            randomOrderForAnswers[3]
+                          ]
+                        }
+                      </div>
                     </div>
                   </div>
-                  <div className="quiz-answer-row">
-                    <div
-                      ref={answerThreeBox}
-                      onClick={() => {
-                        setActiveAnswers({
-                          ...activeAnswers,
-                          answerThree: !activeAnswers.answerThree,
-                        });
-                      }}
-                      className={`quiz-answer-box ${
-                        activeAnswers.answerThree ? 'selected' : ''
-                      }`}
-                    >
-                      {
-                        quiz.quizSet[currentQuestionIndex].answers[
-                          randomOrderForAnswers[2]
-                        ]
+                  {isQuestionCorrectlyAnswered && showResultText ? (
+                    <span className="correct-answer">Correct!</span>
+                  ) : !isQuestionCorrectlyAnswered && showResultText ? (
+                    <span className="incorrect-answer">Incorrect!</span>
+                  ) : (
+                    ''
+                  )}
+                  <button
+                    disabled={showResultText ? true : false}
+                    style={{
+                      opacity: showResultText ? 0.65 : 1,
+                      cursor: showResultText ? 'not-allowed' : 'pointer',
+                    }}
+                    className="submit-btn"
+                    onClick={() => {
+                      setShowResultText(true);
+                      if (isQuestionCorrectlyAnswered) {
+                        setNumberOfCorrectAnswers(
+                          (numberOfCorrectAnswers) =>
+                            numberOfCorrectAnswers + 1,
+                        );
                       }
-                    </div>
-                    <div
-                      ref={answerFourBox}
-                      onClick={() => {
-                        setActiveAnswers({
-                          ...activeAnswers,
-                          answerFour: !activeAnswers.answerFour,
-                        });
-                      }}
-                      className={`quiz-answer-box ${
-                        activeAnswers.answerFour ? 'selected' : ''
-                      }`}
-                    >
-                      {
-                        quiz.quizSet[currentQuestionIndex].answers[
-                          randomOrderForAnswers[3]
-                        ]
-                      }
-                    </div>
-                  </div>
-                </div>
-                {isQuestionCorrectlyAnswered && showResultText ? (
-                  <span className="correct-answer">Correct!</span>
-                ) : !isQuestionCorrectlyAnswered && showResultText ? (
-                  <span className="incorrect-answer">Incorrect!</span>
-                ) : (
-                  ''
-                )}
-                <button
-                  disabled={showResultText ? true : false}
-                  style={{ opacity: showResultText?  0.65 : 1, cursor: showResultText?'not-allowed':'pointer' }}
-                  className="submit-btn"
-                  onClick={() => {
-                    setShowResultText(true);
-                    if (isQuestionCorrectlyAnswered) {
-                      setNumberOfCorrectAnswers(
-                        (numberOfCorrectAnswers) => numberOfCorrectAnswers + 1,
+                    }}
+                  >
+                    Submit
+                  </button>
+                  <button
+                    style={{
+                      visibility: showResultText ? 'visible' : 'hidden',
+                      transition: 'all 0.2s ease-in',
+                      transitionDelay: '.75s',
+                    }}
+                    onClick={() => {
+                      setShowResultText(false);
+                      createRandomOrderForAnswers();
+                      setCurrentQuestionIndex(
+                        (currentQuestionIndex) => currentQuestionIndex + 1,
                       );
-                    }
-                  }}
-                >
-                  Submit
-                </button>
-                <button
-                  style={{
-                    visibility: showResultText ? 'visible' : 'hidden',
-                    transition: 'all 0.2s ease-in',
-                    transitionDelay: '.75s',
-                  }}
-                  onClick={() => {
-                    setShowResultText(false);
-                    createRandomOrderForAnswers();
-                    setCurrentQuestionIndex(
-                      (currentQuestionIndex) => currentQuestionIndex + 1,
-                    );
 
-                    setSelectedAnswers({
-                      answerOne: null,
-                      answerTwo: null,
-                      answerThree: null,
-                      answerFour: null,
-                    });
-                    setActiveAnswers({
-                      answerOne: false,
-                      answerTwo: false,
-                      answerThree: false,
-                      answerFour: false,
-                    });
-                  }}
-                  className="quiz-next-btn"
-                >
-                  <i className="fas fa-arrow-circle-right"></i>
-                </button>{' '}
-              </>
-            ) : (
-              <div className="result-wrapper">
-                <h1 className="result-title">Result</h1>
-                <hr></hr>
-                <span className="result-percentage">
-                  Score: {(numberOfCorrectAnswers / quiz.quizSet.length) * 100}%
-                </span>
-                <span className="result-text">{`${numberOfCorrectAnswers} out of ${quiz.quizSet.length}`}</span>
-              </div>
-            )}
-          </div>
+                      setSelectedAnswers({
+                        answerOne: null,
+                        answerTwo: null,
+                        answerThree: null,
+                        answerFour: null,
+                      });
+                      setActiveAnswers({
+                        answerOne: false,
+                        answerTwo: false,
+                        answerThree: false,
+                        answerFour: false,
+                      });
+                    }}
+                    className="quiz-next-btn"
+                  >
+                    <i className="fas fa-arrow-circle-right"></i>
+                  </button>{' '}
+                </>
+              ) : (
+                <div className="result-wrapper">
+                  <h1 className="result-title">Result</h1>
+                  <hr className="divider-result"></hr>
+                  <span className="result-percentage">
+                    Score:{' '}
+                    {(numberOfCorrectAnswers / quiz.quizSet.length) * 100}%
+                  </span>
+                  <span className="result-text">{`${numberOfCorrectAnswers} out of ${quiz.quizSet.length}`}</span>
+                </div>
+              )}
+            </div>
+          </>
         ) : (
           ''
         )}
