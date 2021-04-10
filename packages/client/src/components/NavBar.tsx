@@ -9,6 +9,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { GoogleLogout } from 'react-google-login';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import baseURL from '../../server';
 import { useActions } from '../hooks/useActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import RoomDialog from './RoomService/RoomDialog';
@@ -156,12 +157,21 @@ const randomId = () => {
   return S4() + S4() + '-' + S4() + S4() + '-' + S4() + S4() + S4();
 };
 
+let clientSideUrl: string;
+if (process.env.NODE_ENV === 'development') {
+  clientSideUrl = 'http://localhost:3000';
+}
+
+if (process.env.NODE_ENV === 'production') {
+  clientSideUrl = 'https://devnotes-bui.netlify.app';
+}
+
 export const NavBar = () => {
   const classes = useStyles();
   const [profileClicked, setProfileClicked] = useState<boolean>(false);
   const [logoutClicked, setLogoutClicked] = useState(false);
   const [roomId, setRoomId] = useState(randomId());
-  const [roomUrl, setRoomUrl] = useState(`http:localhost:3000/room/${roomId}`);
+  const [roomUrl, setRoomUrl] = useState(`${clientSideUrl}/room/${roomId}`);
   const [openRoomDialog, setOpenRoomDialog] = useState(false);
 
   const { showAlert, hideAlert, setUser } = useActions();
@@ -173,7 +183,7 @@ export const NavBar = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:4005/user', { withCredentials: true })
+      .get(`${baseURL}/user`, { withCredentials: true })
       .then((res) => {
         const { username, userId } = res.data;
         setUser({ username, userId });
@@ -212,7 +222,7 @@ export const NavBar = () => {
                     className={classes.collabBtn}
                     onClick={() => {
                       setRoomId(randomId());
-                      setRoomUrl(`http://localhost:3000/room/${roomId}`);
+                      setRoomUrl(`${clientSideUrl}/room/${roomId}`);
                       setOpenRoomDialog(true);
                     }}
                     color="inherit"
@@ -286,7 +296,7 @@ export const NavBar = () => {
                 <span
                   onClick={async () => {
                     try {
-                      await axios.get('http://localhost:4005/auth/logout', {
+                      await axios.get(`${baseURL}/auth/logout`, {
                         withCredentials: true,
                       });
                       renderProps.onClick();

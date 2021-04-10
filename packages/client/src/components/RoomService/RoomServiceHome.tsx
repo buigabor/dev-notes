@@ -1,6 +1,7 @@
 import { RoomServiceProvider } from '@roomservice/react';
 import * as H from 'history';
 import React from 'react';
+import baseURL from '../../../server';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { RoomService } from './RoomService';
 
@@ -25,7 +26,7 @@ async function myAuthFunction(params: {
   room: string;
   ctx: { userID: number };
 }) {
-  const response = await fetch('http://localhost:4005/roomservice', {
+  const response = await fetch(`${baseURL}/roomservice`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import React from 'react';
 import { useHistory } from 'react-router';
+import baseURL from '../../server';
 import { useActions } from '../hooks/useActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { Project } from '../state/reducers/projectsReducer';
@@ -43,7 +44,7 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
 
   const checkIfLoggedIn = async () => {
     return await axios
-      .get('http://localhost:4005/sessions', {
+      .get(`${baseURL}/sessions`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -87,7 +88,7 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
           }
           if (!collaboration) {
             axios.post(
-              'http://localhost:4005/cells/save',
+              `${baseURL}/cells/save`,
               { ...cellsState, projectId: project.id },
               {
                 withCredentials: true,
@@ -95,7 +96,7 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
             );
           } else {
             axios.post(
-              'http://localhost:4005/cells/save',
+              `${baseURL}/cells/save`,
               { data, order: orderCells?.order, projectId: project.id },
               {
                 withCredentials: true,
@@ -167,7 +168,7 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({
           }
           setShowLoadOverlay(true);
           const fetchAllProjects = async () => {
-            const res = await axios.get('http://localhost:4005/projects', {
+            const res = await axios.get(`${baseURL}/projects`, {
               withCredentials: true,
             });
             const projects = res.data.data.projects;

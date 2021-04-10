@@ -16,6 +16,24 @@ import { registerValidation } from './../utils/validation';
 
 const router = express.Router();
 
+let clientSideUrl:string;
+if (process.env.NODE_ENV === 'development') {
+  clientSideUrl = 'http://localhost:3000';
+}
+
+if (process.env.NODE_ENV === 'production') {
+  clientSideUrl = 'https://devnotes-bui.netlify.app';
+}
+
+let backendSideUrl: string;
+if (process.env.NODE_ENV === 'development') {
+  backendSideUrl = 'http://localhost:4005';
+}
+
+if (process.env.NODE_ENV === 'production') {
+  backendSideUrl = 'https://devnotes-bui.herokuapp.com';
+}
+
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -135,7 +153,7 @@ router.get('/logout', async (req, res) => {
 
 router.get('/github', async (req, res) => {
   try {
-    const redirect_uri = 'http://localhost:4005/auth/oauth-callback';
+    const redirect_uri = `${backendSideUrl}/auth/oauth-callback`;
     // `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENTID}`,
     res.redirect(
       `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENTID}`,
@@ -188,7 +206,7 @@ router.get('/oauth-callback', async (req, res) => {
       }),
     );
     await deleteExpiredSessions();
-    res.redirect('http://localhost:3000');
+    res.redirect(clientSideUrl);
   } catch (error) {
     res.status(400).json({ success: false, error: error });
   }

@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import Typist from 'react-typist';
+import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 
@@ -321,15 +322,16 @@ export const Home:React.FC = () => {
   console.log(user)
 
   useEffect(() => {
-      axios.get('http://localhost:4005/user', { withCredentials: true })
-      .then((res) => {
-        const { username, userId } = res.data;
-        setUser({ username, userId });
-      })
-      .catch((error) => {
-        setUser({ username: '', userId: null });
-        console.log('User not found');
-      });
+      axios
+        .get(`${baseURL}/user`, { withCredentials: true })
+        .then((res) => {
+          const { username, userId } = res.data;
+          setUser({ username, userId });
+        })
+        .catch((error) => {
+          setUser({ username: '', userId: null });
+          console.log('User not found');
+        });
   }, [setUser]);
 
   useEffect(() => {

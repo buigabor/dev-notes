@@ -2,6 +2,7 @@
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
+import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import addProjectStyles from './styles/addProjectStyles';
@@ -73,7 +74,7 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
 
             try {
               const res = await axios.post(
-                'http://localhost:4005/projects/create',
+                '${/projects/create',
                 project,
                 {
                   withCredentials: true,
@@ -84,7 +85,7 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
               setTimeout(() => {}, 100);
               if (!collaboration) {
                 axios.post(
-                  'http://localhost:4005/cells/create',
+                  `${baseURL}/cells/create`,
                   { ...cellsState, projectId: projectCreated.id },
                   {
                     withCredentials: true,
@@ -92,7 +93,7 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
                 );
               } else {
                 axios.post(
-                  'http://localhost:4005/cells/create',
+                  `${baseURL}/cells/create`,
                   {
                     data,
                     order: orderCells?.order,

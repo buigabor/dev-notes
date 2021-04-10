@@ -21,7 +21,7 @@ const httpServer = createServer();
 const port = process.env.PORT || 4005;
 const io = require('socket.io')(httpServer, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'https://devnotes-bui.netlify.app'],
   },
 });
 httpServer.listen(5000);

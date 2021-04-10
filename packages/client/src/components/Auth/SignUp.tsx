@@ -11,6 +11,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
 import { useHistory } from 'react-router';
+import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { Alert } from '../Utils/Alert';
 
@@ -132,7 +133,7 @@ export const SignUp: React.FC = () => {
               e.preventDefault();
               axios
                 .post(
-                  'http://localhost:4005/auth/register',
+                  `${baseURL}/auth/register`,
                   { ...user },
                   { withCredentials: true },
                 )

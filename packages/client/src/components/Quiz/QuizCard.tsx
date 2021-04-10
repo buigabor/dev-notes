@@ -5,6 +5,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
+import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { QuizState } from '../../state/reducers/quizReducer';
 
@@ -70,10 +71,9 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             onClick={async () => {
               try {
                 console.log('clicked')
-                const res = await axios.delete(
-                  `http://localhost:4005/quiz/${quiz.id}`,
-                  { withCredentials: true },
-                );
+                const res = await axios.delete(`${baseURL}/quiz/${quiz.id}`, {
+                  withCredentials: true,
+                });
                 const deletedQuiz = res.data.data.quiz;
                 if (!deletedQuiz) {
                   showAlert('Quiz failed to delete', 'error');

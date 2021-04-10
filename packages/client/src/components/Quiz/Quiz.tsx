@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import ProgressBar from "@ramonak/react-progress-bar";
 import axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import baseURL from '../../../server';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { QuizState } from '../../state/reducers/quizReducer';
 import { actionButtonsWrapperStyles } from '../styles/cellListActionButtonStyles';
@@ -333,7 +334,7 @@ export const Quiz:React.FC = () => {
           <button
             onClick={async () => {
               const fetchAllQuizes = async () => {
-                const res = await axios.get('http://localhost:4005/quiz', {
+                const res = await axios.get(`${baseURL}/quiz`, {
                   withCredentials: true,
                 });
                 const quizes = res.data.data.quizes;

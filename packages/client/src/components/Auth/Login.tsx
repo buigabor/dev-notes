@@ -14,6 +14,7 @@ import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
 import GoogleLogin from 'react-google-login';
 import { useHistory } from 'react-router';
+import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { Alert } from '../Utils/Alert';
 
@@ -127,7 +128,7 @@ export const Login: React.FC = () => {
     const token = response.tokenId;
     try {
       await axios.post(
-        'http://localhost:4005/auth/google',
+        `${baseURL}/auth/google`,
         {
           token,
         },
@@ -164,7 +165,7 @@ export const Login: React.FC = () => {
             onSubmit={(e) => {
               e.preventDefault();
               axios
-                .post('http://localhost:4005/auth/login', user, {
+                .post(`${baseURL}/auth/login`, user, {
                   withCredentials: true,
                 })
                 .then((res) => {

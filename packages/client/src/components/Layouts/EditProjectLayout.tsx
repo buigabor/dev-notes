@@ -2,6 +2,7 @@
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import addProjectStyles from './styles/addProjectStyles';
@@ -68,7 +69,7 @@ export const EditProjectLayout: React.FC<EditProjectLayoutProps> = ({
             e.preventDefault();
             try {
               const res = await axios.patch(
-                `http://localhost:4005/projects/${projectState.id}`,
+                `${baseURL}/projects/${projectState.id}`,
                 project,
                 { withCredentials: true },
               );

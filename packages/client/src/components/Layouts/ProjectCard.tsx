@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { MapClient } from '@roomservice/browser';
 import axios from 'axios';
 import React from 'react';
+import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { Project } from '../../state/reducers/projectsReducer';
 import { Alert } from '../Utils/Alert';
@@ -86,7 +87,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             onClick={async () => {
               try {
                 const res = await axios.get(
-                  `http://localhost:4005/cells/${project.id}`,
+                  `${baseURL}/cells/${project.id}`,
                   {
                     withCredentials: true,
                   },
@@ -124,7 +125,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             onClick={async () => {
               try {
                 const res = await axios.delete(
-                  `http://localhost:4005/projects/${project.id}`,
+                  `${baseURL}/projects/${project.id}`,
                   { withCredentials: true },
                 );
                 const deletedProject = res.data.data.project;

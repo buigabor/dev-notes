@@ -3,7 +3,8 @@ import { css } from '@emotion/react';
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
+import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { UserState } from '../../state/reducers/userReducer';
 import { QuestionContainer } from './QuestionContainer';
@@ -167,7 +168,7 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
             className={classes.textField}
             id="standard-basic"
             label="Quiz Title"
-            onChange={(e) => {
+            onChange={(e:ChangeEvent<HTMLInputElement>) => {
               setQuizTitle(e.target.value);
             }}
           />
@@ -205,12 +206,12 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
               onClick={async () => {
                 try {
                     await axios.post(
-                    'http://localhost:4005/quiz/create',
-                    { userId: user.userId, quizSet: questions, quizTitle },
-                    {
-                      withCredentials: true,
-                    },
-                  );
+                      `${baseURL}}/quiz/create`,
+                      { userId: user.userId, quizSet: questions, quizTitle },
+                      {
+                        withCredentials: true,
+                      },
+                    );
                   showAlert('Quiz created!', 'success');
                   setTimeout(() => {
                     hideAlert();
