@@ -2,7 +2,7 @@ import camelcaseKeys from 'camelcase-keys';
 require('dotenv').config();
 
 const postgres = require('postgres');
-const sql = postgres();
+// let sql = postgres();
 
 module.exports = function setPostgresDefaultsOnHeroku() {
   if (process.env.DATABASE_URL) {
@@ -18,6 +18,31 @@ module.exports = function setPostgresDefaultsOnHeroku() {
     process.env.PGPASSWORD = password;
   }
 };
+
+interface globalThis {
+  [key: string]: any; // Add index signature
+}
+
+function connectOneTimeToDatabase() {
+  let sql;
+
+  if (process.env.NODE_ENV === 'production') {
+    sql = postgres();
+    // Heroku needs SSL connections but
+    // has an "unauthorized" certificate
+    // https://devcenter.heroku.com/changelog-items/852
+    sql = postgres({ ssl: { rejectUnauthorized: false } });
+  } else {
+    if (!(globalThis as globalThis).__postgresSqlClient) {
+      (globalThis as globalThis).__postgresSqlClient = postgres();
+    }
+    sql = (globalThis as globalThis).__postgresSqlClient;
+  }
+  return sql;
+}
+
+// Connect to PostgreSQL
+const sql = connectOneTimeToDatabase();
 
 interface Quiz {
   id:number;
