@@ -1,5 +1,5 @@
-const setPostgresDefaultsOnHeroku = require('./db/index.ts')
-// import { setPostgresDefaultsOnHeroku } from './db/index';
+// const setPostgresDefaultsOnHeroku = require('./db/index.ts')
+import { setPostgresDefaultsOnHeroku } from './db/index';
 
 setPostgresDefaultsOnHeroku()
 
