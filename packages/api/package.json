@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon index.ts",
     "dev:start": "tsc --watch --preserveWatchOutput",
-    "start": "node dist/index.js",
+    "start": "node index.js",
     "migrate": "dotenv ley",
     "heroku-postbuild": "yarn migrate up && yarn build",
     "build": "tsc"
