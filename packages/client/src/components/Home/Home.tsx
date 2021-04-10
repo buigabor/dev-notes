@@ -7,9 +7,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import Typist from 'react-typist';
-import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
+import baseURL from '../../server';
 
 const homeStyles = css`
   background: rgb(7, 7, 8);
@@ -362,7 +362,7 @@ export const Home:React.FC = () => {
           <div className="navbar-buttons">
             <button
               onClick={() => {
-                history.push('/login');
+                history.push('/signup');
               }}
               className="sign-up-btn"
             >
@@ -370,7 +370,7 @@ export const Home:React.FC = () => {
             </button>
             <button
               onClick={() => {
-                history.push('/signup');
+                history.push('/login');
               }}
               className="login-btn"
             >

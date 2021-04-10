@@ -4,8 +4,8 @@ import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
-import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
+import baseURL from '../../server';
 import { UserState } from '../../state/reducers/userReducer';
 import { QuestionContainer } from './QuestionContainer';
 

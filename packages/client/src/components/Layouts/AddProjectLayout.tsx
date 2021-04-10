@@ -2,9 +2,9 @@
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
-import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
+import baseURL from '../../server';
 import addProjectStyles from './styles/addProjectStyles';
 interface AddProjectLayoutProps {
   showAddOverlay: boolean;

@@ -1,8 +1,8 @@
 import { RoomServiceProvider } from '@roomservice/react';
 import * as H from 'history';
 import React from 'react';
-import baseURL from '../../../server';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
+import baseURL from '../../server';
 import { RoomService } from './RoomService';
 
 export interface IReactRouterParams {

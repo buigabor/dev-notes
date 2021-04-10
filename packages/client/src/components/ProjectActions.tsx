@@ -2,9 +2,9 @@
 import axios from 'axios';
 import React from 'react';
 import { useHistory } from 'react-router';
-import baseURL from '../../server';
 import { useActions } from '../hooks/useActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import baseURL from '../server';
 import { Project } from '../state/reducers/projectsReducer';
 import { actionButtonsWrapperStyles } from './styles/cellListActionButtonStyles';
 

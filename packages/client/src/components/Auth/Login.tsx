@@ -14,8 +14,8 @@ import axios from 'axios';
 import React, { ChangeEvent, useState } from 'react';
 import GoogleLogin from 'react-google-login';
 import { useHistory } from 'react-router';
-import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
+import baseURL from '../../server';
 import { Alert } from '../Utils/Alert';
 
 const CssTextField = withStyles({

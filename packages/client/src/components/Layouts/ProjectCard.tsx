@@ -8,8 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import { MapClient } from '@roomservice/browser';
 import axios from 'axios';
 import React from 'react';
-import baseURL from '../../../server';
 import { useActions } from '../../hooks/useActions';
+import baseURL from '../../server';
 import { Project } from '../../state/reducers/projectsReducer';
 import { Alert } from '../Utils/Alert';
 

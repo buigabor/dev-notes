@@ -9,9 +9,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { GoogleLogout } from 'react-google-login';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import baseURL from '../../server';
 import { useActions } from '../hooks/useActions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import baseURL from '../server';
 import RoomDialog from './RoomService/RoomDialog';
 import { Alert } from './Utils/Alert';
 
