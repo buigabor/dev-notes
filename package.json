@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "workspaces": [
+    "packages/api",
+    "packages/client"
+  ],
+  "scripts": {
+    "start": "yarn workspace api start",
+    "build": "yarn workspace api build"
+  }
+}
