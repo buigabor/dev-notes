@@ -1,10 +1,10 @@
 import camelcaseKeys from 'camelcase-keys';
-const setPostgresDefaultsOnHeroku = require('./setPostgresDefaultsOnHeroku.js')
+
 require('dotenv').config();
 
 const postgres = require('postgres');
 // let sql = postgres();
-setPostgresDefaultsOnHeroku();
+
 
 interface globalThis {
   [key: string]: any; // Add index signature
