@@ -4,7 +4,7 @@ require('dotenv').config();
 const postgres = require('postgres');
 // let sql = postgres();
 
-module.exports = function setPostgresDefaultsOnHeroku() {
+export function setPostgresDefaultsOnHeroku() {
   if (process.env.DATABASE_URL) {
     const { parse } = require('pg-connection-string');
 

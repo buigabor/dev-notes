@@ -14,6 +14,20 @@ import {
 import { generateToken } from '../utils/session';
 import { registerValidation } from './../utils/validation';
 
+// const {OAuth2Client} = require('google-auth-library');
+// const axios = require('axios');
+// const bcrypt = require('bcrypt');
+// const cookie = require('cookie');
+// const express = require('express');
+// const {deleteExpiredSessions,
+//   getUserByEmail,
+//   getUserByName,
+//   insertSession,
+//   saveGithubOrGoogleUser,
+//   saveUser} = require('..db')
+// const {generateToken} = require('../utils/session')
+// const { registerValidation } = require('./../utils/validation');
+
 const router = express.Router();
 
 let clientSideUrl:string;
