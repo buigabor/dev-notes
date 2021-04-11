@@ -8,7 +8,7 @@ const loadProjectStyles = css`
   height: 100%;
   transition: all 0.2s linear;
   background: rgba(26, 26, 26, 0.7);
-  z-index: 2;
+  z-index: 100;
   visibility: 'visible';
   display: flex;
   justify-content: center;

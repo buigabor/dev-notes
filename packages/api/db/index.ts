@@ -1,5 +1,6 @@
 import camelcaseKeys from 'camelcase-keys';
-import postgres from 'postgres';
+// import postgres from 'postgres';
+const postgres = require('postgres')
 
 function setPostgresDefaultsOnHeroku(){if (process.env.DATABASE_URL) {
   const { parse } = require('pg-connection-string');

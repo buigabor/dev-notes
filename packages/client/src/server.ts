@@ -7,7 +7,6 @@ if (process.env.NODE_ENV === 'development') {
 
 if (process.env.NODE_ENV === 'production') {
   baseURL = 'https://devnotes-bui.herokuapp.com';
-  // baseURL = 'http://localhost:4005';
 }
 
 export default baseURL;
