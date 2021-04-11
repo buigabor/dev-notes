@@ -12,6 +12,7 @@ const chatIcon = css`
   bottom: 25px;
   right: 25px;
   cursor: pointer;
+  z-index: 9999;
   .chat-unread-count {
     position: absolute;
     right: 12px;
