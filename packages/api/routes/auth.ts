@@ -94,7 +94,7 @@ router.post('/register', async (req, res) => {
         sameSite: 'none',
         maxAge,
         path: '/',
-        // domain: clientSideUrl,
+        domain: clientSideUrl,
       }),
     );
     await deleteExpiredSessions();
@@ -127,7 +127,7 @@ router.post('/login', async (req, res) => {
 sameSite: 'none',
         maxAge,
         path: '/',
-        // domain: clientSideUrl,
+        domain: clientSideUrl,
       }),
     );
     await deleteExpiredSessions();
@@ -206,7 +206,7 @@ router.get('/oauth-callback', async (req, res) => {
 sameSite: 'none',
         maxAge,
         path: '/',
-        // domain: clientSideUrl,
+        domain: clientSideUrl,
       }),
     );
     await deleteExpiredSessions();
@@ -251,7 +251,7 @@ router.post('/google', async (req, res) => {
         sameSite: 'none',
         maxAge,
         path: '/',
-        // domain: clientSideUrl,
+        domain: clientSideUrl,
       }),
     );
     res.status(200).json({ success: true, error: null });
