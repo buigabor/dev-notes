@@ -94,7 +94,7 @@ router.post('/register', async (req, res) => {
         // sameSite: false,
         maxAge,
         path: '/',
-        domain: clientSideUrl,
+        // domain: clientSideUrl,
       }),
     );
     await deleteExpiredSessions();
@@ -127,7 +127,7 @@ router.post('/login', async (req, res) => {
         // sameSite: false,
         maxAge,
         path: '/',
-        domain: clientSideUrl,
+        // domain: clientSideUrl,
       }),
     );
     await deleteExpiredSessions();
@@ -202,11 +202,11 @@ router.get('/oauth-callback', async (req, res) => {
       cookie.serialize('token', token, {
         httpOnly: true,
         expires: new Date(Date.now() + maxAge * 1000),
-        secure: process.env.NODE_ENV === 'production',
+        // secure: process.env.NODE_ENV === 'production',
         // sameSite: false,
         maxAge,
         path: '/',
-        domain: clientSideUrl,
+        // domain: clientSideUrl,
       }),
     );
     await deleteExpiredSessions();
@@ -251,7 +251,7 @@ router.post('/google', async (req, res) => {
         // sameSite: false,
         maxAge,
         path: '/',
-        domain: clientSideUrl,
+        // domain: clientSideUrl,
       }),
     );
     res.status(200).json({ success: true, error: null });
