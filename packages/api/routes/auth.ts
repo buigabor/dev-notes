@@ -91,7 +91,7 @@ router.post('/register', async (req, res) => {
       cookie.serialize('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: 'none',
         maxAge,
         path: '/',
       }),
@@ -123,7 +123,7 @@ router.post('/login', async (req, res) => {
       cookie.serialize('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: 'none',
         maxAge,
         path: '/',
       }),
