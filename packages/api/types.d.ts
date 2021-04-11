@@ -1,3 +1,3 @@
 declare module 'postgres';
 declare module 'node-fetch';
-declare module 'setPostgresDefaultsOnHeroku';
+declare module 'setPostgresDefaultsOnHeroku.js';

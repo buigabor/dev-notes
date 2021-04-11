@@ -1,8 +1,9 @@
 import camelcaseKeys from 'camelcase-keys';
+import postgres from 'postgres';
 
+const setPostgresDefaultsOnHeroku = require('./setPostgresDefaultsOnHeroku');
+setPostgresDefaultsOnHeroku();
 require('dotenv').config();
-
-const postgres = require('postgres');
 // let sql = postgres();
 
 
