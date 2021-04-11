@@ -206,7 +206,7 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
               onClick={async () => {
                 try {
                     await axios.post(
-                      `${baseURL}}/quiz/create`,
+                      `${baseURL}/quiz/create`,
                       { userId: user.userId, quizSet: questions, quizTitle },
                       {
                         withCredentials: true,
