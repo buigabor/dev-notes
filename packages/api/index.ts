@@ -16,17 +16,30 @@ import roomserviceRoute from './routes/roomservice';
 import sessionsRoute from './routes/sessions';
 import usersRoute from './routes/user';
 
+let clientSideUrl: string;
+if (process.env.NODE_ENV === 'development') {
+  clientSideUrl = 'http://localhost:3000';
+}
+
+if (process.env.NODE_ENV === 'production') {
+  clientSideUrl = 'https://devnotes-bui.netlify.app';
+}
+
 const app = express();
 const httpServer = createServer();
 const port = process.env.PORT || 4005;
 const io = require('socket.io')(httpServer, {
   cors: {
-    origin: ['http://localhost:3000', 'https://devnotes-bui.netlify.app'],
+    origin: [
+      'http://localhost:3000',
+      'https://devnotes-bui.netlify.app',
+      'https://devnotes-bui.herokuapp.com',
+    ],
   },
 });
 httpServer.listen(5000);
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', req.header('Origin'));
+  res.header('Access-Control-Allow-Origin', clientSideUrl);
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header(
     'Access-Control-Allow-Headers',

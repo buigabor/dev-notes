@@ -4,29 +4,15 @@ import cookie from 'cookie';
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import {
-  deleteExpiredSessions,
-  getUserByEmail,
-  getUserByName,
-  insertSession,
-  saveGithubOrGoogleUser,
-  saveUser
+    deleteExpiredSessions,
+    getUserByEmail,
+    getUserByName,
+    insertSession,
+    saveGithubOrGoogleUser,
+    saveUser
 } from '../db';
 import { generateToken } from '../utils/session';
 import { registerValidation } from './../utils/validation';
-
-// const {OAuth2Client} = require('google-auth-library');
-// const axios = require('axios');
-// const bcrypt = require('bcrypt');
-// const cookie = require('cookie');
-// const express = require('express');
-// const {deleteExpiredSessions,
-//   getUserByEmail,
-//   getUserByName,
-//   insertSession,
-//   saveGithubOrGoogleUser,
-//   saveUser} = require('..db')
-// const {generateToken} = require('../utils/session')
-// const { registerValidation } = require('./../utils/validation');
 
 const router = express.Router();
 
