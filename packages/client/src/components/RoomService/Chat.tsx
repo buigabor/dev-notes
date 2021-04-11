@@ -57,7 +57,7 @@ export const Chat: React.FC<ChatProps> = ({
 
   useEffect(() => {
     if (user.username) {
-      const newSocket = io('http://localhost:5000', {
+      const newSocket = io('http://localhost:5001', {
         query: { id: match.params?.id, user: String(user.userId) },
       });
       setSocket(newSocket);

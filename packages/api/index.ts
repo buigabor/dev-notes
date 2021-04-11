@@ -39,12 +39,12 @@ const io = require('socket.io')(httpServer, {
     ],
   },
 });
-httpServer.listen(5000);
+httpServer.listen(5001);
 app.use(function (req, res, next) {
   let allowedOrigins = [
     'http://localhost:3000',
     'https://devnotes-bui.netlify.app',
-    'http://localhost:52468',
+    'http://localhost:5000',
   ];
 let origin = req.headers.origin;
   if (origin && allowedOrigins.includes(origin)) {
