@@ -4,12 +4,12 @@ import cookie from 'cookie';
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import {
-    deleteExpiredSessions,
-    getUserByEmail,
-    getUserByName,
-    insertSession,
-    saveGithubOrGoogleUser,
-    saveUser
+  deleteExpiredSessions,
+  getUserByEmail,
+  getUserByName,
+  insertSession,
+  saveGithubOrGoogleUser,
+  saveUser
 } from '../db';
 import { generateToken } from '../utils/session';
 import { registerValidation } from './../utils/validation';
@@ -214,6 +214,7 @@ router.get('/oauth-callback', async (req, res) => {
 
 router.post('/google', async (req, res) => {
   const token = req.body.token;
+  console.log(token)
   const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
   const sessionCookie = generateToken();
   async function verify() {
@@ -227,9 +228,7 @@ router.post('/google', async (req, res) => {
     if (payload && payload.name && payload.email) {
       const name = payload.name;
       const email = payload.email;
-      const userId = Number(payload.sub.slice(12));
       const user = await saveUser({ username: name, email, password: 'N/A' });
-      // const user = await saveGithubOrGoogleUser(name, userId, email);
       await insertSession(sessionCookie, user.id);
     }
     // If request specified a G Suite domain:
@@ -251,6 +250,7 @@ router.post('/google', async (req, res) => {
     );
     res.status(200).json({ success: true, error: null });
   } catch (error) {
+    console.error(error)
     res.status(400).json({ success: false, error: error });
   }
 });

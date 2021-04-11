@@ -25,6 +25,8 @@ if (process.env.NODE_ENV === 'production') {
   clientSideUrl = 'https://devnotes-bui.netlify.app';
 }
 
+
+
 const app = express();
 const httpServer = createServer();
 const port = process.env.PORT || 4005;
@@ -39,7 +41,15 @@ const io = require('socket.io')(httpServer, {
 });
 httpServer.listen(5000);
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', clientSideUrl);
+  let allowedOrigins = [
+    'http://localhost:3000',
+    'https://devnotes-bui.netlify.app',
+    'http://localhost:52468',
+  ];
+let origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin); // restrict it to the required domain
+  }
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header(
     'Access-Control-Allow-Headers',

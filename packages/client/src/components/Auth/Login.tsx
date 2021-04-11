@@ -126,6 +126,7 @@ export const Login: React.FC = () => {
 
   const responseGoogle = async (response: any) => {
     const token = response.tokenId;
+    console.log(response)
     try {
       await axios.post(
         `${baseURL}/auth/google`,
@@ -140,10 +141,10 @@ export const Login: React.FC = () => {
         history.push('/playground');
       }, 1200);
     } catch (error) {
+      console.error(error)
       showAlert('Login failed!', 'error');
       setTimeout(() => {
         hideAlert();
-        history.push('/playground');
       }, 1200);
     }
   };
