@@ -58,16 +58,14 @@ export const QuestionContainer: React.FC<IQuestionContainer> = ({
     answerFour: false,
   });
   const classes = useStyles();
-
-  const memoizedCallback = useCallback( () => {
+  const memoizedCallback = useCallback(() => {
     const currentQuestion = questions[question.id];
-    const correctAnswersArray = []
-    const incorrectAnswersArray = []
+    const correctAnswersArray = [];
+    const incorrectAnswersArray = [];
 
-
-    for(let answer in correctAnswers){
+    for (let answer in correctAnswers) {
       if (correctAnswers[answer]) {
-        correctAnswersArray.push(answers[answer])
+        correctAnswersArray.push(answers[answer]);
       } else {
         incorrectAnswersArray.push(answers[answer]);
       }
@@ -79,11 +77,11 @@ export const QuestionContainer: React.FC<IQuestionContainer> = ({
     currentQuestion.question = quizQuestion;
     currentQuestion.answers = allAnswers;
 
-    const newQuestionsArray = [...questions]
+    const newQuestionsArray = [...questions];
     newQuestionsArray.splice(question.id, 1, currentQuestion);
     setQuestions([...newQuestionsArray]);
-  }, [answers, correctAnswers, question.id, questions, quizQuestion, setQuestions]
-  )
+    // eslint-disable-next-line
+  }, [answers, correctAnswers, question.id, quizQuestion, setQuestions]);
 
   useEffect(() => {
     memoizedCallback();
@@ -93,9 +91,11 @@ export const QuestionContainer: React.FC<IQuestionContainer> = ({
     setCorrectAnswers({ ...correctAnswers, [e.target.name]: e.target.checked });
   };
 
-  const handleOnChangeAnswersTextField = (e:React.ChangeEvent<HTMLInputElement>)=>{
-    setAnswers({...answers, [e.target.name]:e.target.value})
-  }
+  const handleOnChangeAnswersTextField = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setAnswers({ ...answers, [e.target.name]: e.target.value });
+  };
 
   return (
     <div className="quiz-container">

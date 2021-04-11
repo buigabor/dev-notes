@@ -137,7 +137,7 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
   const [quizTitle, setQuizTitle] = useState('');
   const { showAlert, hideAlert } = useActions();
   const classes = useStyles();
-
+  console.log(questions);
   return (
     <div
       style={{ visibility: showCreateQuiz ? 'visible' : 'hidden' }}
