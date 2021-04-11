@@ -74,7 +74,7 @@ export const AddProjectLayout: React.FC<AddProjectLayoutProps> = ({
 
             try {
               const res = await axios.post(
-                '${/projects/create',
+                `${baseURL}/projects/create`,
                 project,
                 {
                   withCredentials: true,
