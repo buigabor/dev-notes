@@ -43,7 +43,7 @@ const io = require('socket.io')(httpServer, {
         : 'http://localhost:3000',
   },
 });
-httpServer.listen(5001);
+httpServer.listen(process.env.PORT || 5001);
 app.use(function (req, res, next) {
   let allowedOrigins = [
     'http://localhost:3000',
