@@ -212,7 +212,7 @@ sameSite: 'none',
       }),
     );
     await deleteExpiredSessions();
-    res.redirect(clientSideUrl);
+    res.redirect(`${clientSideUrl}/playground`);
   } catch (error) {
     res.status(400).json({ success: false, error: error });
   }
