@@ -10,26 +10,34 @@ interface globalThis {
   [key: string]: any; // Add index signature
 }
 
-function connectOneTimeToDatabase() {
-  let sql;
+// function connectOneTimeToDatabase() {
+//   let sql;
 
-  if (process.env.NODE_ENV === 'production') {
-    sql = postgres();
-    // Heroku needs SSL connections but
-    // has an "unauthorized" certificate
-    // https://devcenter.heroku.com/changelog-items/852
-    sql = postgres({ ssl: { rejectUnauthorized: false } });
-  } else {
-    if (!(globalThis as globalThis).__postgresSqlClient) {
-      (globalThis as globalThis).__postgresSqlClient = postgres();
-    }
-    sql = (globalThis as globalThis).__postgresSqlClient;
-  }
-  return sql;
-}
+//   if (process.env.NODE_ENV === 'production') {
+//     sql = postgres();
+//     // Heroku needs SSL connections but
+//     // has an "unauthorized" certificate
+//     // https://devcenter.heroku.com/changelog-items/852
+//     sql = postgres({ ssl: { rejectUnauthorized: false } });
+//   } else {
+//     if (!(globalThis as globalThis).__postgresSqlClient) {
+//       (globalThis as globalThis).__postgresSqlClient = postgres();
+//     }
+//     sql = (globalThis as globalThis).__postgresSqlClient;
+//   }
+//   return sql;
+// }
 
 // Connect to PostgreSQL
-const sql = connectOneTimeToDatabase();
+// const sql = connectOneTimeToDatabase();
+
+const sql =
+  process.env.NODE_ENV === 'production'
+    ? postgres({ ssl: { rejectUnauthorized: false } })
+    : postgres({
+        idle_timeout: 5,
+      });
+
 
 interface Quiz {
   id:number;
