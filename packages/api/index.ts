@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
 
 
 const app = express();
-const httpServer = createServer();
+const httpServer = createServer(app);
 const port = process.env.PORT || 4005;
 const io = require('socket.io')(httpServer, {
   cors: {
@@ -43,7 +43,7 @@ const io = require('socket.io')(httpServer, {
         : 'http://localhost:3000',
   },
 });
-httpServer.listen(process.env.PORT || 5001);
+
 app.use(function (req, res, next) {
   let allowedOrigins = [
     'http://localhost:3000',
@@ -113,6 +113,10 @@ app.get('/', async (req, res) => {
   res.status(200).json({ info: 'Node.js, Express, and Postgres API' });
 });
 
-app.listen(port, () => {
-  console.log(`App running on port ${port}.`);
+// app.listen(port, () => {
+//   console.log(`App running on port ${port}.`);
+// });
+
+httpServer.listen(port, () => {
+  console.log('Server up on ' + port);
 });

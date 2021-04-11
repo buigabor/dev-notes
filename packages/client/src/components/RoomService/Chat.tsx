@@ -17,6 +17,7 @@ import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io-client/build/typed-events';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
+import baseURL from '../../server';
 import { IReactRouterParams, match } from './RoomServiceHome';
 import chatStyles from './styles/chatStyles';
 
@@ -57,7 +58,7 @@ export const Chat: React.FC<ChatProps> = ({
 
   useEffect(() => {
     if (user.username) {
-      const newSocket = io('http://localhost:5001', {
+      const newSocket = io(`${baseURL}`, {
         query: { id: match.params?.id, user: String(user.userId) },
       });
       setSocket(newSocket);
