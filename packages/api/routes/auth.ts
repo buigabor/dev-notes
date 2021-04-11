@@ -124,7 +124,7 @@ router.post('/login', async (req, res) => {
       cookie.serialize('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-sameSite: 'none',
+        sameSite: 'none',
         maxAge,
         path: '/',
         // domain: clientSideUrl,
@@ -144,6 +144,8 @@ router.get('/logout', async (req, res) => {
       cookie.serialize('token', '', {
         maxAge: -1,
         path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
       }),
     );
     req.headers.userId = '';
