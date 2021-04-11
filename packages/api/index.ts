@@ -32,11 +32,15 @@ const httpServer = createServer();
 const port = process.env.PORT || 4005;
 const io = require('socket.io')(httpServer, {
   cors: {
-    origin: [
-      'http://localhost:3000',
-      'https://devnotes-bui.netlify.app',
-      'https://devnotes-bui.herokuapp.com',
-    ],
+    // origin: [
+    //   'http://localhost:3000',
+    //   'https://devnotes-bui.netlify.app',
+    //   'https://devnotes-bui.herokuapp.com',
+    // ],
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? 'https://devnotes-bui.netlify.app'
+        : 'http://localhost:3000',
   },
 });
 httpServer.listen(5001);
@@ -47,9 +51,9 @@ app.use(function (req, res, next) {
     'http://localhost:5000',
   ];
 let origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin); // restrict it to the required domain
-  }
+  // if (origin && allowedOrigins.includes(origin)) {
+  // }
+  res.header('Access-Control-Allow-Origin', clientSideUrl); // restrict it to the required domain
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header(
     'Access-Control-Allow-Headers',
