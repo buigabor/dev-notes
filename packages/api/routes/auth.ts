@@ -199,6 +199,7 @@ router.get('/oauth-callback', async (req, res) => {
       'Set-Cookie',
       cookie.serialize('token', token, {
         httpOnly: true,
+        expires: new Date(Date.now() + maxAge * 1000),
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge,
@@ -242,6 +243,7 @@ router.post('/google', async (req, res) => {
       'Set-Cookie',
       cookie.serialize('token', sessionCookie, {
         httpOnly: true,
+        expires: new Date(Date.now() + maxAge * 1000),
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge,

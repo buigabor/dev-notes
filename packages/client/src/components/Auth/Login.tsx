@@ -175,7 +175,7 @@ export const Login: React.FC = () => {
                     showAlert('Login successful!', 'success');
                     setTimeout(() => {
                       hideAlert();
-                      history.goBack();
+                      history.push('/playground');
                     }, 1200);
                   }
                 })
@@ -251,7 +251,7 @@ export const Login: React.FC = () => {
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link className={classes.link} href="/signup" variant="body2">
+                <Link className={classes.link} onClick={()=>{history.push('/signup')}} variant="body2">
                   Don't have an account? Sign Up
                 </Link>
               </Grid>

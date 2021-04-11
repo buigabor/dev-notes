@@ -222,7 +222,13 @@ export const SignUp: React.FC = () => {
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link className={classes.link} href="/login" variant="body2">
+                <Link
+                  className={classes.link}
+                  onClick={() => {
+                    history.push('/login');
+                  }}
+                  variant="body2"
+                >
                   Already have an account? Sign in
                 </Link>
               </Grid>
