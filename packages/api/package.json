@@ -4,8 +4,8 @@
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon index.ts",
-    "dev:start": "tsc --watch --preserveWatchOutput",
+    "dev:start": "nodemon index.ts",
+    "dev:compile": "tsc --watch --preserveWatchOutput",
     "start": "node dist/index.js",
     "migrate": "dotenv ley",
     "heroku-postbuild": "yarn migrate up && yarn build",

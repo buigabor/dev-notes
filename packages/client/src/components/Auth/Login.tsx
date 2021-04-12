@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   text: {
     color: '#fff',
   },
-  link: { color: '#00b5ad', textDecoration: 'none' },
+  link: { color: '#00b5ad', textDecoration: 'none', cursor:'pointer' },
   outlinedTextfield: {
     color: '#fff',
     borderColor: '#fff',
