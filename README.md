@@ -32,8 +32,8 @@ npm run start
 
 ## 🖥️ Technologies Used
 
-Frontend: TypeScript, React, Redux
-Backend: Node.js, Express   
+Frontend: TypeScript, React, Redux.  
+Backend: Node.js, Express.  
 Database: PostgreSQL.  
 Miscellaneous: Room Service, Socket.io, ESBuild, Immer, Emotion, Material UI, Framer Motion. 
  
