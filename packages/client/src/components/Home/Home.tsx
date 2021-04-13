@@ -58,7 +58,8 @@ const homeStyles = css`
     &-wrapper {
       padding-top: 15rem;
       align-self: center;
-      margin-bottom: 14rem;
+      position: absolute;
+      bottom: 10%;
     }
 
     &-btn {
@@ -138,7 +139,7 @@ const homeStyles = css`
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      padding-top: 5rem;
+      margin-top: 100vh;
     }
     &-header {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -245,7 +246,7 @@ const homeStyles = css`
   .playground-btn {
     color: #06c8bf;
     background-color: transparent;
-    border:none;
+    border: none;
     display: flex;
     align-items: center;
     margin-left: auto;
