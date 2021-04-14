@@ -8,6 +8,7 @@ A note-taking application specifically designed for web developers.
 - Save your work as a project to load it up anytime you want 🧭
 - User authentication system (register, login) including Google and Github Auth 🙎‍♂️
 - Collaborate with others! Share your knowledge! 🧠 
+- Quiz feature to test your knowledge on your notes! ❓
 - Fully built out RESTful API with to manage all of the products on the client-side 💾
 
 ## 🕹️ Installation
