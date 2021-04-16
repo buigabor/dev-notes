@@ -27,7 +27,6 @@
     "axios": "0.21.1",
     "bulmaswatch": "^0.8.1",
     "customize-cra": "^1.0.0",
-    "cypress": "^7.1.0",
     "dateformat": "^4.5.1",
     "esbuild-wasm": "0.8.27",
     "framer-motion": "^3.10.0",
